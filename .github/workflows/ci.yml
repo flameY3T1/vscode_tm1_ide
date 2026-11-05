@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Compile
+        run: npm run compile
+
+      # Same size/emptiness check vscode:prepublish runs — so a dependency leaking
+      # into the bundle shows on the push, not first at release time.
+      - name: Bundle check
+        run: node scripts/check-bundle.cjs
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Lint (floating promises — type-checked)
+        run: npm run lint:promises
+
+      - name: Test (with coverage)
+        run: npm run test:coverage
+
+      - name: Dead-code gate (knip)
+        run: npm run lint:dead
+
+      - name: Dependency lint (layers + cycles)
+        run: npm run lint:deps
+
+      # `dependencies` = everything esbuild bundles into the VSIX (incl. the
+      # monaco-vendor bundle); no node_modules tree is packaged, so
+      # dev-tooling advisories are noise here.
+      # Flags live in package.json#scripts.audit so CI and local stay identical.
+      - name: Dependency audit (production deps, high+)
+        run: npm run audit
+
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Integration tests launch a real VS Code (Electron) host, which needs a
+      # display on Linux — run under xvfb.
+      - name: Integration tests
+        run: xvfb-run -a npm run test:integration

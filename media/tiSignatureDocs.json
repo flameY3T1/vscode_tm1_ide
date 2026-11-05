@@ -1,0 +1,509 @@
+{
+  "version": 1,
+  "docs": {
+    "cellgetn": {
+      "description": "Reads a numeric cell value from a cube.",
+      "paramDocs": {
+        "cubename": "Name of the cube",
+        "elem1": "Element of the first dimension",
+        "elemn": "Further dimension elements"
+      }
+    },
+    "cellgets": {
+      "description": "Reads a string cell value from a cube.",
+      "paramDocs": {
+        "cubename": "Name of the cube",
+        "elem1": "Element of the first dimension",
+        "elemn": "Further dimension elements"
+      }
+    },
+    "cellputn": {
+      "description": "Writes a numeric value into a cube cell.",
+      "paramDocs": {
+        "value": "Numeric value to write",
+        "cubename": "Name of the cube",
+        "elem1": "Element of the first dimension",
+        "elemn": "Further dimension elements"
+      }
+    },
+    "cellputs": {
+      "description": "Writes a string value into a cube cell.",
+      "paramDocs": {
+        "value": "String value to write",
+        "cubename": "Name of the cube",
+        "elem1": "Element of the first dimension",
+        "elemn": "Further dimension elements"
+      }
+    },
+    "str": {
+      "description": "Converts a number into a formatted string.",
+      "paramDocs": {
+        "number": "Number to convert",
+        "width": "Total width of the string",
+        "decimals": "Number of decimal places"
+      }
+    },
+    "subst": {
+      "description": "Extracts a substring.",
+      "paramDocs": {
+        "string": "Source string",
+        "start": "Start position (1-based)",
+        "length": "Length of the substring"
+      }
+    },
+    "scan": {
+      "description": "Searches for a substring. Returns its position (0 = not found).",
+      "paramDocs": {
+        "substring": "Substring to search for",
+        "string": "String to search in"
+      }
+    },
+    "trim": {
+      "description": "Removes leading and trailing spaces.",
+      "paramDocs": {
+        "string": "String to trim"
+      }
+    },
+    "upper": {
+      "description": "Converts a string to upper case.",
+      "paramDocs": {
+        "string": "String to convert"
+      }
+    },
+    "lower": {
+      "description": "Converts a string to lower case.",
+      "paramDocs": {
+        "string": "String to convert"
+      }
+    },
+    "long": {
+      "description": "Returns the length of a string.",
+      "paramDocs": {
+        "string": "String whose length is measured"
+      }
+    },
+    "char": {
+      "description": "Returns the character for an ASCII code.",
+      "paramDocs": {
+        "number": "ASCII code (1–255)"
+      }
+    },
+    "code": {
+      "description": "Returns the ASCII code of the character at a position.",
+      "paramDocs": {
+        "string": "Source string",
+        "position": "Position of the character (1-based)"
+      }
+    },
+    "fill": {
+      "description": "Repeats a string up to the given length.",
+      "paramDocs": {
+        "string": "String to repeat",
+        "length": "Total length of the result"
+      }
+    },
+    "capit": {
+      "description": "Returns the string with its first letter capitalized.",
+      "paramDocs": {
+        "string": "Source string"
+      }
+    },
+    "delet": {
+      "description": "Deletes characters from a string.",
+      "paramDocs": {
+        "string": "Source string",
+        "start": "Start position (1-based)",
+        "length": "Number of characters to delete"
+      }
+    },
+    "insrt": {
+      "description": "Inserts a string at a position.",
+      "paramDocs": {
+        "insert": "String to insert",
+        "string": "Target string",
+        "position": "Insert position (1-based)"
+      }
+    },
+    "numbr": {
+      "description": "Converts a string into a number.",
+      "paramDocs": {
+        "string": "String to convert"
+      }
+    },
+    "expand": {
+      "description": "Expands variable references (%) inside a string.",
+      "paramDocs": {
+        "string": "String containing %variable% references"
+      }
+    },
+    "numbertostring": {
+      "description": "Converts a number into a string without formatting.",
+      "paramDocs": {
+        "number": "Number to convert"
+      }
+    },
+    "numbertostringex": {
+      "description": "Converts a number into a formatted string.",
+      "paramDocs": {
+        "number": "Number to convert",
+        "formatstring": "Format string (e.g. \"#,##0.00\")",
+        "decimalseparator": "Decimal separator",
+        "thousandsseparator": "Thousands separator"
+      }
+    },
+    "stringtonumber": {
+      "description": "Converts a string into a number.",
+      "paramDocs": {
+        "string": "String to convert"
+      }
+    },
+    "abs": {
+      "description": "Returns the absolute value.",
+      "paramDocs": {
+        "number": "Numeric value"
+      }
+    },
+    "int": {
+      "description": "Returns the integer part (rounded down).",
+      "paramDocs": {
+        "number": "Numeric value"
+      }
+    },
+    "round": {
+      "description": "Rounds a number to the given number of decimal places.",
+      "paramDocs": {
+        "number": "Number to round",
+        "decimals": "Number of decimal places"
+      }
+    },
+    "mod": {
+      "description": "Returns the remainder of a division.",
+      "paramDocs": {
+        "number": "Dividend",
+        "divisor": "Divisor"
+      }
+    },
+    "max": {
+      "description": "Returns the larger of two numbers.",
+      "paramDocs": {
+        "number1": "First number",
+        "number2": "Second number"
+      }
+    },
+    "min": {
+      "description": "Returns the smaller of two numbers.",
+      "paramDocs": {
+        "number1": "First number",
+        "number2": "Second number"
+      }
+    },
+    "power": {
+      "description": "Returns base raised to exponent.",
+      "paramDocs": {
+        "base": "Base",
+        "exponent": "Exponent"
+      }
+    },
+    "sqrt": {
+      "description": "Returns the square root.",
+      "paramDocs": {
+        "number": "Numeric value (≥ 0)"
+      }
+    },
+    "log": {
+      "description": "Returns the natural logarithm.",
+      "paramDocs": {
+        "number": "Numeric value (> 0)"
+      }
+    },
+    "log10": {
+      "description": "Returns the base-10 logarithm.",
+      "paramDocs": {
+        "number": "Numeric value (> 0)"
+      }
+    },
+    "exp": {
+      "description": "Returns e raised to the given number.",
+      "paramDocs": {
+        "number": "Exponent"
+      }
+    },
+    "rand": {
+      "description": "Returns a random number between 0 and 1."
+    },
+    "today": {
+      "description": "Returns the current date as a string.",
+      "paramDocs": {
+        "format": "Date format (e.g. \"DD-MM-YYYY\")"
+      }
+    },
+    "now": {
+      "description": "Returns date and time as a string.",
+      "paramDocs": {
+        "format": "Date format (e.g. \"DD-MM-YYYY HH:MM:SS\")"
+      }
+    },
+    "date": {
+      "description": "Converts a day number (since 1900-01-01) into a date.",
+      "paramDocs": {
+        "days": "Number of days since 1900-01-01",
+        "format": "Output format"
+      }
+    },
+    "dayno": {
+      "description": "Converts a date into a day number.",
+      "paramDocs": {
+        "datestring": "Date in the format DD/MM/YYYY or similar"
+      }
+    },
+    "timst": {
+      "description": "Formats a time value.",
+      "paramDocs": {
+        "time": "Time value",
+        "format": "Output format (e.g. \"HH:MM:SS\")"
+      }
+    },
+    "year": {
+      "description": "Returns the year of a date.",
+      "paramDocs": {
+        "datestring": "Date string"
+      }
+    },
+    "month": {
+      "description": "Returns the month (1–12) of a date.",
+      "paramDocs": {
+        "datestring": "Date string"
+      }
+    },
+    "day": {
+      "description": "Returns the day (1–31) of a date.",
+      "paramDocs": {
+        "datestring": "Date string"
+      }
+    },
+    "parsedate": {
+      "description": "Converts a date string into a serial date number. Pattern and index are optional.",
+      "paramDocs": {
+        "datestring": "Date string",
+        "pattern": "Format pattern (ICU syntax); empty = formatter default",
+        "index": "Index of a formatter created via NewDateFormatter (default 0)"
+      }
+    },
+    "dimsiz": {
+      "description": "Returns the number of elements in a dimension.",
+      "paramDocs": {
+        "dimensionname": "Name of the dimension"
+      }
+    },
+    "dimnm": {
+      "description": "Returns the name of the element at a given position.",
+      "paramDocs": {
+        "dimensionname": "Name of the dimension",
+        "index": "Position of the element (1-based)"
+      }
+    },
+    "dimix": {
+      "description": "Returns the position (index) of an element.",
+      "paramDocs": {
+        "dimensionname": "Name of the dimension",
+        "elementname": "Name of the element"
+      }
+    },
+    "dtype": {
+      "description": "Returns the type of an element (N=numeric, S=string, C=consolidated).",
+      "paramDocs": {
+        "dimensionname": "Name of the dimension",
+        "elementname": "Name of the element"
+      }
+    },
+    "dnlev": {
+      "description": "Returns the number of levels in a dimension.",
+      "paramDocs": {
+        "dimensionname": "Name of the dimension"
+      }
+    },
+    "dnxt": {
+      "description": "Returns the next element in the dimension.",
+      "paramDocs": {
+        "dimensionname": "Name of the dimension",
+        "elementname": "Current element"
+      }
+    },
+    "elpar": {
+      "description": "Returns the name of the parent element.",
+      "paramDocs": {
+        "dimensionname": "Name of the dimension",
+        "elementname": "Name of the element",
+        "parentindex": "Index of the parent element (1-based)"
+      }
+    },
+    "elparn": {
+      "description": "Returns the number of parent elements.",
+      "paramDocs": {
+        "dimensionname": "Name of the dimension",
+        "elementname": "Name of the element"
+      }
+    },
+    "ellev": {
+      "description": "Returns the level of an element.",
+      "paramDocs": {
+        "dimensionname": "Name of the dimension",
+        "elementname": "Name of the element"
+      }
+    },
+    "elcomp": {
+      "description": "Returns the name of a child element.",
+      "paramDocs": {
+        "dimensionname": "Name of the dimension",
+        "elementname": "Name of the parent element",
+        "childindex": "Index of the child element (1-based)"
+      }
+    },
+    "elcompn": {
+      "description": "Returns the number of child elements.",
+      "paramDocs": {
+        "dimensionname": "Name of the dimension",
+        "elementname": "Name of the parent element"
+      }
+    },
+    "elweight": {
+      "description": "Returns the weight of a child element.",
+      "paramDocs": {
+        "dimensionname": "Name of the dimension",
+        "parentname": "Name of the parent element",
+        "childname": "Name of the child element"
+      }
+    },
+    "elisanc": {
+      "description": "Tests whether AncestorName is an ancestor of ElementName. Returns 1 or 0.",
+      "paramDocs": {
+        "dimensionname": "Name of the dimension",
+        "elementname": "Name of the element",
+        "ancestorname": "Ancestor to test for"
+      }
+    },
+    "attrs": {
+      "description": "Returns a string attribute value.",
+      "paramDocs": {
+        "dimensionname": "Name of the dimension",
+        "elementname": "Name of the element",
+        "attributename": "Name of the attribute"
+      }
+    },
+    "attrn": {
+      "description": "Returns a numeric attribute value.",
+      "paramDocs": {
+        "dimensionname": "Name of the dimension",
+        "elementname": "Name of the element",
+        "attributename": "Name of the attribute"
+      }
+    },
+    "executeprocess": {
+      "description": "Runs another TI process.",
+      "paramDocs": {
+        "processname": "Name of the process to run",
+        "paramname": "Name of a parameter (optional)",
+        "paramvalue": "Value of the parameter"
+      }
+    },
+    "logoutput": {
+      "description": "Writes a message to the TM1 message log.",
+      "paramDocs": {
+        "severity": "Severity: 1=INFO, 2=WARN, 3=ERROR, 5=DEBUG",
+        "message": "Message to log"
+      }
+    },
+    "asciioutput": {
+      "description": "Writes values to an ASCII file.",
+      "paramDocs": {
+        "filename": "Target file (path on the server)",
+        "value1": "First value",
+        "valuen": "Further values"
+      }
+    },
+    "textoutput": {
+      "description": "Writes delimited values to a text file.",
+      "paramDocs": {
+        "filename": "Target file",
+        "value1": "First value",
+        "valuen": "Further values"
+      }
+    },
+    "savedataall": {
+      "description": "Saves all cube data to disk."
+    },
+    "getprocessname": {
+      "description": "Returns the name of the currently running process."
+    },
+    "isnumeric": {
+      "description": "Tests whether a string represents a valid number. Returns 1 or 0.",
+      "paramDocs": {
+        "string": "String to test"
+      }
+    },
+    "isundefined": {
+      "description": "Tests whether a value is undefined.",
+      "paramDocs": {
+        "value": "Value to test"
+      }
+    },
+    "dimensioncreate": {
+      "description": "Creates a new dimension.",
+      "paramDocs": {
+        "dimensionname": "Name of the dimension to create"
+      }
+    },
+    "subsetcreate": {
+      "description": "Creates a new subset.",
+      "paramDocs": {
+        "subsetname": "Name of the subset",
+        "dimensionname": "Name of the dimension"
+      }
+    },
+    "subsetelementadd": {
+      "description": "Adds an element to a subset.",
+      "paramDocs": {
+        "subsetname": "Name of the subset",
+        "dimensionname": "Name of the dimension",
+        "elementname": "Element to add"
+      }
+    },
+    "cubecreate": {
+      "description": "Creates a new cube.",
+      "paramDocs": {
+        "cubename": "Name of the cube",
+        "dim1": "Name of the first dimension",
+        "dimn": "Further dimensions"
+      }
+    },
+    "viewcreate": {
+      "description": "Creates a new view.",
+      "paramDocs": {
+        "cubename": "Name of the cube",
+        "viewname": "Name of the view"
+      }
+    },
+    "viewzeroout": {
+      "description": "Sets every cell inside a view to zero.",
+      "paramDocs": {
+        "cubename": "Name of the cube",
+        "viewname": "Name of the view"
+      }
+    },
+    "stringglobalvariable": {
+      "description": "Declares a global string variable.",
+      "paramDocs": {
+        "variablename": "Name of the global variable"
+      }
+    },
+    "numericglobalvariable": {
+      "description": "Declares a global numeric variable.",
+      "paramDocs": {
+        "variablename": "Name of the global variable"
+      }
+    },
+    "securityrefresh": {
+      "description": "Refreshes the security cache of the server."
+    }
+  }
+}

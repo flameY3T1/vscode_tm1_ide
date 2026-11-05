@@ -1,0 +1,181 @@
+{
+  "title": "Cube-Attribute (Task 3a)",
+  "entries": [
+    [
+      "cubeattrn",
+      {
+        "name": "CubeAttrN",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "cubeattrs",
+      {
+        "name": "CubeAttrS",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "cubeattrnl",
+      {
+        "name": "CubeAttrNL",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "cubeattrsl",
+      {
+        "name": "CubeAttrSL",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "cubeattrputn",
+      {
+        "name": "CubeAttrPutN",
+        "minParams": 3,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "Value",
+            "type": "numeric"
+          },
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "cubeattrputs",
+      {
+        "name": "CubeAttrPutS",
+        "minParams": 3,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "Value",
+            "type": "string"
+          },
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "cubeattrinsert",
+      {
+        "name": "CubeAttrInsert",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "PreviousAttributeName",
+            "type": "string"
+          },
+          {
+            "name": "NewAttributeName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeType",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "cubeattrdelete",
+      {
+        "name": "CubeAttrDelete",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "AttributeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

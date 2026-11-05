@@ -1,0 +1,108 @@
+{
+  "title": "Security/Client management",
+  "entries": [
+    [
+      "addclient",
+      {
+        "name": "AddClient",
+        "minParams": 1,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "User",
+            "type": "string"
+          },
+          {
+            "name": "Password",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "addgroup",
+      {
+        "name": "AddGroup",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Group",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "assignclientpassword",
+      {
+        "name": "AssignClientPassword",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "User",
+            "type": "string"
+          },
+          {
+            "name": "Password",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "deleteclient",
+      {
+        "name": "DeleteClient",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "User",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "deletegroup",
+      {
+        "name": "DeleteGroup",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Group",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "removeclientfromgroup",
+      {
+        "name": "RemoveClientFromGroup",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "User",
+            "type": "string"
+          },
+          {
+            "name": "Group",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

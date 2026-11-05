@@ -1,0 +1,129 @@
+{
+  "title": "DimensionCreate, ElementInsert etc",
+  "entries": [
+    [
+      "dimensioncreate",
+      {
+        "name": "DimensionCreate",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "subsetcreate",
+      {
+        "name": "SubsetCreate",
+        "minParams": 2,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          },
+          {
+            "name": "AsTemporary",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "cubecreate",
+      {
+        "name": "CubeCreate",
+        "minParams": 3,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Dim1",
+            "type": "string"
+          },
+          {
+            "name": "DimN",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "viewcreate",
+      {
+        "name": "ViewCreate",
+        "minParams": 2,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          },
+          {
+            "name": "AsTemporary",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "stringglobalvariable",
+      {
+        "name": "StringGlobalVariable",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "VariableName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "numericglobalvariable",
+      {
+        "name": "NumericGlobalVariable",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "VariableName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "securityrefresh",
+      {
+        "name": "SecurityRefresh",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

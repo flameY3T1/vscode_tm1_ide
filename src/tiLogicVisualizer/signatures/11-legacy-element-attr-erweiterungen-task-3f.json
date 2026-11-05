@@ -1,0 +1,245 @@
+{
+  "title": "Legacy / Element-Attr-Erweiterungen (Task 3f)",
+  "entries": [
+    [
+      "attrdelete",
+      {
+        "name": "AttrDelete",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "attrinsert",
+      {
+        "name": "AttrInsert",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "PreviousAttributeName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeType",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "attrnl",
+      {
+        "name": "AttrNL",
+        "minParams": 3,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "attrsl",
+      {
+        "name": "AttrSL",
+        "minParams": 3,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "elementattrnl",
+      {
+        "name": "ElementAttrNL",
+        "minParams": 4,
+        "maxParams": 5,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "elementattrsl",
+      {
+        "name": "ElementAttrSL",
+        "minParams": 4,
+        "maxParams": 5,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "elementattrputn",
+      {
+        "name": "ElementAttrPutN",
+        "minParams": 5,
+        "maxParams": 7,
+        "params": [
+          {
+            "name": "Value",
+            "type": "numeric"
+          },
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleOrPassSecurity",
+            "type": "any"
+          },
+          {
+            "name": "PassSecurity",
+            "type": "any"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "elementattrputs",
+      {
+        "name": "ElementAttrPutS",
+        "minParams": 5,
+        "maxParams": 7,
+        "params": [
+          {
+            "name": "Value",
+            "type": "string"
+          },
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleOrPassSecurity",
+            "type": "any"
+          },
+          {
+            "name": "PassSecurity",
+            "type": "any"
+          }
+        ],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

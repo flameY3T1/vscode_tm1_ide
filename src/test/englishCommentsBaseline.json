@@ -1,0 +1,13 @@
+{
+  "src/commands/cubeViewer/csv.ts": 1,
+  "src/commands/dimension/dimensionBrowserHandlers.ts": 1,
+  "src/commands/messageLogStartupPure.ts": 2,
+  "src/commands/processEditor/odbcPreviewPure.ts": 2,
+  "src/extension.ts": 1,
+  "src/messageLog/messageLogAnalysisPure.ts": 4,
+  "src/runState/runCancellableProcess.ts": 2,
+  "src/tiLogicVisualizer/tiLinter/rules/check-non-ascii-identifier.ts": 1,
+  "src/tm1Rest/transport/http.ts": 1,
+  "src/utils/serverText.ts": 1,
+  "src/webviewClient/cubeViewerMonaco/viewPickerPure.ts": 1
+}

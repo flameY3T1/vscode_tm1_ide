@@ -1,0 +1,235 @@
+{
+  "title": "Chore-Attribute (Task 3c)",
+  "entries": [
+    [
+      "choreattrn",
+      {
+        "name": "ChoreAttrN",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "ChoreName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "choreattrs",
+      {
+        "name": "ChoreAttrS",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "ChoreName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "choreattrnl",
+      {
+        "name": "ChoreAttrNL",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "ChoreName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "choreattrsl",
+      {
+        "name": "ChoreAttrSL",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "ChoreName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "choreattrputn",
+      {
+        "name": "ChoreAttrPutN",
+        "minParams": 3,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "Value",
+            "type": "numeric"
+          },
+          {
+            "name": "ChoreName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "choreattrputs",
+      {
+        "name": "ChoreAttrPutS",
+        "minParams": 3,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "Value",
+            "type": "string"
+          },
+          {
+            "name": "ChoreName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "processattrputn",
+      {
+        "name": "ProcessAttrPutN",
+        "minParams": 3,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "Value",
+            "type": "numeric"
+          },
+          {
+            "name": "ProcessName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "processattrputs",
+      {
+        "name": "ProcessAttrPutS",
+        "minParams": 3,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "Value",
+            "type": "string"
+          },
+          {
+            "name": "ProcessName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "choreattrinsert",
+      {
+        "name": "ChoreAttrInsert",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "PreviousAttributeName",
+            "type": "string"
+          },
+          {
+            "name": "NewAttributeName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeType",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "choreattrdelete",
+      {
+        "name": "ChoreAttrDelete",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "AttributeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

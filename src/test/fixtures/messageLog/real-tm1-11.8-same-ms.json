@@ -1,0 +1,218 @@
+[
+  {
+    "ID": 102115802,
+    "ThreadID": 6616,
+    "SessionID": 0,
+    "Level": "Info",
+    "TimeStamp": "2026-07-25T18:04:00.602Z",
+    "Logger": "TM1.Chore",
+    "Message": "Chore \"ttt\" finished executing"
+  },
+  {
+    "ID": 102115801,
+    "ThreadID": 6616,
+    "SessionID": 0,
+    "Level": "Info",
+    "TimeStamp": "2026-07-25T18:04:00.602Z",
+    "Logger": "TM1.Chore",
+    "Message": "Chore \"ttt\" time = 0.11 seconds"
+  },
+  {
+    "ID": 102115800,
+    "ThreadID": 6616,
+    "SessionID": 0,
+    "Level": "Info",
+    "TimeStamp": "2026-07-25T18:04:00.602Z",
+    "Logger": "TM1.Process",
+    "Message": "Prozess \"_test\":  Ausführung normal beendet, verstrichene Zeit 0.11 Sekunden"
+  },
+  {
+    "ID": 102115798,
+    "ThreadID": 6616,
+    "SessionID": 0,
+    "Level": "Info",
+    "TimeStamp": "2026-07-25T18:04:00.489Z",
+    "Logger": "TM1.Chore",
+    "Message": "Chore \"ttt\" executed by scheduler"
+  },
+  {
+    "ID": 102115799,
+    "ThreadID": 6616,
+    "SessionID": 0,
+    "Level": "Info",
+    "TimeStamp": "2026-07-25T18:04:00.489Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"_test\" executed by chore \"ttt\""
+  },
+  {
+    "ID": 102115769,
+    "ThreadID": 9492,
+    "SessionID": 498,
+    "Level": "Info",
+    "TimeStamp": "2026-07-25T13:54:29.609Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"}VSCode_CubeSaveData\" executed by user \"flameY3T1\""
+  },
+  {
+    "ID": 102115770,
+    "ThreadID": 9492,
+    "SessionID": 498,
+    "Level": "Info",
+    "TimeStamp": "2026-07-25T13:54:29.609Z",
+    "Logger": "TM1.Process",
+    "Message": "Prozess \"}VSCode_CubeSaveData\":  Ausführung normal beendet, verstrichene Zeit 0.00 Sekunden"
+  },
+  {
+    "ID": 102115684,
+    "ThreadID": 21676,
+    "SessionID": 372,
+    "Level": "Info",
+    "TimeStamp": "2026-07-23T19:55:12.109Z",
+    "Logger": "TM1.Process",
+    "Message": "Prozess \"## test1\":  Ausführung normal beendet, verstrichene Zeit 8.03 Sekunden"
+  },
+  {
+    "ID": 102115683,
+    "ThreadID": 21676,
+    "SessionID": 372,
+    "Level": "Info",
+    "TimeStamp": "2026-07-23T19:55:11.100Z",
+    "Logger": "TM1.Process",
+    "Message": "Prozess \"##sleep\":  Ausführung normal beendet, verstrichene Zeit 1.01 Sekunden"
+  },
+  {
+    "ID": 102115681,
+    "ThreadID": 21676,
+    "SessionID": 372,
+    "Level": "Info",
+    "TimeStamp": "2026-07-23T19:55:10.094Z",
+    "Logger": "TM1.Process",
+    "Message": "Prozess \"##sleep\":  Ausführung normal beendet, verstrichene Zeit 3.00 Sekunden"
+  },
+  {
+    "ID": 102115682,
+    "ThreadID": 21676,
+    "SessionID": 372,
+    "Level": "Info",
+    "TimeStamp": "2026-07-23T19:55:10.094Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"##sleep\" run from process \"## test1\" by user \"flameY3T1\""
+  },
+  {
+    "ID": 102115680,
+    "ThreadID": 21676,
+    "SessionID": 372,
+    "Level": "Info",
+    "TimeStamp": "2026-07-23T19:55:07.092Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"##sleep\" run from process \"## test1\" by user \"flameY3T1\""
+  },
+  {
+    "ID": 102115679,
+    "ThreadID": 21676,
+    "SessionID": 372,
+    "Level": "Info",
+    "TimeStamp": "2026-07-23T19:55:04.077Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"## test1\" executed by user \"flameY3T1\""
+  },
+  {
+    "ID": 102115671,
+    "ThreadID": 10784,
+    "SessionID": 372,
+    "Level": "Error",
+    "TimeStamp": "2026-07-23T19:52:28.129Z",
+    "Logger": "TM1.Process",
+    "Message": "Prozess \"##sleep\":  Ausführung wurde mit Fehlern beendet. Fehlerdatei: <TM1ProcessError_20260723195228_12510784_##sleep.log> : Ungültiger Schlüssel: Dimensionsname: \"Datenquellen\", Elementname (Schlüssel): \"\""
+  },
+  {
+    "ID": 102115672,
+    "ThreadID": 10784,
+    "SessionID": 372,
+    "Level": "Info",
+    "TimeStamp": "2026-07-23T19:52:28.129Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"##sleep\" run from process \"## test1\" by user \"flameY3T1\""
+  },
+  {
+    "ID": 102115670,
+    "ThreadID": 10784,
+    "SessionID": 372,
+    "Level": "Info",
+    "TimeStamp": "2026-07-23T19:52:26.114Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"##sleep\" run from process \"## test1\" by user \"flameY3T1\""
+  },
+  {
+    "ID": 102115669,
+    "ThreadID": 10784,
+    "SessionID": 372,
+    "Level": "Info",
+    "TimeStamp": "2026-07-23T19:52:21.102Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"## test1\" executed by user \"flameY3T1\""
+  },
+  {
+    "ID": 102115556,
+    "ThreadID": 9324,
+    "SessionID": 304,
+    "Level": "Info",
+    "TimeStamp": "2026-07-22T18:20:02.408Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"__s3_gxbd38\" executed by user \"tm1user\""
+  },
+  {
+    "ID": 102115557,
+    "ThreadID": 9324,
+    "SessionID": 304,
+    "Level": "Error",
+    "TimeStamp": "2026-07-22T18:20:02.408Z",
+    "Logger": "TM1.Process",
+    "Message": "Prozess \"__s3_gxbd38\": Fehler in Zeile 3\nUnerwartete Klammer\nElementAttrPutS('x','ac_smoke3','A','D3');: Der Prozess konnte nicht initialisiert werden"
+  },
+  {
+    "ID": 102115425,
+    "ThreadID": 25348,
+    "SessionID": 143,
+    "Level": "Info",
+    "TimeStamp": "2026-07-18T16:26:44.315Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"ZZ_MCP_LIVE_CHORE_PROC\" executed by chore \"ZZ_MCP_LIVE_CHORE_A\""
+  },
+  {
+    "ID": 102115424,
+    "ThreadID": 25348,
+    "SessionID": 143,
+    "Level": "Info",
+    "TimeStamp": "2026-07-18T16:26:44.315Z",
+    "Logger": "TM1.Chore",
+    "Message": "Chore \"ZZ_MCP_LIVE_CHORE_A\" executed by user \"tm1user\""
+  },
+  {
+    "ID": 102115427,
+    "ThreadID": 25348,
+    "SessionID": 143,
+    "Level": "Info",
+    "TimeStamp": "2026-07-18T16:26:44.315Z",
+    "Logger": "TM1.Chore",
+    "Message": "Chore \"ZZ_MCP_LIVE_CHORE_A\" finished executing"
+  },
+  {
+    "ID": 102115415,
+    "ThreadID": 18472,
+    "SessionID": 139,
+    "Level": "Info",
+    "TimeStamp": "2026-07-18T16:26:42.234Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"ZZ_MCP_LIVE_PROC_A\" executed by user \"tm1user\""
+  },
+  {
+    "ID": 102115416,
+    "ThreadID": 18472,
+    "SessionID": 139,
+    "Level": "Info",
+    "TimeStamp": "2026-07-18T16:26:42.234Z",
+    "Logger": "TM1.Process",
+    "Message": "Prozess \"ZZ_MCP_LIVE_PROC_A\":  Ausführung normal beendet, verstrichene Zeit 0.00 Sekunden"
+  }
+]

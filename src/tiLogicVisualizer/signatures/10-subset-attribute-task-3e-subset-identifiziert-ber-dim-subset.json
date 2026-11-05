@@ -1,0 +1,213 @@
+{
+  "title": "Subset-Attribute (Task 3e) — Subset identifiziert über Dim + Subset",
+  "entries": [
+    [
+      "subsetattrn",
+      {
+        "name": "SubsetAttrN",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "subsetattrs",
+      {
+        "name": "SubsetAttrS",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "subsetattrnl",
+      {
+        "name": "SubsetAttrNL",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "subsetattrsl",
+      {
+        "name": "SubsetAttrSL",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "subsetattrputn",
+      {
+        "name": "SubsetAttrPutN",
+        "minParams": 4,
+        "maxParams": 5,
+        "params": [
+          {
+            "name": "Value",
+            "type": "numeric"
+          },
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "subsetattrputs",
+      {
+        "name": "SubsetAttrPutS",
+        "minParams": 4,
+        "maxParams": 5,
+        "params": [
+          {
+            "name": "Value",
+            "type": "string"
+          },
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "subsetattrinsert",
+      {
+        "name": "SubsetAttrInsert",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "PreviousAttributeName",
+            "type": "string"
+          },
+          {
+            "name": "NewAttributeName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeType",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "subsetattrdelete",
+      {
+        "name": "SubsetAttrDelete",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "title": "Legacy short-form element functions",
+  "entries": [
+    [
+      "elispar",
+      {
+        "name": "ELISPAR",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "ParentName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ]
+  ]
+}

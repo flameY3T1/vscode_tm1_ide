@@ -1,0 +1,121 @@
+{
+  "title": "Attribute functions",
+  "entries": [
+    [
+      "attrs",
+      {
+        "name": "ATTRS",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "attrn",
+      {
+        "name": "ATTRN",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "attrputs",
+      {
+        "name": "AttrPutS",
+        "minParams": 4,
+        "maxParams": 6,
+        "params": [
+          {
+            "name": "Value",
+            "type": "string"
+          },
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleOrPassSecurity",
+            "type": "any"
+          },
+          {
+            "name": "PassSecurity",
+            "type": "any"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "attrputn",
+      {
+        "name": "AttrPutN",
+        "minParams": 4,
+        "maxParams": 6,
+        "params": [
+          {
+            "name": "Value",
+            "type": "numeric"
+          },
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "LocaleOrPassSecurity",
+            "type": "any"
+          },
+          {
+            "name": "PassSecurity",
+            "type": "any"
+          }
+        ],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

@@ -1,0 +1,5 @@
+# Verified false positives (2026-10-31): description text, fake test ciphertext, identifiers.
+package.nls.de.json:generic-api-key:50
+src/test/passwordNeverPersisted.test.ts:generic-api-key:21
+src/tiLogicVisualizer/tiLinter/versionCompatPure.ts:generic-api-key:47
+src/webviews/columnWidthStore.ts:generic-api-key:10

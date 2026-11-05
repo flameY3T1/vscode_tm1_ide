@@ -1,0 +1,248 @@
+{
+  "title": "Hierarchy Element (Task 1c)",
+  "entries": [
+    [
+      "hierarchyelementexists",
+      {
+        "name": "HierarchyElementExists",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "hierarchyelementdeletedirect",
+      {
+        "name": "HierarchyElementDeleteDirect",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "hierarchyelementinsertdirect",
+      {
+        "name": "HierarchyElementInsertDirect",
+        "minParams": 5,
+        "maxParams": 5,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "InsertionPoint",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "ElementType",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "hierarchyelementprincipalname",
+      {
+        "name": "HierarchyElementPrincipalName",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "hierarchyelementcomponentadddirect",
+      {
+        "name": "HierarchyElementComponentAddDirect",
+        "minParams": 5,
+        "maxParams": 5,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ParentName",
+            "type": "string"
+          },
+          {
+            "name": "ChildName",
+            "type": "string"
+          },
+          {
+            "name": "Weight",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "hierarchyelementcomponentdelete",
+      {
+        "name": "HierarchyElementComponentDelete",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ParentName",
+            "type": "string"
+          },
+          {
+            "name": "ChildName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "hierarchyelementcomponentdeletedirect",
+      {
+        "name": "HierarchyElementComponentDeleteDirect",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ParentName",
+            "type": "string"
+          },
+          {
+            "name": "ChildName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "hierarchyelementsecurityget",
+      {
+        "name": "HierarchyElementSecurityGet",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "GroupName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "hierarchyelementsecurityput",
+      {
+        "name": "HierarchyElementSecurityPut",
+        "minParams": 5,
+        "maxParams": 5,
+        "params": [
+          {
+            "name": "Level",
+            "type": "string"
+          },
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "GroupName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

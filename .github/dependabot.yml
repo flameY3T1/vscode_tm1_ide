@@ -1,0 +1,86 @@
+version: 2
+
+# Grouping strategy: minor+patch bumps are batched into one PR per dependency
+# class so the maintainer reviews two PRs a week instead of twenty. Major bumps
+# are deliberately left OUT of every group — they arrive as individual PRs
+# because they need their own changelog read and their own test run.
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      # Build/test tooling (esbuild, vitest, eslint, typescript, knip, …).
+      dev-dependencies:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+      # Actually ships inside the bundle: marked, jszip, http(s)-proxy-agent.
+      production-dependencies:
+        dependency-type: production
+        update-types:
+          - minor
+          - patch
+      # vitest and its coverage plugin move only together: coverage-v8 5 alone
+      # failed CI against vitest 4.
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+        update-types:
+          - major
+    # Checked and rejected (2026-08-30, vsce/ovsx 2026-11-04), see CONTRIBUTING.md. Bump these by hand.
+    ignore:
+      # 18 needs Node ^22||^24||>=26; CI and VS Code run on Node 20.
+      - dependency-name: dependency-cruiser
+        update-types: ["version-update:semver-major"]
+      # Coupled to the runtime: higher types accept APIs Node 20 does not have.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # Coupled to engines.vscode, raised together with it.
+      - dependency-name: "@types/vscode"
+      # eslint, @eslint/js and typescript-eslint only jump together.
+      - dependency-name: eslint
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@eslint/js"
+        update-types: ["version-update:semver-major"]
+      # vsce 4 and ovsx 1.2+ need Node >=22; release.yml packages and publishes on Node 20.
+      - dependency-name: "@vscode/vsce"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: ovsx
+        versions: [">=1.2.0"]
+      # vitest 5 and test-electron 3 need Node >=22; CI and VS Code run on Node 20 (2026-11-05).
+      - dependency-name: vitest
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@vitest/*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@vscode/test-electron"
+        update-types: ["version-update:semver-major"]
+      # 7 conflicts with typescript-eslint 8 (ERESOLVE); moves with the eslint toolchain.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+      # 0.56 moved its type layout; needs a module-resolution switch.
+      - dependency-name: monaco-editor
+        versions: [">=0.56.0"]
+    commit-message:
+      prefix: chore(deps)
+      prefix-development: chore(deps-dev)
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+    commit-message:
+      prefix: ci(deps)

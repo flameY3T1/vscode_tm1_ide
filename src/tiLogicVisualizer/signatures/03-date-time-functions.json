@@ -1,0 +1,147 @@
+{
+  "title": "Date/time functions",
+  "entries": [
+    [
+      "today",
+      {
+        "name": "TODAY",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Format",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "now",
+      {
+        "name": "NOW",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "date",
+      {
+        "name": "DATE",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "Days",
+            "type": "numeric"
+          },
+          {
+            "name": "Format",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "dayno",
+      {
+        "name": "DAYNO",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "DateString",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "timst",
+      {
+        "name": "TIMST",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "Time",
+            "type": "numeric"
+          },
+          {
+            "name": "Format",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "year",
+      {
+        "name": "YEAR",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "DateString",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "month",
+      {
+        "name": "MONTH",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "DateString",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "day",
+      {
+        "name": "DAY",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "DateString",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "timvl",
+      {
+        "name": "TIMVL",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "Index",
+            "type": "numeric"
+          },
+          {
+            "name": "DateString",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ]
+  ]
+}

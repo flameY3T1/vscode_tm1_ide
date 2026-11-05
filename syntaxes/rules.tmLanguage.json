@@ -1,0 +1,101 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "TM1 Rules",
+  "scopeName": "source.tm1rules",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#section-keywords" },
+    { "include": "#rule-type-prefix" },
+    { "include": "#feeder-operator" },
+    { "include": "#cell-references" },
+    { "include": "#db-function" },
+    { "include": "#control-flow" },
+    { "include": "#builtin-functions" },
+    { "include": "#operators" },
+    { "include": "#numbers" },
+    { "include": "#identifiers" }
+  ],
+  "repository": {
+    "comments": {
+      "name": "comment.line.number-sign.tm1rules",
+      "match": "#.*$"
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.single.tm1rules",
+          "begin": "'",
+          "end": "'",
+          "patterns": [{ "name": "constant.character.escape.tm1rules", "match": "''" }]
+        },
+        {
+          "name": "string.quoted.double.tm1rules",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [{ "name": "constant.character.escape.tm1rules", "match": "\"\"" }]
+        }
+      ]
+    },
+    "section-keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.section.tm1rules",
+          "match": "(?i)\\b(SKIPCHECK|FEEDSTRINGS|UNDEFVALS|FEEDERS)\\s*;"
+        }
+      ]
+    },
+    "rule-type-prefix": {
+      "name": "storage.type.rule.tm1rules",
+      "match": "(?<==\\s*)[CNS]:"
+    },
+    "feeder-operator": {
+      "name": "keyword.operator.feeder.tm1rules",
+      "match": "=>"
+    },
+    "cell-references": {
+      "name": "variable.other.cell-ref.tm1rules",
+      "match": "\\[(?:[^\\]]*?)\\]"
+    },
+    "db-function": {
+      "name": "support.function.db.tm1rules",
+      "match": "(?i)\\bDB(?=\\s*\\()"
+    },
+    "control-flow": {
+      "name": "keyword.control.tm1rules",
+      "match": "(?i)\\b(IF|ELSE|ELSEIF|ENDIF)\\b"
+    },
+    "builtin-functions": {
+      "patterns": [
+        {
+          "name": "support.function.math.tm1rules",
+          "match": "(?i)\\b(INT|ROUND|ABS|MOD|MAX|MIN|POWER|EXP|LOG|LOG10|SQRT|SIN|COS|TAN|RAND)(?=\\s*\\()"
+        },
+        {
+          "name": "support.function.string.tm1rules",
+          "match": "(?i)\\b(STR|TRIM|LONG|SCAN|SUBST|UPPER|LOWER|CHAR|CODE|FILL|CAPIT|DELET|INSRT|NUMBR|NumberToString|StringToNumber|Expand)(?=\\s*\\()"
+        },
+        {
+          "name": "support.function.dimension.tm1rules",
+          "match": "(?i)\\b(ATTRS|ATTRN|ATTRE|DIMSIZ|DIMNM|DIMIX|DTYPE|DNLEV|DNXT|ELPAR|ELPARN|ELCOMP|ELCOMPN|ELWEIGHT|ELLEV|ELISANC|ELISPAR|ElementIndex|ElementName|ElementLevel|ElementComponent|ElementComponentCount|ElementWeight|ElementType|ElementParent|ElementParentCount|ElementAttrN|ElementAttrS)(?=\\s*\\()"
+        },
+        {
+          "name": "support.function.check.tm1rules",
+          "match": "(?i)\\b(ISUNDEFINED|ISNUMERIC|ISVALID|NOW|TODAY|DATE|TIME|DAYNO|MONTH|YEAR|DAY|HOUR|MINUTE|SECOND|TIMST|NValue|SValue)(?=\\s*\\()"
+        }
+      ]
+    },
+    "operators": {
+      "name": "keyword.operator.tm1rules",
+      "match": "(<>|<=|>=|<|>|=|\\+|-|\\*|\\/|@|&)"
+    },
+    "numbers": {
+      "name": "constant.numeric.tm1rules",
+      "match": "\\b[0-9]+(\\.[0-9]+)?\\b"
+    },
+    "identifiers": {
+      "name": "variable.other.tm1rules",
+      "match": "!?[a-zA-Z_][a-zA-Z0-9_]*"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  // Typecheck-only project for the vitest suite (excluded from the root tsconfig).
+  // Strictness = root ("strict": true inherited), no relaxations.
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "../..",
+    "noEmit": true,
+    // DOM: tests import src/webviewClient/** modules which use browser globals
+    // (the webviewClient project itself compiles with lib ES2020+DOM).
+    "lib": ["ES2020", "DOM"],
+    "types": ["node", "vitest/globals"],
+    "skipLibCheck": true
+  },
+  // ../types/*.d.ts: ambient module shims (http(s)-proxy-agent) that the root
+  // project picks up via its broad include but this dir-scoped include misses.
+  "include": ["**/*.ts", "../types/*.d.ts"],
+  "exclude": []
+}

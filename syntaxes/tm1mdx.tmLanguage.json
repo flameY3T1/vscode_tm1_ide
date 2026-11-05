@@ -1,0 +1,22 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "TM1 MDX",
+  "scopeName": "source.tm1mdx",
+  "patterns": [
+    { "name": "comment.block.mdx", "begin": "/\\*", "end": "\\*/" },
+    { "name": "comment.line.mdx", "match": "(--|//).*$" },
+    { "name": "string.quoted.double.mdx", "match": "\"(?:\"\"|[^\"])*\"" },
+    { "name": "string.quoted.single.mdx", "match": "'(?:''|[^'])*'" },
+    { "name": "constant.numeric.mdx", "match": "\\b\\d+(?:\\.\\d+)?\\b" },
+    { "name": "variable.other.member.mdx", "match": "\\[[^\\]]*\\]" },
+    {
+      "name": "keyword.control.mdx",
+      "match": "(?i)\\b(SELECT|FROM|WHERE|WITH|AS|ON|COLUMNS|ROWS|PAGES|CHAPTERS|SECTIONS|AXIS|NON|EMPTY|NOT|AND|OR|XOR|SET|MEMBER|CASE|WHEN|THEN|ELSE|END|IS|NULL)\\b"
+    },
+    {
+      "name": "support.function.mdx",
+      "match": "(?i)\\b(MEMBERS|CHILDREN|DESCENDANTS|ANCESTORS|ANCESTOR|PARENT|HIERARCHIZE|ORDER|FILTER|DISTINCT|GENERATE|CROSSJOIN|UNION|INTERSECT|EXCEPT|EXISTS|LEAVES|HEAD|TAIL|SUBSET|ITEM|BOTTOMCOUNT|BOTTOMPERCENT|BOTTOMSUM|TOPCOUNT|TOPPERCENT|TOPSUM|DRILLDOWNLEVEL|DRILLUPMEMBER|DRILLDOWNMEMBER|TM1SUBSETALL|TM1FILTERBYLEVEL|TM1FILTERBYPATTERN|TM1SUBSETTOSET|TM1DRILLDOWNMEMBER|ELEMENT|ROLLUP|SUM|AVG|MIN|MAX|COUNT|MEDIAN|AGGREGATE|YTD|QTD|MTD|WTD|PARALLELPERIOD|LAG|LEAD|PERIODSTODATE|CLOSINGPERIOD|OPENINGPERIOD|IIF|PROPERTIES|CURRENTMEMBER|DEFAULTMEMBER|DIMENSION|HIERARCHY|LEVEL|LEVELS)\\b"
+    },
+    { "name": "keyword.operator.mdx", "match": "[=<>!+\\-*/:]+" }
+  ]
+}

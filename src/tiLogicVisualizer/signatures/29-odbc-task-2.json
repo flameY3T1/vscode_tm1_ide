@@ -1,0 +1,58 @@
+{
+  "title": "ODBC (Task 2)",
+  "entries": [
+    [
+      "getprocesserrorfiledirectory",
+      {
+        "name": "GetProcessErrorFileDirectory",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string"
+      }
+    ],
+    [
+      "servershutdown",
+      {
+        "name": "ServerShutdown",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "batchupdatestart",
+      {
+        "name": "BatchUpdateStart",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "processreturncode",
+      {
+        "name": "ProcessReturnCode",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "returntablehandle",
+      {
+        "name": "ReturnTableHandle",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric",
+        "v12Only": true
+      }
+    ]
+  ]
+}

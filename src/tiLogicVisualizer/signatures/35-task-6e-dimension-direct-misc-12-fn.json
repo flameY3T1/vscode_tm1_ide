@@ -1,0 +1,244 @@
+{
+  "title": "Task 6e — Dimension-Direct + Misc (12 Fn)",
+  "entries": [
+    [
+      "dimensiondeleteelements",
+      {
+        "name": "DimensionDeleteElements",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "Elements",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "dimensionelementcomponentadddirect",
+      {
+        "name": "DimensionElementComponentAddDirect",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ParentName",
+            "type": "string"
+          },
+          {
+            "name": "ChildName",
+            "type": "string"
+          },
+          {
+            "name": "Weight",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "dimensionelementcomponentdeletedirect",
+      {
+        "name": "DimensionElementComponentDeleteDirect",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ParentName",
+            "type": "string"
+          },
+          {
+            "name": "ChildName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "dimensionelementdeletedirect",
+      {
+        "name": "DimensionElementDeleteDirect",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "dimensionelementinsertdirect",
+      {
+        "name": "DimensionElementInsertDirect",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "InsertionPoint",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "ElementType",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "dimensionelementprincipalname",
+      {
+        "name": "DimensionElementPrincipalName",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "dimensionhierarchycreate",
+      {
+        "name": "DimensionHierarchyCreate",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "dimensiontimelastupdated",
+      {
+        "name": "DimensionTimeLastUpdated",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "dimensiontopelementinsert",
+      {
+        "name": "DimensionTopElementInsert",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "ElementType",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "dimensiontopelementinsertdirect",
+      {
+        "name": "DimensionTopElementInsertDirect",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "ElementType",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "dimensionupdatedirect",
+      {
+        "name": "DimensionUpdateDirect",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "deleteallpersistentfeeders",
+      {
+        "name": "DeleteAllPersistentFeeders",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

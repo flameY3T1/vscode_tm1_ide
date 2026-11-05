@@ -1,0 +1,660 @@
+{
+  "TI process template (.pro)": {
+    "prefix": [
+      "protemplate",
+      "Vorlage_TI"
+    ],
+    "body": [
+      "601,100",
+      "602,\"${1:ProcessName}\"",
+      "562,\"NULL\"",
+      "586,",
+      "585,",
+      "564,",
+      "565,",
+      "559,1",
+      "928,0",
+      "593,",
+      "594,",
+      "595,",
+      "597,",
+      "598,",
+      "596,",
+      "800,",
+      "801,",
+      "566,0",
+      "567,\",\"",
+      "588,\".\"",
+      "589,\",\"",
+      "568,\"\\\"\"",
+      "570,",
+      "571,",
+      "569,0",
+      "592,0",
+      "599,1000",
+      "560,0",
+      "561,0",
+      "590,0",
+      "637,0",
+      "577,0",
+      "578,0",
+      "579,0",
+      "580,0",
+      "581,0",
+      "582,0",
+      "603,0",
+      "572,4",
+      "#****Begin: Generated Statements***",
+      "#****End: Generated Statements****",
+      "",
+      "${2:# Prolog}",
+      "573,4",
+      "#****Begin: Generated Statements***",
+      "#****End: Generated Statements****",
+      "",
+      "${3:# Metadata}",
+      "574,4",
+      "#****Begin: Generated Statements***",
+      "#****End: Generated Statements****",
+      "",
+      "${4:# Data}",
+      "575,4",
+      "#****Begin: Generated Statements***",
+      "#****End: Generated Statements****",
+      "",
+      "${5:# Epilog}",
+      "576,CubeAction=1511DataAction=1503CubeLogChanges=0",
+      "930,0",
+      "638,1",
+      "804,0",
+      "1217,1"
+    ],
+    "description": "Native TM1 .pro file template"
+  },
+  "IF Block": {
+    "prefix": "if",
+    "body": [
+      "IF($1);",
+      "\t$2",
+      "ELSEIF($3);",
+      "\t$4",
+      "ELSE;",
+      "\t$5",
+      "ENDIF;"
+    ],
+    "description": "IF / ELSEIF / ELSE / ENDIF"
+  },
+  "IF simple": {
+    "prefix": "ifs",
+    "body": [
+      "IF($1);",
+      "\t$2",
+      "ENDIF;"
+    ],
+    "description": "IF / ENDIF"
+  },
+  "WHILE Loop": {
+    "prefix": "while",
+    "body": [
+      "WHILE($1);",
+      "\t$2",
+      "END;"
+    ],
+    "description": "WHILE / END"
+  },
+  "ABS": {
+    "prefix": "ABS",
+    "body": "ABS(${1:number})",
+    "description": "ABS(number)"
+  },
+  "INT": {
+    "prefix": "INT",
+    "body": "INT(${1:number})",
+    "description": "INT(number)"
+  },
+  "MOD": {
+    "prefix": "MOD",
+    "body": "MOD(${1:dividend}, ${2:divisor})",
+    "description": "MOD(dividend, divisor)"
+  },
+  "POWER": {
+    "prefix": "POWER",
+    "body": "POWER(${1:base}, ${2:exponent})",
+    "description": "POWER(base, exponent)"
+  },
+  "SQRT": {
+    "prefix": "SQRT",
+    "body": "SQRT(${1:number})",
+    "description": "SQRT(number)"
+  },
+  "MAX": {
+    "prefix": "MAX",
+    "body": "MAX(${1:num1}, ${2:num2})",
+    "description": "MAX(num1, num2)"
+  },
+  "MIN": {
+    "prefix": "MIN",
+    "body": "MIN(${1:num1}, ${2:num2})",
+    "description": "MIN(num1, num2)"
+  },
+  "ROUND": {
+    "prefix": "ROUND",
+    "body": "ROUND(${1:number}, ${2:decimals})",
+    "description": "ROUND(number, decimals)"
+  },
+  "LOG": {
+    "prefix": "LOG",
+    "body": "LOG(${1:number})",
+    "description": "LOG(number) — natural logarithm"
+  },
+  "EXP": {
+    "prefix": "EXP",
+    "body": "EXP(${1:number})",
+    "description": "EXP(number)"
+  },
+  "RAND": {
+    "prefix": "RAND",
+    "body": "RAND()",
+    "description": "RAND() — random number between 0 and 1"
+  },
+  "NUMBR": {
+    "prefix": "NUMBR",
+    "body": "NUMBR(${1:string})",
+    "description": "NUMBR(string) — string to number"
+  },
+  "STR": {
+    "prefix": "STR",
+    "body": "STR(${1:number}, ${2:length}, ${3:decimals})",
+    "description": "STR(number, length, decimals)"
+  },
+  "SUBST": {
+    "prefix": "SUBST",
+    "body": "SUBST(${1:string}, ${2:start}, ${3:length})",
+    "description": "SUBST(string, start, length)"
+  },
+  "LONG": {
+    "prefix": "LONG",
+    "body": "LONG(${1:string})",
+    "description": "LONG(string) — length"
+  },
+  "TRIM": {
+    "prefix": "TRIM",
+    "body": "TRIM(${1:string})",
+    "description": "TRIM(string)"
+  },
+  "UPPER": {
+    "prefix": "UPPER",
+    "body": "UPPER(${1:string})",
+    "description": "UPPER(string)"
+  },
+  "LOWER": {
+    "prefix": "LOWER",
+    "body": "LOWER(${1:string})",
+    "description": "LOWER(string)"
+  },
+  "SCAN": {
+    "prefix": "SCAN",
+    "body": "SCAN(${1:substring}, ${2:string})",
+    "description": "SCAN(substring, string)"
+  },
+  "CHAR": {
+    "prefix": "CHAR",
+    "body": "CHAR(${1:number})",
+    "description": "CHAR(number) — ASCII character"
+  },
+  "CODE": {
+    "prefix": "CODE",
+    "body": "CODE(${1:string}, ${2:position})",
+    "description": "CODE(string, position) — ASCII value"
+  },
+  "FILL": {
+    "prefix": "FILL",
+    "body": "FILL(${1:string}, ${2:length})",
+    "description": "FILL(string, length)"
+  },
+  "EXPAND": {
+    "prefix": "EXPAND",
+    "body": "EXPAND(${1:string})",
+    "description": "EXPAND(string)"
+  },
+  "CAPIT": {
+    "prefix": "CAPIT",
+    "body": "CAPIT(${1:string})",
+    "description": "CAPIT(string) — capitalize the first letter"
+  },
+  "DELET": {
+    "prefix": "DELET",
+    "body": "DELET(${1:string}, ${2:start}, ${3:length})",
+    "description": "DELET(string, start, length)"
+  },
+  "INSRT": {
+    "prefix": "INSRT",
+    "body": "INSRT(${1:string1}, ${2:string2}, ${3:position})",
+    "description": "INSRT(string1, string2, position)"
+  },
+  "NOW": {
+    "prefix": "NOW",
+    "body": "NOW(${1:1})",
+    "description": "NOW(format)"
+  },
+  "TODAY": {
+    "prefix": "TODAY",
+    "body": "TODAY(${1:1})",
+    "description": "TODAY(format)"
+  },
+  "TIME": {
+    "prefix": "TIME",
+    "body": "TIME()",
+    "description": "TIME()"
+  },
+  "TIMST": {
+    "prefix": "TIMST",
+    "body": "TIMST(${1:date}, ${2:'\\\\Y-\\\\m-\\\\d'})",
+    "description": "TIMST(date, format)"
+  },
+  "DAYNO": {
+    "prefix": "DAYNO",
+    "body": "DAYNO(${1:date})",
+    "description": "DAYNO(date) — day number"
+  },
+  "DATE": {
+    "prefix": "DATE",
+    "body": "DATE(${1:days}, ${2:'\\\\Y-\\\\m-\\\\d'})",
+    "description": "DATE(days, format) — day number to date string"
+  },
+  "YEAR": {
+    "prefix": "YEAR",
+    "body": "YEAR(${1:date})",
+    "description": "YEAR(date)"
+  },
+  "MONTH": {
+    "prefix": "MONTH",
+    "body": "MONTH(${1:date})",
+    "description": "MONTH(date)"
+  },
+  "DAY": {
+    "prefix": "DAY",
+    "body": "DAY(${1:date})",
+    "description": "DAY(date)"
+  },
+  "DIMSIZ": {
+    "prefix": "DIMSIZ",
+    "body": "DIMSIZ(${1:dimension})",
+    "description": "DIMSIZ(dimension) — number of elements"
+  },
+  "DIMNM": {
+    "prefix": "DIMNM",
+    "body": "DIMNM(${1:dimension}, ${2:index})",
+    "description": "DIMNM(dimension, index) — element name by index"
+  },
+  "DIMIX": {
+    "prefix": "DIMIX",
+    "body": "DIMIX(${1:dimension}, ${2:element})",
+    "description": "DIMIX(dimension, element) — index of an element"
+  },
+  "DTYPE": {
+    "prefix": "DTYPE",
+    "body": "DTYPE(${1:dimension}, ${2:element})",
+    "description": "DTYPE(dimension, element) — element type (N/C/S)"
+  },
+  "DNLEV": {
+    "prefix": "DNLEV",
+    "body": "DNLEV(${1:dimension})",
+    "description": "DNLEV(dimension) — number of levels"
+  },
+  "DNXT": {
+    "prefix": "DNXT",
+    "body": "DNXT(${1:dimension}, ${2:element})",
+    "description": "DNXT(dimension, element) — next element"
+  },
+  "ELPAR": {
+    "prefix": "ELPAR",
+    "body": "ELPAR(${1:dimension}, ${2:element}, ${3:parentIndex})",
+    "description": "ELPAR(dimension, element, parentIndex) — parent name"
+  },
+  "ELPARN": {
+    "prefix": "ELPARN",
+    "body": "ELPARN(${1:dimension}, ${2:element})",
+    "description": "ELPARN(dimension, element) — number of parents"
+  },
+  "ELCOMP": {
+    "prefix": "ELCOMP",
+    "body": "ELCOMP(${1:dimension}, ${2:element}, ${3:childIndex})",
+    "description": "ELCOMP(dimension, element, childIndex) — child name"
+  },
+  "ELCOMPN": {
+    "prefix": "ELCOMPN",
+    "body": "ELCOMPN(${1:dimension}, ${2:element})",
+    "description": "ELCOMPN(dimension, element) — number of children"
+  },
+  "ELWEIGHT": {
+    "prefix": "ELWEIGHT",
+    "body": "ELWEIGHT(${1:dimension}, ${2:parent}, ${3:component})",
+    "description": "ELWEIGHT(dimension, parent, component) — weight"
+  },
+  "ELLEV": {
+    "prefix": "ELLEV",
+    "body": "ELLEV(${1:dimension}, ${2:element})",
+    "description": "ELLEV(dimension, element) — level"
+  },
+  "ELISANC": {
+    "prefix": "ELISANC",
+    "body": "ELISANC(${1:dimension}, ${2:element1}, ${3:element2})",
+    "description": "ELISANC(dimension, element1, element2) — 1 if element1 is an ancestor of element2"
+  },
+  "ATTRS": {
+    "prefix": "ATTRS",
+    "body": "ATTRS(${1:dimension}, ${2:element}, ${3:attribute})",
+    "description": "ATTRS(dimension, element, attribute) — read a string attribute"
+  },
+  "ATTRN": {
+    "prefix": "ATTRN",
+    "body": "ATTRN(${1:dimension}, ${2:element}, ${3:attribute})",
+    "description": "ATTRN(dimension, element, attribute) — read a numeric attribute"
+  },
+  "AttributeGet (S)": {
+    "prefix": "AttributeGetS",
+    "body": "${1:vValue} = ATTRS('${2:dimension}', '${3:element}', '${4:attribute}');",
+    "description": "ATTRS — read a string attribute"
+  },
+  "AttributeGet (N)": {
+    "prefix": "AttributeGetN",
+    "body": "${1:vValue} = ATTRN('${2:dimension}', '${3:element}', '${4:attribute}');",
+    "description": "ATTRN — read a numeric attribute"
+  },
+  "CellGetN": {
+    "prefix": "CellGetN",
+    "body": "${1:vValue} = CellGetN('${2:cube}'${3:, 'el1', 'el2'});",
+    "description": "CellGetN(cube, el1, ...) — read a number from a cell"
+  },
+  "CellGetS": {
+    "prefix": "CellGetS",
+    "body": "${1:vValue} = CellGetS('${2:cube}'${3:, 'el1', 'el2'});",
+    "description": "CellGetS(cube, el1, ...) — read a string from a cell"
+  },
+  "CellPutN": {
+    "prefix": "CellPutN",
+    "body": "CellPutN(${1:value}, '${2:cube}'${3:, 'el1', 'el2'});",
+    "description": "CellPutN(value, cube, el1, ...) — write a number"
+  },
+  "CellPutS": {
+    "prefix": "CellPutS",
+    "body": "CellPutS('${1:value}', '${2:cube}'${3:, 'el1', 'el2'});",
+    "description": "CellPutS(value, cube, el1, ...) — write a string"
+  },
+  "CubeExists": {
+    "prefix": "CubeExists",
+    "body": "CubeExists('${1:cube}')",
+    "description": "CubeExists(cube)"
+  },
+  "CubeCreate": {
+    "prefix": "CubeCreate",
+    "body": "CubeCreate('${1:cube}'${2:, 'dim1', 'dim2'});",
+    "description": "CubeCreate(cube, dim1, dim2, ...)"
+  },
+  "CubeDestroy": {
+    "prefix": "CubeDestroy",
+    "body": "CubeDestroy('${1:cube}');",
+    "description": "CubeDestroy(cube)"
+  },
+  "CubeClearData": {
+    "prefix": "CubeClearData",
+    "body": "CubeClearData('${1:cube}');",
+    "description": "CubeClearData(cube)"
+  },
+  "DimensionExists": {
+    "prefix": "DimensionExists",
+    "body": "DimensionExists('${1:dimension}')",
+    "description": "DimensionExists(dimension)"
+  },
+  "DimensionCreate": {
+    "prefix": "DimensionCreate",
+    "body": "DimensionCreate('${1:dimension}');",
+    "description": "DimensionCreate(dimension)"
+  },
+  "DimensionDestroy": {
+    "prefix": "DimensionDestroy",
+    "body": "DimensionDestroy('${1:dimension}');",
+    "description": "DimensionDestroy(dimension)"
+  },
+  "DimensionElementInsert": {
+    "prefix": "DimensionElementInsert",
+    "body": "DimensionElementInsert('${1:dimension}', '${2:parent}', '${3:element}', '${4|N,C,S|}');",
+    "description": "DimensionElementInsert(dimension, parent, element, type)"
+  },
+  "DimensionElementDelete": {
+    "prefix": "DimensionElementDelete",
+    "body": "DimensionElementDelete('${1:dimension}', '${2:element}');",
+    "description": "DimensionElementDelete(dimension, element)"
+  },
+  "DimensionElementComponentAdd": {
+    "prefix": "DimensionElementComponentAdd",
+    "body": "DimensionElementComponentAdd('${1:dimension}', '${2:parent}', '${3:component}', ${4:1});",
+    "description": "DimensionElementComponentAdd(dimension, parent, component, weight)"
+  },
+  "DimensionElementComponentDelete": {
+    "prefix": "DimensionElementComponentDelete",
+    "body": "DimensionElementComponentDelete('${1:dimension}', '${2:parent}', '${3:component}');",
+    "description": "DimensionElementComponentDelete(dimension, parent, component)"
+  },
+  "DimensionSortOrder": {
+    "prefix": "DimensionSortOrder",
+    "body": "DimensionSortOrder('${1:dimension}', '${2|ASCENDING,DESCENDING,BYINPUT,BYHIERARCHY|}', '${3|ASCENDING,DESCENDING,BYINPUT,BYHIERARCHY|}');",
+    "description": "DimensionSortOrder(dimension, consolidatedOrder, leafOrder)"
+  },
+  "HierarchyExists": {
+    "prefix": "HierarchyExists",
+    "body": "HierarchyExists('${1:dimension}', '${2:hierarchy}')",
+    "description": "HierarchyExists(dimension, hierarchy)"
+  },
+  "HierarchyElementInsert": {
+    "prefix": "HierarchyElementInsert",
+    "body": "HierarchyElementInsert('${1:dimension}', '${2:hierarchy}', '${3:element}', '${4|N,C,S|}');",
+    "description": "HierarchyElementInsert(dimension, hierarchy, element, type)"
+  },
+  "HierarchyElementComponentAdd": {
+    "prefix": "HierarchyElementComponentAdd",
+    "body": "HierarchyElementComponentAdd('${1:dimension}', '${2:hierarchy}', '${3:parent}', '${4:component}', ${5:1});",
+    "description": "HierarchyElementComponentAdd(dimension, hierarchy, parent, component, weight)"
+  },
+  "SubsetExists": {
+    "prefix": "SubsetExists",
+    "body": "SubsetExists('${1:dimension}', '${2:subset}')",
+    "description": "SubsetExists(dimension, subset)"
+  },
+  "SubsetCreate": {
+    "prefix": "SubsetCreate",
+    "body": "SubsetCreate('${1:dimension}', '${2:subset}', ${3:0});",
+    "description": "SubsetCreate(dimension, subset, [asTemporary])"
+  },
+  "SubsetDestroy": {
+    "prefix": "SubsetDestroy",
+    "body": "SubsetDestroy('${1:dimension}', '${2:subset}');",
+    "description": "SubsetDestroy(dimension, subset)"
+  },
+  "SubsetCreateByMDX": {
+    "prefix": "SubsetCreateByMDX",
+    "body": "SubsetCreateByMDX('${1:subset}',\n\t'{ ${2:MDX} }', '${3:dimension}', ${4:0});",
+    "description": "SubsetCreateByMDX(subset, mdx, [dimension], [asTemporary])"
+  },
+  "SubsetGetSize": {
+    "prefix": "SubsetGetSize",
+    "body": "SubsetGetSize('${1:dimension}', '${2:subset}')",
+    "description": "SubsetGetSize(dimension, subset)"
+  },
+  "SubsetGetElementName": {
+    "prefix": "SubsetGetElementName",
+    "body": "SubsetGetElementName('${1:dimension}', '${2:subset}', ${3:index})",
+    "description": "SubsetGetElementName(dimension, subset, index)"
+  },
+  "ViewExists": {
+    "prefix": "ViewExists",
+    "body": "ViewExists('${1:cube}', '${2:view}')",
+    "description": "ViewExists(cube, view)"
+  },
+  "ViewCreate": {
+    "prefix": "ViewCreate",
+    "body": "ViewCreate('${1:cube}', '${2:view}', ${3:0});",
+    "description": "ViewCreate(cube, view, public)"
+  },
+  "ViewDestroy": {
+    "prefix": "ViewDestroy",
+    "body": "ViewDestroy('${1:cube}', '${2:view}');",
+    "description": "ViewDestroy(cube, view)"
+  },
+  "ViewExtractSkipCalcFlag": {
+    "prefix": "ViewExtractSkipCalcFlag",
+    "body": "ViewExtractSkipCalcFlag('${1:cube}', '${2:view}', ${3:1});",
+    "description": "ViewExtractSkipCalcFlag(cube, view, flag)"
+  },
+  "ViewAddSubset": {
+    "prefix": "ViewAddSubset",
+    "body": "ViewAddSubset('${1:cube}', '${2:view}', '${3:dimension}', '${4:subset}');",
+    "description": "ViewAddSubset(cube, view, dimension, subset)"
+  },
+  "ExecuteProcess": {
+    "prefix": "ExecuteProcess",
+    "body": "ExecuteProcess('${1:process}'${2:, '${3:param}', ${4:value}});",
+    "description": "ExecuteProcess(process, param, value, ...)"
+  },
+  "GetProcessName": {
+    "prefix": "GetProcessName",
+    "body": "GetProcessName()",
+    "description": "GetProcessName()"
+  },
+  "ProcessError": {
+    "prefix": "ProcessError",
+    "body": "ProcessError();",
+    "description": "ProcessError()"
+  },
+  "ProcessQuit": {
+    "prefix": "ProcessQuit",
+    "body": "ProcessQuit();",
+    "description": "ProcessQuit()"
+  },
+  "ItemSkip": {
+    "prefix": "ItemSkip",
+    "body": "ItemSkip();",
+    "description": "ItemSkip()"
+  },
+  "ItemReject": {
+    "prefix": "ItemReject",
+    "body": "ItemReject('${1:reason}');",
+    "description": "ItemReject(reason)"
+  },
+  "Sleep": {
+    "prefix": "Sleep",
+    "body": "Sleep(${1:milliseconds});",
+    "description": "Sleep(milliseconds)"
+  },
+  "ASCIIOutput": {
+    "prefix": "ASCIIOutput",
+    "body": "ASCIIOutput('${1:file.csv}', ${2:vLine});",
+    "description": "ASCIIOutput(file, value1, value2, ...) — write values to an ASCII file"
+  },
+  "TextOutput": {
+    "prefix": "TextOutput",
+    "body": "TextOutput('${1:file.log}', ${2:vLine});",
+    "description": "TextOutput(file, value1, value2, ...) — write delimited values to a text file"
+  },
+  "ASCIIDelete": {
+    "prefix": "ASCIIDelete",
+    "body": "ASCIIDelete('${1:file}');",
+    "description": "ASCIIDelete(file)"
+  },
+  "FileOpen": {
+    "prefix": "FileOpen",
+    "body": "FileOpen('${1:file}', '${2|READ,WRITE,APPEND|}');",
+    "description": "FileOpen(file, mode)"
+  },
+  "FileClose": {
+    "prefix": "FileClose",
+    "body": "FileClose('${1:file}');",
+    "description": "FileClose(file)"
+  },
+  "FileRead": {
+    "prefix": "FileRead",
+    "body": "FileRead(${1:vLine}, '${2:file}');",
+    "description": "FileRead(variable, file)"
+  },
+  "FileWrite": {
+    "prefix": "FileWrite",
+    "body": "FileWrite('${1:file}', ${2:vLine});",
+    "description": "FileWrite(file, data)"
+  },
+  "StringGlobalVariable": {
+    "prefix": "StringGlobalVariable",
+    "body": "StringGlobalVariable('${1:varName}');",
+    "description": "StringGlobalVariable(name)"
+  },
+  "NumericGlobalVariable": {
+    "prefix": "NumericGlobalVariable",
+    "body": "NumericGlobalVariable('${1:varName}');",
+    "description": "NumericGlobalVariable(name)"
+  },
+  "GlobalVariable": {
+    "prefix": "GlobalVariable",
+    "body": "StringGlobalVariable('${1:varName}');",
+    "description": "GlobalVariable — declare a global"
+  },
+  "LogOutput": {
+    "prefix": "LogOutput",
+    "body": "LogOutput('${1|INFO,WARN,ERROR|}', '${2:message}');",
+    "description": "LogOutput(level, message)"
+  },
+  "ServerActiveSandboxGet": {
+    "prefix": "ServerActiveSandboxGet",
+    "body": "ServerActiveSandboxGet()",
+    "description": "ServerActiveSandboxGet()"
+  },
+  "CubeGetLogChanges": {
+    "prefix": "CubeGetLogChanges",
+    "body": "CubeGetLogChanges('${1:cube}')",
+    "description": "CubeGetLogChanges(cube)"
+  },
+  "CubeSetLogChanges": {
+    "prefix": "CubeSetLogChanges",
+    "body": "CubeSetLogChanges('${1:cube}', ${2:1});",
+    "description": "CubeSetLogChanges(cube, flag)"
+  },
+  "LOG10": {
+    "prefix": "LOG10",
+    "body": "LOG10(${1:number})",
+    "description": "LOG10(number) — base-10 logarithm"
+  },
+  "NumberToString": {
+    "prefix": "NumberToString",
+    "body": "NumberToString(${1:number})",
+    "description": "NumberToString(number) — number to string, unformatted"
+  },
+  "StringToNumber": {
+    "prefix": "StringToNumber",
+    "body": "StringToNumber('${1:string}')",
+    "description": "StringToNumber(string) — string to number"
+  },
+  "ISNUMERIC": {
+    "prefix": "ISNUMERIC",
+    "body": "ISNUMERIC(${1:string})",
+    "description": "ISNUMERIC(string) — 1 if a valid number, otherwise 0"
+  },
+  "ISUNDEFINED": {
+    "prefix": "ISUNDEFINED",
+    "body": "ISUNDEFINED(${1:value})",
+    "description": "ISUNDEFINED(value) — 1 if the value is undefined"
+  },
+  "ThreadSleep": {
+    "prefix": "ThreadSleep",
+    "body": "ThreadSleep(${1:milliseconds});",
+    "description": "ThreadSleep(milliseconds) — pause the thread"
+  },
+  "SaveDataAll": {
+    "prefix": "SaveDataAll",
+    "body": "SaveDataAll();",
+    "description": "SaveDataAll() — save cube data to disk"
+  },
+  "SecurityRefresh": {
+    "prefix": "SecurityRefresh",
+    "body": "SecurityRefresh();",
+    "description": "SecurityRefresh() — refresh the security cache"
+  }
+}

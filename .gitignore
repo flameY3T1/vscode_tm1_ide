@@ -1,0 +1,36 @@
+# Dependencies. Without the slash too: a git worktree may hold node_modules as
+# a symlink, which `node_modules/` does not match.
+node_modules/
+node_modules
+
+# Build and test output
+out/
+coverage/
+*.vsix
+vitest.config.js
+vitest.config.js.map
+.vscode-test/
+
+# Windows ADS junk
+*Zone.Identifier
+
+# Working directory and manifest of the TM1 git integration, and the default
+# root folder of TI tests: they hold real model objects.
+/tm1/
+/tm1-project.json
+tm1tests/
+
+# Credentials: never in the repo.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+
+# TM1 server logs dropped in for analysis
+*.log
+
+# Local editor settings
+.vscode/settings.json

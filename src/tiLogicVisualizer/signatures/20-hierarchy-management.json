@@ -1,0 +1,132 @@
+{
+  "title": "Hierarchy management",
+  "entries": [
+    [
+      "hierarchycreate",
+      {
+        "name": "HierarchyCreate",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "hierarchyexists",
+      {
+        "name": "HierarchyExists",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "hierarchyelementinsert",
+      {
+        "name": "HierarchyElementInsert",
+        "minParams": 5,
+        "maxParams": 6,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ParentName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "ElementType",
+            "type": "string"
+          },
+          {
+            "name": "Weight",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "hierarchyelementdelete",
+      {
+        "name": "HierarchyElementDelete",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "hierarchyelementcomponentadd",
+      {
+        "name": "HierarchyElementComponentAdd",
+        "minParams": 5,
+        "maxParams": 5,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ParentName",
+            "type": "string"
+          },
+          {
+            "name": "ChildName",
+            "type": "string"
+          },
+          {
+            "name": "Weight",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

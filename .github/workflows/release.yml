@@ -1,0 +1,76 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    # Job-level env so the secret is visible to `if:` conditions on the publish steps.
+    env:
+      VSCE_PAT: ${{ secrets.VSCE_PAT }}
+      OVSX_PAT: ${{ secrets.OVSX_PAT }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Die Standardrunde als EIN Aufruf, nicht als abgeschriebene Liste: hier
+      # standen `typecheck`, `lint`, `lint:promises`, `test` — ohne `compile`.
+      # Mehrere Waechter fuehren das gebaute Bundle aus, also fiel v1.0.40 an
+      # `out/webview/addServer.js fehlt` (2026-09-16, zweimal). `npm run check`
+      # haelt die Reihenfolge an einer Stelle.
+      - name: Verify (npm run check)
+        run: npm run check
+
+      # Ein Tag `v1.0.41` auf einem Stand mit `"version": "1.0.40"` erzeugt sonst
+      # ein Release `v1.0.41`, das ein VSIX 1.0.40 enthaelt — und der
+      # Publish-Schritt darunter schiebt es weiter. Versionsdrift gab es hier
+      # schon (2026-08-30, package.json gegen package-lock), und sie faellt
+      # nirgends sonst auf: `npm run check` prueft den Tag nicht.
+      # Der Tagname kommt ueber `env` in die Shell, nicht per Einsetzung in den
+      # Befehlstext: ein Tag darf fast jedes Zeichen tragen.
+      - name: Tag entspricht package.json
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          pkg="v$(node -p 'require("./package.json").version')"
+          lock="v$(node -p 'require("./package-lock.json").version')"
+          test "$pkg" = "$TAG"  || { echo "Tag $TAG != package.json $pkg"; exit 1; }
+          # Die beiden standen am 2026-08-30 schon einmal auseinander; `npm version`
+          # haelt sie zusammen, Handarbeit an package.json nicht.
+          test "$lock" = "$pkg" || { echo "package-lock $lock != package.json $pkg"; exit 1; }
+
+      - name: Package VSIX
+        run: npx vsce package --no-dependencies
+
+      # The VSIX ships minified code without maps (`files` in package.json); the maps go on
+      # the release so a user's `out/extension.js:1:487213` can be resolved.
+      - name: Archive source maps
+        run: tar -czf "sourcemaps-${{ github.ref_name }}.tar.gz" $(find out -name '*.map')
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${{ github.ref_name }}" ./*.vsix ./sourcemaps-*.tar.gz --title "${{ github.ref_name }}" --generate-notes
+
+      # Publishes only when the VSCE_PAT secret is configured; otherwise skipped.
+      - name: Publish to VS Code Marketplace
+        if: ${{ env.VSCE_PAT != '' }}
+        run: npx vsce publish --no-dependencies --packagePath ./*.vsix
+
+      # Publishes only when the OVSX_PAT secret is configured; otherwise skipped.
+      - name: Publish to Open VSX
+        if: ${{ env.OVSX_PAT != '' }}
+        run: npx ovsx publish ./*.vsix -p "${{ env.OVSX_PAT }}"

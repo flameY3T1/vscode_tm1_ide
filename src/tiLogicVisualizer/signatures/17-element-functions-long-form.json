@@ -1,0 +1,352 @@
+{
+  "title": "Element functions (long-form)",
+  "entries": [
+    [
+      "elementcount",
+      {
+        "name": "ElementCount",
+        "minParams": 1,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "elementindex",
+      {
+        "name": "ElementIndex",
+        "minParams": 2,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "elementname",
+      {
+        "name": "ElementName",
+        "minParams": 2,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "Index",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "elementlevel",
+      {
+        "name": "ElementLevel",
+        "minParams": 2,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "elementtype",
+      {
+        "name": "ElementType",
+        "minParams": 2,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "elementparent",
+      {
+        "name": "ElementParent",
+        "minParams": 3,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "ParentIndex",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "elementparentcount",
+      {
+        "name": "ElementParentCount",
+        "minParams": 2,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "elementcomponent",
+      {
+        "name": "ElementComponent",
+        "minParams": 3,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "ChildIndex",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "elementcomponentcount",
+      {
+        "name": "ElementComponentCount",
+        "minParams": 2,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "elementweight",
+      {
+        "name": "ElementWeight",
+        "minParams": 3,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ParentName",
+            "type": "string"
+          },
+          {
+            "name": "ChildName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "elementattrn",
+      {
+        "name": "ElementAttrN",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "elementattrs",
+      {
+        "name": "ElementAttrS",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "elementattrinsert",
+      {
+        "name": "ElementAttrInsert",
+        "minParams": 5,
+        "maxParams": 5,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string",
+            "doc": "Optional (TM1 11.8+). Bei 4-Arg-Aufruf entfällt dieser Parameter; bei 5-Arg-Aufruf steht hier der Hierarchie-Name."
+          },
+          {
+            "name": "PreviousAttributeName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeType",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "elementattrdelete",
+      {
+        "name": "ElementAttrDelete",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

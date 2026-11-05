@@ -1,0 +1,58 @@
+{
+  "Name": "zz_roundtrip_probe",
+  "HasSecurityAccess": true,
+  "PrologProcedure": "# prolog\r\nnLine = 1;\r\nsText = 'a' | 'b';\r\n",
+  "MetadataProcedure": "",
+  "DataProcedure": "# data\r\nIF(vC > 0);\r\n  ItemSkip;\r\nENDIF;\r\n",
+  "EpilogProcedure": "# epilog\r\n",
+  "UIData": "CubeAction=1511\fDataAction=1503\fCubeLogChanges=0\f",
+  "VariablesUIData": [
+    "VarType=32\fColType=827\f",
+    "IgnoredInputVarName=vB\fVarType=32\fColType=1165\f",
+    "VarType=33\fColType=827\f"
+  ],
+  "DataSource": {
+    "Type": "ASCII",
+    "asciiDecimalSeparator": ".",
+    "asciiDelimiterChar": ";",
+    "asciiDelimiterType": "Character",
+    "asciiHeaderRecords": 1,
+    "asciiQuoteCharacter": "\"",
+    "asciiThousandSeparator": ",",
+    "dataSourceNameForClient": "C:\\data\\in.csv",
+    "dataSourceNameForServer": "C:\\data\\in.csv"
+  },
+  "Parameters": [
+    {
+      "Name": "pYear",
+      "Prompt": "Year",
+      "Value": 2026,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pCube",
+      "Prompt": "",
+      "Value": "Sales",
+      "Type": "String"
+    }
+  ],
+  "Variables": [
+    {
+      "Name": "vA",
+      "Type": "String",
+      "Position": 1,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "vC",
+      "Type": "Numeric",
+      "Position": 3,
+      "StartByte": 0,
+      "EndByte": 0
+    }
+  ],
+  "Attributes": {
+    "Caption": "zz_roundtrip_probe"
+  }
+}

@@ -1,0 +1,509 @@
+{
+  "version": 1,
+  "docs": {
+    "cellgetn": {
+      "description": "Lee el valor numérico de una celda de un cubo.",
+      "paramDocs": {
+        "cubename": "Nombre del cubo",
+        "elem1": "Elemento de la primera dimensión",
+        "elemn": "Más elementos de dimensión"
+      }
+    },
+    "cellgets": {
+      "description": "Lee el valor de cadena de una celda de un cubo.",
+      "paramDocs": {
+        "cubename": "Nombre del cubo",
+        "elem1": "Elemento de la primera dimensión",
+        "elemn": "Más elementos de dimensión"
+      }
+    },
+    "cellputn": {
+      "description": "Escribe un valor numérico en una celda de un cubo.",
+      "paramDocs": {
+        "value": "Valor numérico que se escribe",
+        "cubename": "Nombre del cubo",
+        "elem1": "Elemento de la primera dimensión",
+        "elemn": "Más elementos de dimensión"
+      }
+    },
+    "cellputs": {
+      "description": "Escribe un valor de cadena en una celda de un cubo.",
+      "paramDocs": {
+        "value": "Valor de cadena que se escribe",
+        "cubename": "Nombre del cubo",
+        "elem1": "Elemento de la primera dimensión",
+        "elemn": "Más elementos de dimensión"
+      }
+    },
+    "str": {
+      "description": "Convierte un número en una cadena con formato.",
+      "paramDocs": {
+        "number": "Número que se convierte",
+        "width": "Ancho total de la cadena",
+        "decimals": "Número de decimales"
+      }
+    },
+    "subst": {
+      "description": "Extrae una subcadena.",
+      "paramDocs": {
+        "string": "Cadena de origen",
+        "start": "Posición inicial (empieza en 1)",
+        "length": "Longitud de la subcadena"
+      }
+    },
+    "scan": {
+      "description": "Busca una subcadena. Devuelve su posición (0 = no encontrada).",
+      "paramDocs": {
+        "substring": "Subcadena que se busca",
+        "string": "Cadena en la que se busca"
+      }
+    },
+    "trim": {
+      "description": "Quita los espacios iniciales y finales.",
+      "paramDocs": {
+        "string": "Cadena que se recorta"
+      }
+    },
+    "upper": {
+      "description": "Convierte una cadena a mayúsculas.",
+      "paramDocs": {
+        "string": "Cadena que se convierte"
+      }
+    },
+    "lower": {
+      "description": "Convierte una cadena a minúsculas.",
+      "paramDocs": {
+        "string": "Cadena que se convierte"
+      }
+    },
+    "long": {
+      "description": "Devuelve la longitud de una cadena.",
+      "paramDocs": {
+        "string": "Cadena cuya longitud se mide"
+      }
+    },
+    "char": {
+      "description": "Devuelve el carácter correspondiente a un código ASCII.",
+      "paramDocs": {
+        "number": "Código ASCII (1–255)"
+      }
+    },
+    "code": {
+      "description": "Devuelve el código ASCII del carácter que hay en una posición.",
+      "paramDocs": {
+        "string": "Cadena de origen",
+        "position": "Posición del carácter (empieza en 1)"
+      }
+    },
+    "fill": {
+      "description": "Repite una cadena hasta la longitud indicada.",
+      "paramDocs": {
+        "string": "Cadena que se repite",
+        "length": "Longitud total del resultado"
+      }
+    },
+    "capit": {
+      "description": "Devuelve la cadena con su primera letra en mayúscula.",
+      "paramDocs": {
+        "string": "Cadena de origen"
+      }
+    },
+    "delet": {
+      "description": "Elimina caracteres de una cadena.",
+      "paramDocs": {
+        "string": "Cadena de origen",
+        "start": "Posición inicial (empieza en 1)",
+        "length": "Número de caracteres que se eliminan"
+      }
+    },
+    "insrt": {
+      "description": "Inserta una cadena en una posición.",
+      "paramDocs": {
+        "insert": "Cadena que se inserta",
+        "string": "Cadena de destino",
+        "position": "Posición de inserción (empieza en 1)"
+      }
+    },
+    "numbr": {
+      "description": "Convierte una cadena en un número.",
+      "paramDocs": {
+        "string": "Cadena que se convierte"
+      }
+    },
+    "expand": {
+      "description": "Expande las referencias a variables (%) dentro de una cadena.",
+      "paramDocs": {
+        "string": "Cadena que contiene referencias %variable%"
+      }
+    },
+    "numbertostring": {
+      "description": "Convierte un número en una cadena sin formato.",
+      "paramDocs": {
+        "number": "Número que se convierte"
+      }
+    },
+    "numbertostringex": {
+      "description": "Convierte un número en una cadena con formato.",
+      "paramDocs": {
+        "number": "Número que se convierte",
+        "formatstring": "Cadena de formato (p. ej. «#,##0.00»)",
+        "decimalseparator": "Separador decimal",
+        "thousandsseparator": "Separador de millares"
+      }
+    },
+    "stringtonumber": {
+      "description": "Convierte una cadena en un número.",
+      "paramDocs": {
+        "string": "Cadena que se convierte"
+      }
+    },
+    "abs": {
+      "description": "Devuelve el valor absoluto.",
+      "paramDocs": {
+        "number": "Valor numérico"
+      }
+    },
+    "int": {
+      "description": "Devuelve la parte entera (redondeada hacia abajo).",
+      "paramDocs": {
+        "number": "Valor numérico"
+      }
+    },
+    "round": {
+      "description": "Redondea un número al número de decimales indicado.",
+      "paramDocs": {
+        "number": "Número que se redondea",
+        "decimals": "Número de decimales"
+      }
+    },
+    "mod": {
+      "description": "Devuelve el resto de una división.",
+      "paramDocs": {
+        "number": "Dividendo",
+        "divisor": "Divisor"
+      }
+    },
+    "max": {
+      "description": "Devuelve el mayor de dos números.",
+      "paramDocs": {
+        "number1": "Primer número",
+        "number2": "Segundo número"
+      }
+    },
+    "min": {
+      "description": "Devuelve el menor de dos números.",
+      "paramDocs": {
+        "number1": "Primer número",
+        "number2": "Segundo número"
+      }
+    },
+    "power": {
+      "description": "Devuelve la base elevada al exponente.",
+      "paramDocs": {
+        "base": "Base",
+        "exponent": "Exponente"
+      }
+    },
+    "sqrt": {
+      "description": "Devuelve la raíz cuadrada.",
+      "paramDocs": {
+        "number": "Valor numérico (≥ 0)"
+      }
+    },
+    "log": {
+      "description": "Devuelve el logaritmo natural.",
+      "paramDocs": {
+        "number": "Valor numérico (> 0)"
+      }
+    },
+    "log10": {
+      "description": "Devuelve el logaritmo en base 10.",
+      "paramDocs": {
+        "number": "Valor numérico (> 0)"
+      }
+    },
+    "exp": {
+      "description": "Devuelve e elevado al número indicado.",
+      "paramDocs": {
+        "number": "Exponente"
+      }
+    },
+    "rand": {
+      "description": "Devuelve un número aleatorio entre 0 y 1."
+    },
+    "today": {
+      "description": "Devuelve la fecha actual como cadena.",
+      "paramDocs": {
+        "format": "Formato de fecha (p. ej. «DD-MM-YYYY»)"
+      }
+    },
+    "now": {
+      "description": "Devuelve la fecha y la hora como cadena.",
+      "paramDocs": {
+        "format": "Formato de fecha (p. ej. «DD-MM-YYYY HH:MM:SS»)"
+      }
+    },
+    "date": {
+      "description": "Convierte un número de día (desde 1900-01-01) en una fecha.",
+      "paramDocs": {
+        "days": "Número de días desde 1900-01-01",
+        "format": "Formato de salida"
+      }
+    },
+    "dayno": {
+      "description": "Convierte una fecha en un número de día.",
+      "paramDocs": {
+        "datestring": "Fecha con el formato DD/MM/YYYY o similar"
+      }
+    },
+    "timst": {
+      "description": "Da formato a un valor de hora.",
+      "paramDocs": {
+        "time": "Valor de hora",
+        "format": "Formato de salida (p. ej. «HH:MM:SS»)"
+      }
+    },
+    "year": {
+      "description": "Devuelve el año de una fecha.",
+      "paramDocs": {
+        "datestring": "Cadena de fecha"
+      }
+    },
+    "month": {
+      "description": "Devuelve el mes (1–12) de una fecha.",
+      "paramDocs": {
+        "datestring": "Cadena de fecha"
+      }
+    },
+    "day": {
+      "description": "Devuelve el día (1–31) de una fecha.",
+      "paramDocs": {
+        "datestring": "Cadena de fecha"
+      }
+    },
+    "parsedate": {
+      "description": "Convierte una cadena de fecha en un número de fecha de serie. El patrón y el índice son opcionales.",
+      "paramDocs": {
+        "datestring": "Cadena de fecha",
+        "pattern": "Patrón de formato (sintaxis ICU); vacío = el predeterminado del formateador",
+        "index": "Índice de un formateador creado con NewDateFormatter (0 de forma predeterminada)"
+      }
+    },
+    "dimsiz": {
+      "description": "Devuelve el número de elementos de una dimensión.",
+      "paramDocs": {
+        "dimensionname": "Nombre de la dimensión"
+      }
+    },
+    "dimnm": {
+      "description": "Devuelve el nombre del elemento que hay en una posición dada.",
+      "paramDocs": {
+        "dimensionname": "Nombre de la dimensión",
+        "index": "Posición del elemento (empieza en 1)"
+      }
+    },
+    "dimix": {
+      "description": "Devuelve la posición (índice) de un elemento.",
+      "paramDocs": {
+        "dimensionname": "Nombre de la dimensión",
+        "elementname": "Nombre del elemento"
+      }
+    },
+    "dtype": {
+      "description": "Devuelve el tipo de un elemento (N=numérico, S=cadena, C=consolidado).",
+      "paramDocs": {
+        "dimensionname": "Nombre de la dimensión",
+        "elementname": "Nombre del elemento"
+      }
+    },
+    "dnlev": {
+      "description": "Devuelve el número de niveles de una dimensión.",
+      "paramDocs": {
+        "dimensionname": "Nombre de la dimensión"
+      }
+    },
+    "dnxt": {
+      "description": "Devuelve el siguiente elemento de la dimensión.",
+      "paramDocs": {
+        "dimensionname": "Nombre de la dimensión",
+        "elementname": "Elemento actual"
+      }
+    },
+    "elpar": {
+      "description": "Devuelve el nombre del elemento padre.",
+      "paramDocs": {
+        "dimensionname": "Nombre de la dimensión",
+        "elementname": "Nombre del elemento",
+        "parentindex": "Índice del elemento padre (empieza en 1)"
+      }
+    },
+    "elparn": {
+      "description": "Devuelve el número de elementos padre.",
+      "paramDocs": {
+        "dimensionname": "Nombre de la dimensión",
+        "elementname": "Nombre del elemento"
+      }
+    },
+    "ellev": {
+      "description": "Devuelve el nivel de un elemento.",
+      "paramDocs": {
+        "dimensionname": "Nombre de la dimensión",
+        "elementname": "Nombre del elemento"
+      }
+    },
+    "elcomp": {
+      "description": "Devuelve el nombre de un elemento hijo.",
+      "paramDocs": {
+        "dimensionname": "Nombre de la dimensión",
+        "elementname": "Nombre del elemento padre",
+        "childindex": "Índice del elemento hijo (empieza en 1)"
+      }
+    },
+    "elcompn": {
+      "description": "Devuelve el número de elementos hijo.",
+      "paramDocs": {
+        "dimensionname": "Nombre de la dimensión",
+        "elementname": "Nombre del elemento padre"
+      }
+    },
+    "elweight": {
+      "description": "Devuelve el peso de un elemento hijo.",
+      "paramDocs": {
+        "dimensionname": "Nombre de la dimensión",
+        "parentname": "Nombre del elemento padre",
+        "childname": "Nombre del elemento hijo"
+      }
+    },
+    "elisanc": {
+      "description": "Comprueba si AncestorName es antecesor de ElementName. Devuelve 1 o 0.",
+      "paramDocs": {
+        "dimensionname": "Nombre de la dimensión",
+        "elementname": "Nombre del elemento",
+        "ancestorname": "Antecesor que se comprueba"
+      }
+    },
+    "attrs": {
+      "description": "Devuelve el valor de un atributo de cadena.",
+      "paramDocs": {
+        "dimensionname": "Nombre de la dimensión",
+        "elementname": "Nombre del elemento",
+        "attributename": "Nombre del atributo"
+      }
+    },
+    "attrn": {
+      "description": "Devuelve el valor de un atributo numérico.",
+      "paramDocs": {
+        "dimensionname": "Nombre de la dimensión",
+        "elementname": "Nombre del elemento",
+        "attributename": "Nombre del atributo"
+      }
+    },
+    "executeprocess": {
+      "description": "Ejecuta otro proceso de TI.",
+      "paramDocs": {
+        "processname": "Nombre del proceso que se ejecuta",
+        "paramname": "Nombre de un parámetro (opcional)",
+        "paramvalue": "Valor del parámetro"
+      }
+    },
+    "logoutput": {
+      "description": "Escribe un mensaje en el registro de mensajes de TM1.",
+      "paramDocs": {
+        "severity": "Gravedad: 1=INFO, 2=WARN, 3=ERROR, 5=DEBUG",
+        "message": "Mensaje que se registra"
+      }
+    },
+    "asciioutput": {
+      "description": "Escribe valores en un archivo ASCII.",
+      "paramDocs": {
+        "filename": "Archivo de destino (ruta en el servidor)",
+        "value1": "Primer valor",
+        "valuen": "Más valores"
+      }
+    },
+    "textoutput": {
+      "description": "Escribe valores delimitados en un archivo de texto.",
+      "paramDocs": {
+        "filename": "Archivo de destino",
+        "value1": "Primer valor",
+        "valuen": "Más valores"
+      }
+    },
+    "savedataall": {
+      "description": "Guarda en disco los datos de todos los cubos."
+    },
+    "getprocessname": {
+      "description": "Devuelve el nombre del proceso que se está ejecutando."
+    },
+    "isnumeric": {
+      "description": "Comprueba si una cadena representa un número válido. Devuelve 1 o 0.",
+      "paramDocs": {
+        "string": "Cadena que se comprueba"
+      }
+    },
+    "isundefined": {
+      "description": "Comprueba si un valor está indefinido.",
+      "paramDocs": {
+        "value": "Valor que se comprueba"
+      }
+    },
+    "dimensioncreate": {
+      "description": "Crea una dimensión nueva.",
+      "paramDocs": {
+        "dimensionname": "Nombre de la dimensión que se crea"
+      }
+    },
+    "subsetcreate": {
+      "description": "Crea un subconjunto nuevo.",
+      "paramDocs": {
+        "subsetname": "Nombre del subconjunto",
+        "dimensionname": "Nombre de la dimensión"
+      }
+    },
+    "subsetelementadd": {
+      "description": "Añade un elemento a un subconjunto.",
+      "paramDocs": {
+        "subsetname": "Nombre del subconjunto",
+        "dimensionname": "Nombre de la dimensión",
+        "elementname": "Elemento que se añade"
+      }
+    },
+    "cubecreate": {
+      "description": "Crea un cubo nuevo.",
+      "paramDocs": {
+        "cubename": "Nombre del cubo",
+        "dim1": "Nombre de la primera dimensión",
+        "dimn": "Más dimensiones"
+      }
+    },
+    "viewcreate": {
+      "description": "Crea una vista nueva.",
+      "paramDocs": {
+        "cubename": "Nombre del cubo",
+        "viewname": "Nombre de la vista"
+      }
+    },
+    "viewzeroout": {
+      "description": "Pone a cero todas las celdas de una vista.",
+      "paramDocs": {
+        "cubename": "Nombre del cubo",
+        "viewname": "Nombre de la vista"
+      }
+    },
+    "stringglobalvariable": {
+      "description": "Declara una variable global de cadena.",
+      "paramDocs": {
+        "variablename": "Nombre de la variable global"
+      }
+    },
+    "numericglobalvariable": {
+      "description": "Declara una variable global numérica.",
+      "paramDocs": {
+        "variablename": "Nombre de la variable global"
+      }
+    },
+    "securityrefresh": {
+      "description": "Actualiza la caché de seguridad del servidor."
+    }
+  }
+}

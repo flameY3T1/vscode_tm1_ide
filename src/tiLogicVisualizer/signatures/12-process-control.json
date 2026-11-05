@@ -1,0 +1,259 @@
+{
+  "title": "Process control",
+  "entries": [
+    [
+      "executeprocess",
+      {
+        "name": "ExecuteProcess",
+        "minParams": 1,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "ProcessName",
+            "type": "string"
+          },
+          {
+            "name": "ParamName",
+            "type": "string"
+          },
+          {
+            "name": "ParamValue",
+            "type": "any"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "runprocess",
+      {
+        "name": "RunProcess",
+        "minParams": 1,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "ProcessName",
+            "type": "string"
+          },
+          {
+            "name": "ParamName",
+            "type": "string"
+          },
+          {
+            "name": "ParamValue",
+            "type": "any"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "processexitnormal",
+      {
+        "name": "ProcessExitNormal",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "processexitminorerror",
+      {
+        "name": "ProcessExitMinorError",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "processexitseriouserror",
+      {
+        "name": "ProcessExitSeriousError",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "processexitbybreak",
+      {
+        "name": "ProcessExitByBreak",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "processexitbyquit",
+      {
+        "name": "ProcessExitByQuit",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "processexitoninit",
+      {
+        "name": "ProcessExitOnInit",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "processexitwithmessage",
+      {
+        "name": "ProcessExitWithMessage",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "processexitbychorequit",
+      {
+        "name": "ProcessExitByChoreQuit",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "processexitbychorerollback",
+      {
+        "name": "ProcessExitByChoreRollback",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "processexitbyprocessrollback",
+      {
+        "name": "ProcessExitByProcessRollback",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "logoutput",
+      {
+        "name": "LogOutput",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "Severity",
+            "type": "string",
+            "allowedValues": [
+              "DEBUG",
+              "INFO",
+              "WARN",
+              "ERROR",
+              "FATAL"
+            ]
+          },
+          {
+            "name": "Message",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "asciioutput",
+      {
+        "name": "ASCIIOutput",
+        "minParams": 2,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "FileName",
+            "type": "string"
+          },
+          {
+            "name": "Value1",
+            "type": "string"
+          },
+          {
+            "name": "ValueN",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "textoutput",
+      {
+        "name": "TextOutput",
+        "minParams": 2,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "FileName",
+            "type": "string"
+          },
+          {
+            "name": "Value1",
+            "type": "string"
+          },
+          {
+            "name": "ValueN",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "savedataall",
+      {
+        "name": "SaveDataAll",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "getprocessname",
+      {
+        "name": "GetProcessName",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string"
+      }
+    ],
+    [
+      "synchronized",
+      {
+        "name": "Synchronized",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "LockObject",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

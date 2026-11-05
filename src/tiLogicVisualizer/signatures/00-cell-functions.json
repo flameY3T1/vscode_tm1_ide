@@ -1,0 +1,124 @@
+{
+  "title": "Cell functions",
+  "entries": [
+    [
+      "cellgetn",
+      {
+        "name": "CellGetN",
+        "minParams": 3,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Elem1",
+            "type": "string"
+          },
+          {
+            "name": "ElemN",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "cellgets",
+      {
+        "name": "CellGetS",
+        "minParams": 3,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Elem1",
+            "type": "string"
+          },
+          {
+            "name": "ElemN",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "cellputn",
+      {
+        "name": "CellPutN",
+        "minParams": 4,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "Value",
+            "type": "numeric"
+          },
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Elem1",
+            "type": "string"
+          },
+          {
+            "name": "ElemN",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "cellputs",
+      {
+        "name": "CellPutS",
+        "minParams": 4,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "Value",
+            "type": "string"
+          },
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Elem1",
+            "type": "string"
+          },
+          {
+            "name": "ElemN",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "cellisupdateable",
+      {
+        "name": "CellIsUpdateable",
+        "minParams": 3,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ElemN",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ]
+  ]
+}

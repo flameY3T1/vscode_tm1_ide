@@ -1,0 +1,116 @@
+{
+  "title": "Subset management",
+  "entries": [
+    [
+      "subsetcreatebymdx",
+      {
+        "name": "SubsetCreateByMDX",
+        "minParams": 2,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "SubsetName",
+            "type": "string"
+          },
+          {
+            "name": "MDX_Expression",
+            "type": "any"
+          },
+          {
+            "name": "DimName_or_AsTemporary",
+            "type": "any"
+          },
+          {
+            "name": "AsTemporary",
+            "type": "any"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "subsetelementdelete",
+      {
+        "name": "SubsetElementDelete",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          },
+          {
+            "name": "Index",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "subsetexists",
+      {
+        "name": "SubsetExists",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "subsetgetelementname",
+      {
+        "name": "SubsetGetElementName",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          },
+          {
+            "name": "ElementIndex",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "subsetgetsize",
+      {
+        "name": "SubsetGetSize",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ]
+  ]
+}

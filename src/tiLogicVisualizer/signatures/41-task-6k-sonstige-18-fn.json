@@ -1,0 +1,471 @@
+{
+  "title": "Task 6k — Sonstige (18 Fn)",
+  "entries": [
+    [
+      "assignclienttogroup",
+      {
+        "name": "AssignClientToGroup",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "ClientName",
+            "type": "string"
+          },
+          {
+            "name": "GroupName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "asciioutputopen",
+      {
+        "name": "AsciiOutputOpen",
+        "minParams": 1,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "FileName",
+            "type": "string"
+          },
+          {
+            "name": "OpeningMode",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "file_open_append",
+      {
+        "name": "FILE_OPEN_APPEND",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "file_open_shared",
+      {
+        "name": "FILE_OPEN_SHARED",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "canceljobs",
+      {
+        "name": "CancelJobs",
+        "minParams": 1,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "JobId",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "v12Only": true
+      }
+    ],
+    [
+      "disablemtqviewconstruct",
+      {
+        "name": "DisableMTQViewConstruct",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void"
+      }
+    ],
+    [
+      "enablemtqviewconstruct",
+      {
+        "name": "EnableMTQViewConstruct",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void"
+      }
+    ],
+    [
+      "formatdate",
+      {
+        "name": "FormatDate",
+        "minParams": 2,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "SerialDate",
+            "type": "numeric"
+          },
+          {
+            "name": "FormatString",
+            "type": "string"
+          },
+          {
+            "name": "FormatterIndex",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "getjobstatus",
+      {
+        "name": "GetJobStatus",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "JobId",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric",
+        "v12Only": true
+      }
+    ],
+    [
+      "getprocesserrorfilename",
+      {
+        "name": "GetProcessErrorFilename",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string"
+      }
+    ],
+    [
+      "getuseactivesandboxproperty",
+      {
+        "name": "GetUseActiveSandboxProperty",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "levelcount",
+      {
+        "name": "LevelCount",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "sleep",
+      {
+        "name": "Sleep",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Milliseconds",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "viewzeroout",
+      {
+        "name": "ViewZeroOut",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "viewsuppresszeroesset",
+      {
+        "name": "ViewSuppressZeroesSet",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          },
+          {
+            "name": "Flag",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "parsedate",
+      {
+        "name": "ParseDate",
+        "minParams": 1,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DateString",
+            "type": "string"
+          },
+          {
+            "name": "Pattern",
+            "type": "string"
+          },
+          {
+            "name": "Index",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "numbertostringex",
+      {
+        "name": "NumberToStringEx",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "Number",
+            "type": "numeric"
+          },
+          {
+            "name": "FormatString",
+            "type": "string"
+          },
+          {
+            "name": "DecimalSeparator",
+            "type": "string"
+          },
+          {
+            "name": "ThousandsSeparator",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "setoutputcharacterset",
+      {
+        "name": "SetOutputCharacterSet",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "FileName",
+            "type": "string"
+          },
+          {
+            "name": "CharacterSet",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "setinputcharacterset",
+      {
+        "name": "SetInputCharacterSet",
+        "minParams": 1,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "FileNameOrCharacterSet",
+            "type": "string"
+          },
+          {
+            "name": "CharacterSet",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "setuseactivesandboxproperty",
+      {
+        "name": "SetUseActiveSandboxProperty",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Flag",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "serveractivesandboxset",
+      {
+        "name": "ServerActiveSandboxSet",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "SandboxName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "serversandboxexists",
+      {
+        "name": "ServerSandboxExists",
+        "minParams": 1,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "SandboxName",
+            "type": "string"
+          },
+          {
+            "name": "UserName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "elementsecurityput",
+      {
+        "name": "ElementSecurityPut",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "Level",
+            "type": "string"
+          },
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "GroupName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "viewextractskipconsolidatedstringsset",
+      {
+        "name": "ViewExtractSkipConsolidatedStringsSet",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          },
+          {
+            "name": "Skip",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "publishview",
+      {
+        "name": "PublishView",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          },
+          {
+            "name": "PublishPrivateSubsets",
+            "type": "numeric"
+          },
+          {
+            "name": "OverwriteExisting",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "publishsubset",
+      {
+        "name": "PublishSubset",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          },
+          {
+            "name": "OverwriteExisting",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

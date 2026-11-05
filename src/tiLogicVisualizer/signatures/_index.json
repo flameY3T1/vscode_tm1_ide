@@ -1,0 +1,335 @@
+{
+  "totalEntries": 498,
+  "infSentinel": "__INFINITY__",
+  "sections": [
+    {
+      "index": 0,
+      "slug": "cell-functions",
+      "title": "Cell functions",
+      "count": 5,
+      "file": "00-cell-functions.json"
+    },
+    {
+      "index": 1,
+      "slug": "string-functions",
+      "title": "String functions",
+      "count": 18,
+      "file": "01-string-functions.json"
+    },
+    {
+      "index": 2,
+      "slug": "math-functions",
+      "title": "Math functions",
+      "count": 12,
+      "file": "02-math-functions.json"
+    },
+    {
+      "index": 3,
+      "slug": "date-time-functions",
+      "title": "Date/time functions",
+      "count": 9,
+      "file": "03-date-time-functions.json"
+    },
+    {
+      "index": 4,
+      "slug": "dimension-element-functions",
+      "title": "Dimension/Element functions",
+      "count": 13,
+      "file": "04-dimension-element-functions.json"
+    },
+    {
+      "index": 5,
+      "slug": "attribute-functions",
+      "title": "Attribute functions",
+      "count": 4,
+      "file": "05-attribute-functions.json"
+    },
+    {
+      "index": 6,
+      "slug": "cube-attribute-task-3a",
+      "title": "Cube-Attribute (Task 3a)",
+      "count": 8,
+      "file": "06-cube-attribute-task-3a.json"
+    },
+    {
+      "index": 7,
+      "slug": "dimension-attribute-task-3b",
+      "title": "Dimension-Attribute (Task 3b)",
+      "count": 8,
+      "file": "07-dimension-attribute-task-3b.json"
+    },
+    {
+      "index": 8,
+      "slug": "chore-attribute-task-3c",
+      "title": "Chore-Attribute (Task 3c)",
+      "count": 10,
+      "file": "08-chore-attribute-task-3c.json"
+    },
+    {
+      "index": 9,
+      "slug": "view-attribute-task-3d-view-identifiziert-ber-cube-view",
+      "title": "View-Attribute (Task 3d) — View identifiziert über Cube + View",
+      "count": 8,
+      "file": "09-view-attribute-task-3d-view-identifiziert-ber-cube-view.json"
+    },
+    {
+      "index": 10,
+      "slug": "subset-attribute-task-3e-subset-identifiziert-ber-dim-subset",
+      "title": "Subset-Attribute (Task 3e) — Subset identifiziert über Dim + Subset",
+      "count": 8,
+      "file": "10-subset-attribute-task-3e-subset-identifiziert-ber-dim-subset.json"
+    },
+    {
+      "index": 11,
+      "slug": "legacy-element-attr-erweiterungen-task-3f",
+      "title": "Legacy / Element-Attr-Erweiterungen (Task 3f)",
+      "count": 8,
+      "file": "11-legacy-element-attr-erweiterungen-task-3f.json"
+    },
+    {
+      "index": 12,
+      "slug": "process-control",
+      "title": "Process control",
+      "count": 18,
+      "file": "12-process-control.json"
+    },
+    {
+      "index": 13,
+      "slug": "validation",
+      "title": "Validation",
+      "count": 1,
+      "file": "13-validation.json"
+    },
+    {
+      "index": 14,
+      "slug": "dimensioncreate-elementinsert-etc",
+      "title": "DimensionCreate, ElementInsert etc",
+      "count": 7,
+      "file": "14-dimensioncreate-elementinsert-etc.json"
+    },
+    {
+      "index": 15,
+      "slug": "cube-management",
+      "title": "Cube management",
+      "count": 7,
+      "file": "15-cube-management.json"
+    },
+    {
+      "index": 16,
+      "slug": "dimension-management",
+      "title": "Dimension management",
+      "count": 9,
+      "file": "16-dimension-management.json"
+    },
+    {
+      "index": 17,
+      "slug": "element-functions-long-form",
+      "title": "Element functions (long-form)",
+      "count": 14,
+      "file": "17-element-functions-long-form.json"
+    },
+    {
+      "index": 18,
+      "slug": "hierarchy-attr-task-1a-hierarchy-level-attribute",
+      "title": "Hierarchy-Attr (Task 1a) — Hierarchy-Level-Attribute",
+      "count": 6,
+      "file": "18-hierarchy-attr-task-1a-hierarchy-level-attribute.json"
+    },
+    {
+      "index": 19,
+      "slug": "legacy-short-form-element-functions",
+      "title": "Legacy short-form element functions",
+      "count": 1,
+      "file": "19-legacy-short-form-element-functions.json"
+    },
+    {
+      "index": 20,
+      "slug": "hierarchy-management",
+      "title": "Hierarchy management",
+      "count": 5,
+      "file": "20-hierarchy-management.json"
+    },
+    {
+      "index": 21,
+      "slug": "hierarchy-core-task-1b",
+      "title": "Hierarchy Core (Task 1b)",
+      "count": 10,
+      "file": "21-hierarchy-core-task-1b.json"
+    },
+    {
+      "index": 22,
+      "slug": "hierarchy-element-task-1c",
+      "title": "Hierarchy Element (Task 1c)",
+      "count": 9,
+      "file": "22-hierarchy-element-task-1c.json"
+    },
+    {
+      "index": 23,
+      "slug": "hierarchy-subset-task-1d",
+      "title": "Hierarchy Subset (Task 1d)",
+      "count": 23,
+      "file": "23-hierarchy-subset-task-1d.json"
+    },
+    {
+      "index": 24,
+      "slug": "attribute-management",
+      "title": "Attribute management",
+      "count": 0,
+      "file": "24-attribute-management.json"
+    },
+    {
+      "index": 25,
+      "slug": "subset-management",
+      "title": "Subset management",
+      "count": 5,
+      "file": "25-subset-management.json"
+    },
+    {
+      "index": 26,
+      "slug": "view-management",
+      "title": "View management",
+      "count": 11,
+      "file": "26-view-management.json"
+    },
+    {
+      "index": 27,
+      "slug": "security-client-management",
+      "title": "Security/Client management",
+      "count": 6,
+      "file": "27-security-client-management.json"
+    },
+    {
+      "index": 28,
+      "slug": "system-io-functions",
+      "title": "System/IO functions",
+      "count": 6,
+      "file": "28-system-io-functions.json"
+    },
+    {
+      "index": 29,
+      "slug": "odbc-task-2",
+      "title": "ODBC (Task 2)",
+      "count": 5,
+      "file": "29-odbc-task-2.json"
+    },
+    {
+      "index": 30,
+      "slug": "process-control-task-4",
+      "title": "Process-Control (Task 4)",
+      "count": 72,
+      "file": "30-process-control-task-4.json"
+    },
+    {
+      "index": 31,
+      "slug": "task-6a-cubedr-data-reservation-5-fn",
+      "title": "Task 6a — CubeDR / Data Reservation (5 Fn)",
+      "count": 0,
+      "file": "31-task-6a-cubedr-data-reservation-5-fn.json"
+    },
+    {
+      "index": 32,
+      "slug": "task-6b-cube-misc-8-fn",
+      "title": "Task 6b — Cube-Misc (8 Fn)",
+      "count": 8,
+      "file": "32-task-6b-cube-misc-8-fn.json"
+    },
+    {
+      "index": 33,
+      "slug": "task-6c-cell-misc-2-fn",
+      "title": "Task 6c — Cell-Misc (2 Fn)",
+      "count": 2,
+      "file": "33-task-6c-cell-misc-2-fn.json"
+    },
+    {
+      "index": 34,
+      "slug": "task-6d-chore-control-3-fn",
+      "title": "Task 6d — Chore-Control (3 Fn)",
+      "count": 3,
+      "file": "34-task-6d-chore-control-3-fn.json"
+    },
+    {
+      "index": 35,
+      "slug": "task-6e-dimension-direct-misc-12-fn",
+      "title": "Task 6e — Dimension-Direct + Misc (12 Fn)",
+      "count": 12,
+      "file": "35-task-6e-dimension-direct-misc-12-fn.json"
+    },
+    {
+      "index": 36,
+      "slug": "task-6f-http-4-fn",
+      "title": "Task 6f — HTTP (4 Fn)",
+      "count": 4,
+      "file": "36-task-6f-http-4-fn.json"
+    },
+    {
+      "index": 37,
+      "slug": "task-6g-mdx-metadata-olap-14-fn",
+      "title": "Task 6g — MDX / MetaData / OLAP (14 Fn)",
+      "count": 0,
+      "file": "37-task-6g-mdx-metadata-olap-14-fn.json"
+    },
+    {
+      "index": 38,
+      "slug": "task-6h-token-text-6-fn",
+      "title": "Task 6h — Token / Text (6 Fn)",
+      "count": 0,
+      "file": "38-task-6h-token-text-6-fn.json"
+    },
+    {
+      "index": 39,
+      "slug": "task-6i-transaction-7-fn",
+      "title": "Task 6i — Transaction (7 Fn)",
+      "count": 0,
+      "file": "39-task-6i-transaction-7-fn.json"
+    },
+    {
+      "index": 40,
+      "slug": "task-6j-view-misc-subset-legacy-24-fn",
+      "title": "Task 6j — View-Misc + Subset-Legacy (24 Fn)",
+      "count": 13,
+      "file": "40-task-6j-view-misc-subset-legacy-24-fn.json"
+    },
+    {
+      "index": 41,
+      "slug": "task-6k-sonstige-18-fn",
+      "title": "Task 6k — Sonstige (18 Fn)",
+      "count": 26,
+      "file": "41-task-6k-sonstige-18-fn.json"
+    },
+    {
+      "index": 42,
+      "slug": "missing-ti-functions",
+      "title": "Missing classic + v12 TI functions (sandbox, security overlay, process-attr, view/subset, jobs)",
+      "count": 39,
+      "file": "42-missing-ti-functions.json"
+    },
+    {
+      "index": 43,
+      "slug": "rules-functions",
+      "title": "Rules functions (math, financial, consolidation, cube-data, element, hierarchy, date)",
+      "count": 36,
+      "file": "43-rules-functions.json"
+    },
+    {
+      "index": 44,
+      "slug": "v12-json-and-job-functions",
+      "title": "JSON and async-job functions (TM1 Database 12 only)",
+      "count": 14,
+      "file": "44-v12-json-and-job-functions.json"
+    },
+    {
+      "index": 45,
+      "slug": "drillthrough-handles",
+      "title": "Drillthrough handles (Epilog of a }Drill_* process)",
+      "count": 2,
+      "file": "45-drillthrough-handles.json"
+    },
+    {
+      "index": 46,
+      "slug": "undocumented-v11-only",
+      "title": "Undocumented v11 functions, removed in TM1 12",
+      "count": 13,
+      "file": "46-undocumented-v11-only.json"
+    }
+  ]
+}

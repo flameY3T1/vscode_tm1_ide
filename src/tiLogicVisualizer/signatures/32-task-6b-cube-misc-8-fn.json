@@ -1,0 +1,141 @@
+{
+  "title": "Task 6b — Cube-Misc (8 Fn)",
+  "entries": [
+    [
+      "addcubedependency",
+      {
+        "name": "AddCubeDependency",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "DependentCubeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "cubedimensioncountget",
+      {
+        "name": "CubeDimensionCountGet",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "cubeprocessfeeders",
+      {
+        "name": "CubeProcessFeeders",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "cuberuleappend",
+      {
+        "name": "CubeRuleAppend",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "RuleText",
+            "type": "string"
+          },
+          {
+            "name": "IsCalculationRule",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "cuberuledestroy",
+      {
+        "name": "CubeRuleDestroy",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "cubetimelastupdated",
+      {
+        "name": "CubeTimeLastUpdated",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "cellsecuritycubecreate",
+      {
+        "name": "CellSecurityCubeCreate",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Dimensions",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "cellsecuritycubedestroy",
+      {
+        "name": "CellSecurityCubeDestroy",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

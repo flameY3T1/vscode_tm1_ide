@@ -1,0 +1,509 @@
+{
+  "version": 1,
+  "docs": {
+    "cellgetn": {
+      "description": "Odczytuje wartość liczbową komórki z kostki.",
+      "paramDocs": {
+        "cubename": "Nazwa kostki",
+        "elem1": "Element pierwszego wymiaru",
+        "elemn": "Kolejne elementy wymiarów"
+      }
+    },
+    "cellgets": {
+      "description": "Odczytuje wartość tekstową komórki z kostki.",
+      "paramDocs": {
+        "cubename": "Nazwa kostki",
+        "elem1": "Element pierwszego wymiaru",
+        "elemn": "Kolejne elementy wymiarów"
+      }
+    },
+    "cellputn": {
+      "description": "Zapisuje wartość liczbową do komórki kostki.",
+      "paramDocs": {
+        "value": "Wartość liczbowa do zapisania",
+        "cubename": "Nazwa kostki",
+        "elem1": "Element pierwszego wymiaru",
+        "elemn": "Kolejne elementy wymiarów"
+      }
+    },
+    "cellputs": {
+      "description": "Zapisuje wartość tekstową do komórki kostki.",
+      "paramDocs": {
+        "value": "Wartość tekstowa do zapisania",
+        "cubename": "Nazwa kostki",
+        "elem1": "Element pierwszego wymiaru",
+        "elemn": "Kolejne elementy wymiarów"
+      }
+    },
+    "str": {
+      "description": "Konwertuje liczbę na sformatowany tekst.",
+      "paramDocs": {
+        "number": "Liczba do konwersji",
+        "width": "Łączna szerokość tekstu",
+        "decimals": "Liczba miejsc dziesiętnych"
+      }
+    },
+    "subst": {
+      "description": "Wyodrębnia podciąg.",
+      "paramDocs": {
+        "string": "Tekst źródłowy",
+        "start": "Pozycja początkowa (liczona od 1)",
+        "length": "Długość podciągu"
+      }
+    },
+    "scan": {
+      "description": "Szuka podciągu. Zwraca jego pozycję (0 = nie znaleziono).",
+      "paramDocs": {
+        "substring": "Szukany podciąg",
+        "string": "Tekst, w którym się szuka"
+      }
+    },
+    "trim": {
+      "description": "Usuwa spacje na początku i na końcu.",
+      "paramDocs": {
+        "string": "Tekst do oczyszczenia"
+      }
+    },
+    "upper": {
+      "description": "Zamienia tekst na wielkie litery.",
+      "paramDocs": {
+        "string": "Tekst do konwersji"
+      }
+    },
+    "lower": {
+      "description": "Zamienia tekst na małe litery.",
+      "paramDocs": {
+        "string": "Tekst do konwersji"
+      }
+    },
+    "long": {
+      "description": "Zwraca długość tekstu.",
+      "paramDocs": {
+        "string": "Tekst, którego długość jest mierzona"
+      }
+    },
+    "char": {
+      "description": "Zwraca znak odpowiadający kodowi ASCII.",
+      "paramDocs": {
+        "number": "Kod ASCII (1–255)"
+      }
+    },
+    "code": {
+      "description": "Zwraca kod ASCII znaku na danej pozycji.",
+      "paramDocs": {
+        "string": "Tekst źródłowy",
+        "position": "Pozycja znaku (liczona od 1)"
+      }
+    },
+    "fill": {
+      "description": "Powtarza tekst do podanej długości.",
+      "paramDocs": {
+        "string": "Tekst do powtórzenia",
+        "length": "Łączna długość wyniku"
+      }
+    },
+    "capit": {
+      "description": "Zwraca tekst z pierwszą literą wielką.",
+      "paramDocs": {
+        "string": "Tekst źródłowy"
+      }
+    },
+    "delet": {
+      "description": "Usuwa znaki z tekstu.",
+      "paramDocs": {
+        "string": "Tekst źródłowy",
+        "start": "Pozycja początkowa (liczona od 1)",
+        "length": "Liczba znaków do usunięcia"
+      }
+    },
+    "insrt": {
+      "description": "Wstawia tekst na danej pozycji.",
+      "paramDocs": {
+        "insert": "Tekst do wstawienia",
+        "string": "Tekst docelowy",
+        "position": "Pozycja wstawienia (liczona od 1)"
+      }
+    },
+    "numbr": {
+      "description": "Konwertuje tekst na liczbę.",
+      "paramDocs": {
+        "string": "Tekst do konwersji"
+      }
+    },
+    "expand": {
+      "description": "Rozwija odwołania do zmiennych (%) wewnątrz tekstu.",
+      "paramDocs": {
+        "string": "Tekst zawierający odwołania %zmienna%"
+      }
+    },
+    "numbertostring": {
+      "description": "Konwertuje liczbę na tekst bez formatowania.",
+      "paramDocs": {
+        "number": "Liczba do konwersji"
+      }
+    },
+    "numbertostringex": {
+      "description": "Konwertuje liczbę na sformatowany tekst.",
+      "paramDocs": {
+        "number": "Liczba do konwersji",
+        "formatstring": "Ciąg formatu (np. „#,##0.00”)",
+        "decimalseparator": "Separator dziesiętny",
+        "thousandsseparator": "Separator tysięcy"
+      }
+    },
+    "stringtonumber": {
+      "description": "Konwertuje tekst na liczbę.",
+      "paramDocs": {
+        "string": "Tekst do konwersji"
+      }
+    },
+    "abs": {
+      "description": "Zwraca wartość bezwzględną.",
+      "paramDocs": {
+        "number": "Wartość liczbowa"
+      }
+    },
+    "int": {
+      "description": "Zwraca część całkowitą (zaokrągloną w dół).",
+      "paramDocs": {
+        "number": "Wartość liczbowa"
+      }
+    },
+    "round": {
+      "description": "Zaokrągla liczbę do podanej liczby miejsc dziesiętnych.",
+      "paramDocs": {
+        "number": "Liczba do zaokrąglenia",
+        "decimals": "Liczba miejsc dziesiętnych"
+      }
+    },
+    "mod": {
+      "description": "Zwraca resztę z dzielenia.",
+      "paramDocs": {
+        "number": "Dzielna",
+        "divisor": "Dzielnik"
+      }
+    },
+    "max": {
+      "description": "Zwraca większą z dwóch liczb.",
+      "paramDocs": {
+        "number1": "Pierwsza liczba",
+        "number2": "Druga liczba"
+      }
+    },
+    "min": {
+      "description": "Zwraca mniejszą z dwóch liczb.",
+      "paramDocs": {
+        "number1": "Pierwsza liczba",
+        "number2": "Druga liczba"
+      }
+    },
+    "power": {
+      "description": "Zwraca podstawę podniesioną do wykładnika.",
+      "paramDocs": {
+        "base": "Podstawa",
+        "exponent": "Wykładnik"
+      }
+    },
+    "sqrt": {
+      "description": "Zwraca pierwiastek kwadratowy.",
+      "paramDocs": {
+        "number": "Wartość liczbowa (≥ 0)"
+      }
+    },
+    "log": {
+      "description": "Zwraca logarytm naturalny.",
+      "paramDocs": {
+        "number": "Wartość liczbowa (> 0)"
+      }
+    },
+    "log10": {
+      "description": "Zwraca logarytm o podstawie 10.",
+      "paramDocs": {
+        "number": "Wartość liczbowa (> 0)"
+      }
+    },
+    "exp": {
+      "description": "Zwraca e podniesione do podanej liczby.",
+      "paramDocs": {
+        "number": "Wykładnik"
+      }
+    },
+    "rand": {
+      "description": "Zwraca liczbę losową z przedziału od 0 do 1."
+    },
+    "today": {
+      "description": "Zwraca bieżącą datę jako tekst.",
+      "paramDocs": {
+        "format": "Format daty (np. „DD-MM-YYYY”)"
+      }
+    },
+    "now": {
+      "description": "Zwraca datę i godzinę jako tekst.",
+      "paramDocs": {
+        "format": "Format daty (np. „DD-MM-YYYY HH:MM:SS”)"
+      }
+    },
+    "date": {
+      "description": "Konwertuje numer dnia (od 1900-01-01) na datę.",
+      "paramDocs": {
+        "days": "Liczba dni od 1900-01-01",
+        "format": "Format wyjściowy"
+      }
+    },
+    "dayno": {
+      "description": "Konwertuje datę na numer dnia.",
+      "paramDocs": {
+        "datestring": "Data w formacie DD/MM/YYYY lub podobnym"
+      }
+    },
+    "timst": {
+      "description": "Formatuje wartość godziny.",
+      "paramDocs": {
+        "time": "Wartość godziny",
+        "format": "Format wyjściowy (np. „HH:MM:SS”)"
+      }
+    },
+    "year": {
+      "description": "Zwraca rok z daty.",
+      "paramDocs": {
+        "datestring": "Tekst daty"
+      }
+    },
+    "month": {
+      "description": "Zwraca miesiąc (1–12) z daty.",
+      "paramDocs": {
+        "datestring": "Tekst daty"
+      }
+    },
+    "day": {
+      "description": "Zwraca dzień (1–31) z daty.",
+      "paramDocs": {
+        "datestring": "Tekst daty"
+      }
+    },
+    "parsedate": {
+      "description": "Konwertuje tekst daty na seryjny numer daty. Wzorzec i indeks są opcjonalne.",
+      "paramDocs": {
+        "datestring": "Tekst daty",
+        "pattern": "Wzorzec formatu (składnia ICU); puste = domyślny formatera",
+        "index": "Indeks formatera utworzonego przez NewDateFormatter (domyślnie 0)"
+      }
+    },
+    "dimsiz": {
+      "description": "Zwraca liczbę elementów w wymiarze.",
+      "paramDocs": {
+        "dimensionname": "Nazwa wymiaru"
+      }
+    },
+    "dimnm": {
+      "description": "Zwraca nazwę elementu na danej pozycji.",
+      "paramDocs": {
+        "dimensionname": "Nazwa wymiaru",
+        "index": "Pozycja elementu (liczona od 1)"
+      }
+    },
+    "dimix": {
+      "description": "Zwraca pozycję (indeks) elementu.",
+      "paramDocs": {
+        "dimensionname": "Nazwa wymiaru",
+        "elementname": "Nazwa elementu"
+      }
+    },
+    "dtype": {
+      "description": "Zwraca typ elementu (N=liczbowy, S=tekstowy, C=skonsolidowany).",
+      "paramDocs": {
+        "dimensionname": "Nazwa wymiaru",
+        "elementname": "Nazwa elementu"
+      }
+    },
+    "dnlev": {
+      "description": "Zwraca liczbę poziomów w wymiarze.",
+      "paramDocs": {
+        "dimensionname": "Nazwa wymiaru"
+      }
+    },
+    "dnxt": {
+      "description": "Zwraca następny element w wymiarze.",
+      "paramDocs": {
+        "dimensionname": "Nazwa wymiaru",
+        "elementname": "Bieżący element"
+      }
+    },
+    "elpar": {
+      "description": "Zwraca nazwę elementu nadrzędnego.",
+      "paramDocs": {
+        "dimensionname": "Nazwa wymiaru",
+        "elementname": "Nazwa elementu",
+        "parentindex": "Indeks elementu nadrzędnego (liczony od 1)"
+      }
+    },
+    "elparn": {
+      "description": "Zwraca liczbę elementów nadrzędnych.",
+      "paramDocs": {
+        "dimensionname": "Nazwa wymiaru",
+        "elementname": "Nazwa elementu"
+      }
+    },
+    "ellev": {
+      "description": "Zwraca poziom elementu.",
+      "paramDocs": {
+        "dimensionname": "Nazwa wymiaru",
+        "elementname": "Nazwa elementu"
+      }
+    },
+    "elcomp": {
+      "description": "Zwraca nazwę elementu podrzędnego.",
+      "paramDocs": {
+        "dimensionname": "Nazwa wymiaru",
+        "elementname": "Nazwa elementu nadrzędnego",
+        "childindex": "Indeks elementu podrzędnego (liczony od 1)"
+      }
+    },
+    "elcompn": {
+      "description": "Zwraca liczbę elementów podrzędnych.",
+      "paramDocs": {
+        "dimensionname": "Nazwa wymiaru",
+        "elementname": "Nazwa elementu nadrzędnego"
+      }
+    },
+    "elweight": {
+      "description": "Zwraca wagę elementu podrzędnego.",
+      "paramDocs": {
+        "dimensionname": "Nazwa wymiaru",
+        "parentname": "Nazwa elementu nadrzędnego",
+        "childname": "Nazwa elementu podrzędnego"
+      }
+    },
+    "elisanc": {
+      "description": "Sprawdza, czy AncestorName jest przodkiem ElementName. Zwraca 1 albo 0.",
+      "paramDocs": {
+        "dimensionname": "Nazwa wymiaru",
+        "elementname": "Nazwa elementu",
+        "ancestorname": "Sprawdzany przodek"
+      }
+    },
+    "attrs": {
+      "description": "Zwraca wartość atrybutu tekstowego.",
+      "paramDocs": {
+        "dimensionname": "Nazwa wymiaru",
+        "elementname": "Nazwa elementu",
+        "attributename": "Nazwa atrybutu"
+      }
+    },
+    "attrn": {
+      "description": "Zwraca wartość atrybutu liczbowego.",
+      "paramDocs": {
+        "dimensionname": "Nazwa wymiaru",
+        "elementname": "Nazwa elementu",
+        "attributename": "Nazwa atrybutu"
+      }
+    },
+    "executeprocess": {
+      "description": "Uruchamia inny proces TI.",
+      "paramDocs": {
+        "processname": "Nazwa procesu do uruchomienia",
+        "paramname": "Nazwa parametru (opcjonalnie)",
+        "paramvalue": "Wartość parametru"
+      }
+    },
+    "logoutput": {
+      "description": "Zapisuje komunikat w dzienniku komunikatów TM1.",
+      "paramDocs": {
+        "severity": "Waga: 1=INFO, 2=WARN, 3=ERROR, 5=DEBUG",
+        "message": "Komunikat do zapisania"
+      }
+    },
+    "asciioutput": {
+      "description": "Zapisuje wartości do pliku ASCII.",
+      "paramDocs": {
+        "filename": "Plik docelowy (ścieżka na serwerze)",
+        "value1": "Pierwsza wartość",
+        "valuen": "Kolejne wartości"
+      }
+    },
+    "textoutput": {
+      "description": "Zapisuje wartości rozdzielone separatorem do pliku tekstowego.",
+      "paramDocs": {
+        "filename": "Plik docelowy",
+        "value1": "Pierwsza wartość",
+        "valuen": "Kolejne wartości"
+      }
+    },
+    "savedataall": {
+      "description": "Zapisuje na dysk dane wszystkich kostek."
+    },
+    "getprocessname": {
+      "description": "Zwraca nazwę aktualnie działającego procesu."
+    },
+    "isnumeric": {
+      "description": "Sprawdza, czy tekst reprezentuje prawidłową liczbę. Zwraca 1 albo 0.",
+      "paramDocs": {
+        "string": "Tekst do sprawdzenia"
+      }
+    },
+    "isundefined": {
+      "description": "Sprawdza, czy wartość jest niezdefiniowana.",
+      "paramDocs": {
+        "value": "Wartość do sprawdzenia"
+      }
+    },
+    "dimensioncreate": {
+      "description": "Tworzy nowy wymiar.",
+      "paramDocs": {
+        "dimensionname": "Nazwa tworzonego wymiaru"
+      }
+    },
+    "subsetcreate": {
+      "description": "Tworzy nowy podzbiór.",
+      "paramDocs": {
+        "subsetname": "Nazwa podzbioru",
+        "dimensionname": "Nazwa wymiaru"
+      }
+    },
+    "subsetelementadd": {
+      "description": "Dodaje element do podzbioru.",
+      "paramDocs": {
+        "subsetname": "Nazwa podzbioru",
+        "dimensionname": "Nazwa wymiaru",
+        "elementname": "Element do dodania"
+      }
+    },
+    "cubecreate": {
+      "description": "Tworzy nową kostkę.",
+      "paramDocs": {
+        "cubename": "Nazwa kostki",
+        "dim1": "Nazwa pierwszego wymiaru",
+        "dimn": "Kolejne wymiary"
+      }
+    },
+    "viewcreate": {
+      "description": "Tworzy nowy widok.",
+      "paramDocs": {
+        "cubename": "Nazwa kostki",
+        "viewname": "Nazwa widoku"
+      }
+    },
+    "viewzeroout": {
+      "description": "Zeruje wszystkie komórki w widoku.",
+      "paramDocs": {
+        "cubename": "Nazwa kostki",
+        "viewname": "Nazwa widoku"
+      }
+    },
+    "stringglobalvariable": {
+      "description": "Deklaruje globalną zmienną tekstową.",
+      "paramDocs": {
+        "variablename": "Nazwa zmiennej globalnej"
+      }
+    },
+    "numericglobalvariable": {
+      "description": "Deklaruje globalną zmienną liczbową.",
+      "paramDocs": {
+        "variablename": "Nazwa zmiennej globalnej"
+      }
+    },
+    "securityrefresh": {
+      "description": "Odświeża pamięć podręczną zabezpieczeń serwera."
+    }
+  }
+}

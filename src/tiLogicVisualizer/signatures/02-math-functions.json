@@ -1,0 +1,190 @@
+{
+  "title": "Math functions",
+  "entries": [
+    [
+      "abs",
+      {
+        "name": "ABS",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Number",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "int",
+      {
+        "name": "INT",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Number",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "round",
+      {
+        "name": "ROUND",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Number",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "mod",
+      {
+        "name": "MOD",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "Number",
+            "type": "numeric"
+          },
+          {
+            "name": "Divisor",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "max",
+      {
+        "name": "MAX",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "Number1",
+            "type": "numeric"
+          },
+          {
+            "name": "Number2",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "min",
+      {
+        "name": "MIN",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "Number1",
+            "type": "numeric"
+          },
+          {
+            "name": "Number2",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "sqrt",
+      {
+        "name": "SQRT",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Number",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "sin",
+      {
+        "name": "SIN",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Angle",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "log",
+      {
+        "name": "LOG",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Number",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "exp",
+      {
+        "name": "EXP",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Number",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "rand",
+      {
+        "name": "RAND",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "roundp",
+      {
+        "name": "ROUNDP",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          { "name": "Number", "type": "numeric" },
+          { "name": "Decimals", "type": "numeric" }
+        ],
+        "returnType": "numeric"
+      }
+    ]
+  ]
+}

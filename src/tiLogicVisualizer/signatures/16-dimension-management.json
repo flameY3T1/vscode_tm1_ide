@@ -1,0 +1,196 @@
+{
+  "title": "Dimension management",
+  "entries": [
+    [
+      "dimensiondestroy",
+      {
+        "name": "DimensionDestroy",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "dimensionexists",
+      {
+        "name": "DimensionExists",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "dimensiondeleteallelements",
+      {
+        "name": "DimensionDeleteAllElements",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "dimensionelementinsert",
+      {
+        "name": "DimensionElementInsert",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "Position",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "ElementType",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "dimensionelementdelete",
+      {
+        "name": "DimensionElementDelete",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "dimensionelementexists",
+      {
+        "name": "DimensionElementExists",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "dimensionelementcomponentadd",
+      {
+        "name": "DimensionElementComponentAdd",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ParentName",
+            "type": "string"
+          },
+          {
+            "name": "ChildName",
+            "type": "string"
+          },
+          {
+            "name": "Weight",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "dimensionelementcomponentdelete",
+      {
+        "name": "DimensionElementComponentDelete",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ParentName",
+            "type": "string"
+          },
+          {
+            "name": "ChildName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "dimensionsortorder",
+      {
+        "name": "DimensionSortOrder",
+        "minParams": 5,
+        "maxParams": 5,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "HierarchyName",
+            "type": "string"
+          },
+          {
+            "name": "Order",
+            "type": "string"
+          },
+          {
+            "name": "SortingCriteria",
+            "type": "string"
+          },
+          {
+            "name": "AttributeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

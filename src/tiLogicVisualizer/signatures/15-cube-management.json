@@ -1,0 +1,124 @@
+{
+  "title": "Cube management",
+  "entries": [
+    [
+      "cubedestroy",
+      {
+        "name": "CubeDestroy",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "cubeexists",
+      {
+        "name": "CubeExists",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "tabdim",
+      {
+        "name": "TabDim",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Index",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "cubecleardata",
+      {
+        "name": "CubeClearData",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "cubesetlogchanges",
+      {
+        "name": "CubeSetLogChanges",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "LogChanges",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "cubegetlogchanges",
+      {
+        "name": "CubeGetLogChanges",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "ruleloadfromfile",
+      {
+        "name": "RuleLoadFromFile",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "FileName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

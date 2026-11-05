@@ -1,0 +1,184 @@
+[
+  {
+    "ThreadID": 25556,
+    "Level": "Info",
+    "TimeStamp": "2026-07-25T13:34:57.234Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"\" executed by user \"tm1user\""
+  },
+  {
+    "ThreadID": 25556,
+    "Level": "Info",
+    "TimeStamp": "2026-07-25T13:34:57.234Z",
+    "Logger": "TM1.Process",
+    "Message": "Prozess \"\":  Ausführung normal beendet, verstrichene Zeit 0.00 Sekunden"
+  },
+  {
+    "ThreadID": 25556,
+    "Level": "Info",
+    "TimeStamp": "2026-07-25T13:34:57.231Z",
+    "Logger": "TM1.Process",
+    "Message": "Prozess \"}VSCode_ProbeTransient\":  Ausführung normal beendet, verstrichene Zeit 0.00 Sekunden"
+  },
+  {
+    "ThreadID": 25556,
+    "Level": "Info",
+    "TimeStamp": "2026-07-25T13:34:57.230Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"}VSCode_ProbeTransient\" executed by user \"tm1user\""
+  },
+  {
+    "ThreadID": 16196,
+    "Level": "Info",
+    "TimeStamp": "2026-07-25T07:54:32.598Z",
+    "Logger": "TM1.Process",
+    "Message": "Prozess \"}zzDir\":  finished executing normally.  Check new message in the file: <TM1ProcessError_20260725075432_58816196_}zzDir.log>"
+  },
+  {
+    "ThreadID": 16196,
+    "Level": "Info",
+    "TimeStamp": "2026-07-25T07:54:32.597Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"}zzDir\" executed by user \"tm1user\""
+  },
+  {
+    "ThreadID": 9800,
+    "Level": "Error",
+    "TimeStamp": "2026-07-25T07:50:44.227Z",
+    "Logger": "TM1.Process",
+    "Message": "Prozess \"}zzP\": : Die Ausführung wurde abgebrochen. Fehlerdatei: <TM1ProcessError_20260725075044_22509800_}zzP.log>"
+  },
+  {
+    "ThreadID": 9800,
+    "Level": "Info",
+    "TimeStamp": "2026-07-25T07:50:44.225Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"}zzP\" executed by user \"tm1user\""
+  },
+  {
+    "ThreadID": 12680,
+    "Level": "Error",
+    "TimeStamp": "2026-07-25T07:50:09.380Z",
+    "Logger": "TM1.Process",
+    "Message": "Prozess \"}zzP\": Fehler in Zeile 2\nVariable \"recordnumber\" ist nicht definiert.\nIF(RecordNumber<=8);: Der Prozess konnte nicht initialisiert werden"
+  },
+  {
+    "ThreadID": 12680,
+    "Level": "Info",
+    "TimeStamp": "2026-07-25T07:50:09.376Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"}zzP\" executed by user \"tm1user\""
+  },
+  {
+    "ThreadID": 22768,
+    "Level": "Info",
+    "TimeStamp": "2026-07-24T20:05:00.499Z",
+    "Logger": "TM1.Chore",
+    "Message": "Chore \"tt\" time = 0.10 seconds"
+  },
+  {
+    "ThreadID": 22768,
+    "Level": "Info",
+    "TimeStamp": "2026-07-24T20:05:00.499Z",
+    "Logger": "TM1.Process",
+    "Message": "Prozess \"_test\":  Ausführung normal beendet, verstrichene Zeit 0.10 Sekunden"
+  },
+  {
+    "ThreadID": 22768,
+    "Level": "Info",
+    "TimeStamp": "2026-07-24T20:05:00.499Z",
+    "Logger": "TM1.Chore",
+    "Message": "Chore \"tt\" finished executing"
+  },
+  {
+    "ThreadID": 22768,
+    "Level": "Info",
+    "TimeStamp": "2026-07-24T20:05:00.395Z",
+    "Logger": "TM1.Chore",
+    "Message": "Chore \"tt\" executed by scheduler"
+  },
+  {
+    "ThreadID": 22768,
+    "Level": "Info",
+    "TimeStamp": "2026-07-24T20:05:00.395Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"_test\" executed by chore \"tt\""
+  },
+  {
+    "ThreadID": 12920,
+    "Level": "Info",
+    "TimeStamp": "2026-07-18T15:57:00.741Z",
+    "Logger": "TM1.Chore",
+    "Message": "Chore \"ttt\" finished executing"
+  },
+  {
+    "ThreadID": 12920,
+    "Level": "Info",
+    "TimeStamp": "2026-07-18T15:57:00.740Z",
+    "Logger": "TM1.Process",
+    "Message": "Prozess \"_test\":  Ausführung normal beendet, verstrichene Zeit 0.11 Sekunden"
+  },
+  {
+    "ThreadID": 12920,
+    "Level": "Info",
+    "TimeStamp": "2026-07-18T15:57:00.740Z",
+    "Logger": "TM1.Chore",
+    "Message": "Chore \"ttt\" time = 0.11 seconds"
+  },
+  {
+    "ThreadID": 12920,
+    "Level": "Info",
+    "TimeStamp": "2026-07-18T15:57:00.632Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"_test\" executed by chore \"ttt\""
+  },
+  {
+    "ThreadID": 12920,
+    "Level": "Info",
+    "TimeStamp": "2026-07-18T15:57:00.630Z",
+    "Logger": "TM1.Chore",
+    "Message": "Chore \"ttt\" executed by scheduler"
+  },
+  {
+    "ThreadID": 10596,
+    "Level": "Info",
+    "TimeStamp": "2026-07-18T05:55:16.651Z",
+    "Logger": "TM1.Process",
+    "Message": "Prozess \"}bedrock.cube.data.copy\":  mit ProcessBreak beendet"
+  },
+  {
+    "ThreadID": 10596,
+    "Level": "Info",
+    "TimeStamp": "2026-07-18T05:55:16.651Z",
+    "Logger": "TM1.Process",
+    "Message": "Prozess \"00303_copy_data_snapshot\":  Ausführung normal beendet, verstrichene Zeit 0.01 Sekunden"
+  },
+  {
+    "ThreadID": 10596,
+    "Level": "Info",
+    "TimeStamp": "2026-07-18T05:55:16.647Z",
+    "Logger": "TM1.Process",
+    "Message": "Prozess \"}bedrock.cube.data.copy\":  mit ProcessBreak beendet"
+  },
+  {
+    "ThreadID": 10596,
+    "Level": "Info",
+    "TimeStamp": "2026-07-18T05:55:16.647Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"}bedrock.cube.data.copy\" run from process \"00303_copy_data_snapshot\" by user \"flameY3T1\""
+  },
+  {
+    "ThreadID": 10596,
+    "Level": "Info",
+    "TimeStamp": "2026-07-18T05:55:16.640Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"}bedrock.cube.data.copy\" run from process \"00303_copy_data_snapshot\" by user \"flameY3T1\""
+  },
+  {
+    "ThreadID": 10596,
+    "Level": "Info",
+    "TimeStamp": "2026-07-18T05:55:16.639Z",
+    "Logger": "TM1.Process",
+    "Message": "Process \"00303_copy_data_snapshot\" executed by user \"flameY3T1\""
+  }
+]

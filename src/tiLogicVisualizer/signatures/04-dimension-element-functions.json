@@ -1,0 +1,260 @@
+{
+  "title": "Dimension/Element functions",
+  "entries": [
+    [
+      "dimsiz",
+      {
+        "name": "DIMSIZ",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "dimnm",
+      {
+        "name": "DIMNM",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "Index",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "dimix",
+      {
+        "name": "DIMIX",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "dtype",
+      {
+        "name": "DTYPE",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "dnlev",
+      {
+        "name": "DNLEV",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "dnext",
+      {
+        "name": "DNEXT",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "elpar",
+      {
+        "name": "ELPAR",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "ParentIndex",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "elparn",
+      {
+        "name": "ELPARN",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "ellev",
+      {
+        "name": "ELLEV",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "elcomp",
+      {
+        "name": "ELCOMP",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "ChildIndex",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "elcompn",
+      {
+        "name": "ELCOMPN",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "elweight",
+      {
+        "name": "ELWEIGHT",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ParentName",
+            "type": "string"
+          },
+          {
+            "name": "ChildName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "elisanc",
+      {
+        "name": "ELISANC",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "AncestorName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ]
+  ]
+}

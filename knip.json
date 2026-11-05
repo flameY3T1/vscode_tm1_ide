@@ -1,0 +1,21 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "src/webviewClient/*/index.ts",
+    "scripts/*.cjs",
+    "src/test/**/*.test.ts",
+    "src/test-integration/**/*.test.ts"
+  ],
+  "project": ["src/**/*.ts"],
+  "ignore": [
+    "src/tm1Rest/transport/authAssertions.ts"
+  ],
+  "ignoreDependencies": [
+    "@types/vscode",
+    "@vscode/test-electron"
+  ],
+  "ignoreBinaries": [
+    "dot"
+  ],
+  "ignoreExportsUsedInFile": true
+}

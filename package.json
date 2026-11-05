@@ -1,0 +1,3332 @@
+{
+  "name": "vscode-tm1-ide",
+  "publisher": "flameY3T1",
+  "displayName": "TM1 IDE – IBM Planning Analytics (TurboIntegrator, Rules, MDX)",
+  "description": "%extension.description%",
+  "l10n": "./l10n",
+  "version": "1.0.54",
+  "icon": "media/icon.png",
+  "files": [
+    "out/extension.js",
+    "out/THIRD_PARTY_NOTICES.txt",
+    "out/webview/**/*.js",
+    "out/webview/**/*.css",
+    "out/webview/**/*.ttf",
+    "l10n/*.json",
+    "media/icon.png",
+    "media/icons/**/*.svg",
+    "media/*.json",
+    "resources/native/**",
+    "snippets/*.json",
+    "syntaxes/*.json",
+    "language-configuration*.json",
+    "package.nls*.json",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "SECURITY.md"
+  ],
+  "galleryBanner": {
+    "color": "#0d2238",
+    "theme": "dark"
+  },
+  "keywords": [
+    "IBM Planning Analytics",
+    "Planning Analytics",
+    "Planning Analytics Workspace",
+    "PAW",
+    "TurboIntegrator",
+    "MDX",
+    "OLAP",
+    "linter"
+  ],
+  "license": "MIT",
+  "author": "flameY3T1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flameY3T1/vscode_tm1_ide.git"
+  },
+  "qna": "marketplace",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "extensionKind": [
+    "workspace"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "Server profiles and credentials live outside the workspace, so a folder cannot redirect them. In Restricted Mode the workspace cannot set the TI test root folder or the native API path.",
+      "restrictedConfigurations": [
+        "tm1.tests.rootFolder",
+        "tm1.nativeApiPath"
+      ]
+    },
+    "virtualWorkspaces": {
+      "supported": false,
+      "description": "Requires local file-system access (Git mirror, .pro/.rux/.ti files) and Node networking for the TM1 REST API, which are unavailable in virtual workspaces."
+    }
+  },
+  "categories": [
+    "Programming Languages",
+    "Debuggers",
+    "Linters",
+    "Formatters",
+    "Snippets",
+    "Notebooks"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "notebooks": [
+      {
+        "type": "tm1-notebook",
+        "displayName": "%tm1.notebook.displayName%",
+        "selector": [
+          {
+            "filenamePattern": "*.tm1nb"
+          }
+        ]
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "tm1.tiConsole.open",
+        "key": "ctrl+alt+j c",
+        "mac": "cmd+alt+j c"
+      },
+      {
+        "command": "tm1.tiConsole.open",
+        "key": "ctrl+alt+j ctrl+alt+c",
+        "mac": "cmd+alt+j cmd+alt+c"
+      },
+      {
+        "command": "tm1.showMessageLog",
+        "key": "ctrl+alt+j l",
+        "mac": "cmd+alt+j l"
+      },
+      {
+        "command": "tm1.showMessageLog",
+        "key": "ctrl+alt+j ctrl+alt+l",
+        "mac": "cmd+alt+j cmd+alt+l"
+      },
+      {
+        "command": "tm1.showThreads",
+        "key": "ctrl+alt+j t",
+        "mac": "cmd+alt+j t"
+      },
+      {
+        "command": "tm1.showThreads",
+        "key": "ctrl+alt+j ctrl+alt+t",
+        "mac": "cmd+alt+j cmd+alt+t"
+      },
+      {
+        "command": "tm1.mdx.open",
+        "key": "ctrl+alt+j m",
+        "mac": "cmd+alt+j m"
+      },
+      {
+        "command": "tm1.mdx.open",
+        "key": "ctrl+alt+j ctrl+alt+m",
+        "mac": "cmd+alt+j cmd+alt+m"
+      },
+      {
+        "command": "tm1.findReplaceObjects",
+        "key": "ctrl+alt+j f",
+        "mac": "cmd+alt+j f"
+      },
+      {
+        "command": "tm1.findReplaceObjects",
+        "key": "ctrl+alt+j ctrl+alt+f",
+        "mac": "cmd+alt+j cmd+alt+f"
+      },
+      {
+        "command": "tm1.goToObject",
+        "key": "ctrl+alt+j o",
+        "mac": "cmd+alt+j o"
+      },
+      {
+        "command": "tm1.goToObject",
+        "key": "ctrl+alt+j ctrl+alt+o",
+        "mac": "cmd+alt+j cmd+alt+o"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "tm1-explorer",
+          "title": "TM1 IDE",
+          "icon": "$(server-environment)"
+        }
+      ]
+    },
+    "views": {
+      "tm1-explorer": [
+        {
+          "id": "tm1.recent",
+          "name": "%view.tm1.recent.name%",
+          "canSearch": false,
+          "when": "tm1.recent.hasItems",
+          "initialSize": 1
+        },
+        {
+          "id": "tm1Explorer",
+          "name": "TM1 Explorer",
+          "canSearch": false,
+          "initialSize": 8
+        },
+        {
+          "id": "tm1.tiTests",
+          "name": "TI Tests",
+          "canSearch": false,
+          "when": "tm1.tiTests.hasItems",
+          "initialSize": 1
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "tm1Explorer",
+        "contents": "%viewsWelcome.tm1Explorer.contents%"
+      }
+    ],
+    "configurationDefaults": {
+      "[ti]": {
+        "editor.quickSuggestions": {
+          "other": true,
+          "comments": false,
+          "strings": false
+        },
+        "editor.suggestOnTriggerCharacters": true
+      }
+    },
+    "languages": [
+      {
+        "id": "tm1mdx",
+        "aliases": [
+          "TM1 MDX"
+        ],
+        "configuration": "./language-configuration.mdx.json"
+      },
+      {
+        "id": "tm1status",
+        "aliases": [
+          "TM1 Status Check"
+        ]
+      },
+      {
+        "id": "tm1params",
+        "aliases": [
+          "TM1 Parameters"
+        ]
+      },
+      {
+        "id": "tm1rules",
+        "aliases": [
+          "TM1 Rules"
+        ],
+        "extensions": [
+          ".rux"
+        ],
+        "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "ti",
+        "aliases": [
+          "Turbo Integrator",
+          "TI",
+          "TM1"
+        ],
+        "extensions": [
+          ".ti",
+          ".pro"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "ti",
+        "scopeName": "source.ti",
+        "path": "./syntaxes/ti.tmLanguage.json"
+      },
+      {
+        "language": "tm1mdx",
+        "scopeName": "source.tm1mdx",
+        "path": "./syntaxes/tm1mdx.tmLanguage.json"
+      },
+      {
+        "language": "tm1rules",
+        "scopeName": "source.tm1rules",
+        "path": "./syntaxes/rules.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "ti",
+        "path": "./snippets/ti.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "tm1.testConnection",
+        "title": "%tm1.testConnection.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.probeODBC",
+        "title": "%tm1.probeODBC.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.deployProcess",
+        "title": "%tm1.deployProcess.title%",
+        "category": "TM1",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "tm1.executeProcess",
+        "title": "%tm1.executeProcess.title%",
+        "category": "TM1",
+        "icon": "$(play)"
+      },
+      {
+        "command": "tm1.deployAndExecute",
+        "title": "%tm1.deployAndExecute.title%",
+        "category": "TM1",
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "tm1.debugProcess",
+        "title": "%tm1.debugProcess.title%",
+        "category": "TM1",
+        "icon": "$(debug-alt)"
+      },
+      {
+        "command": "tm1.showTm1Top",
+        "title": "%tm1.showTm1Top.title%",
+        "category": "TM1",
+        "icon": "$(pulse)"
+      },
+      {
+        "command": "tm1.showThreads",
+        "title": "%tm1.showThreads.title%",
+        "category": "TM1",
+        "icon": "$(pulse)"
+      },
+      {
+        "command": "tm1.showLockChain",
+        "title": "%tm1.showLockChain.title%",
+        "category": "TM1",
+        "icon": "$(debug-disconnect)"
+      },
+      {
+        "command": "tm1.mdx.open",
+        "title": "%tm1.mdx.open.title%",
+        "category": "TM1",
+        "icon": "$(table)"
+      },
+      {
+        "command": "tm1.selectServer",
+        "title": "%tm1.selectServer.title%",
+        "category": "TM1",
+        "icon": "$(server-environment)"
+      },
+      {
+        "command": "tm1.addServer",
+        "title": "%tm1.addServer.title%",
+        "category": "TM1",
+        "icon": "$(add)"
+      },
+      {
+        "command": "tm1.editServer",
+        "title": "%tm1.editServer.title%",
+        "category": "TM1",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "tm1.server.editById",
+        "title": "%tm1.server.editById.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.createServerFolder",
+        "title": "%tm1.createServerFolder.title%",
+        "category": "TM1",
+        "icon": "$(new-folder)"
+      },
+      {
+        "command": "tm1.server.moveToFolder",
+        "title": "%tm1.server.moveToFolder.title%",
+        "category": "TM1",
+        "icon": "$(folder)"
+      },
+      {
+        "command": "tm1.server.delete",
+        "title": "%tm1.server.delete.title%",
+        "category": "TM1",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.serverFolder.rename",
+        "title": "%tm1.serverFolder.rename.title%",
+        "category": "TM1",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "tm1.serverFolder.delete",
+        "title": "%tm1.serverFolder.delete.title%",
+        "category": "TM1",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.adminServer.add",
+        "title": "%tm1.adminServer.add.title%",
+        "category": "TM1",
+        "icon": "$(add)"
+      },
+      {
+        "command": "tm1.adminServer.refresh",
+        "title": "%tm1.adminServer.refresh.title%",
+        "category": "TM1",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "tm1.adminServer.edit",
+        "title": "%tm1.adminServer.edit.title%",
+        "category": "TM1",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "tm1.adminServer.editPaw",
+        "title": "%tm1.adminServer.editPaw.title%",
+        "category": "TM1",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "tm1.adminServer.remove",
+        "title": "%tm1.adminServer.remove.title%",
+        "category": "TM1",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.adminServer.removePaw",
+        "title": "%tm1.adminServer.removePaw.title%",
+        "category": "TM1",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.adminServer.restore",
+        "title": "%tm1.adminServer.restore.title%",
+        "category": "TM1",
+        "icon": "$(history)"
+      },
+      {
+        "command": "tm1.adminServer.hide",
+        "title": "%tm1.adminServer.hide.title%",
+        "category": "TM1",
+        "icon": "$(eye-closed)"
+      },
+      {
+        "command": "tm1.adminServer.tm1Top",
+        "title": "%tm1.adminServer.tm1Top.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.adminServer.detach",
+        "title": "%tm1.adminServer.detach.title%",
+        "category": "TM1",
+        "icon": "$(export)"
+      },
+      {
+        "command": "tm1.loadProcesses",
+        "title": "%tm1.loadProcesses.title%",
+        "category": "TM1",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "tm1.manageChores",
+        "title": "%tm1.manageChores.title%",
+        "category": "TM1",
+        "icon": "$(calendar)"
+      },
+      {
+        "command": "tm1.showMessageLog",
+        "title": "%tm1.showMessageLog.title%",
+        "category": "TM1",
+        "icon": "$(output)"
+      },
+      {
+        "command": "tm1.showTransactionLog",
+        "title": "%tm1.showTransactionLog.title%",
+        "category": "TM1",
+        "icon": "$(history)"
+      },
+      {
+        "command": "tm1.showMessageLogAnalysis",
+        "title": "%tm1.showMessageLogAnalysis.title%",
+        "category": "TM1",
+        "icon": "$(list-tree)"
+      },
+      {
+        "command": "tm1.showMessageLogStartup",
+        "title": "%tm1.showMessageLogStartup.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.newProcess",
+        "title": "%tm1.newProcess.title%",
+        "category": "TM1",
+        "icon": "$(new-file)"
+      },
+      {
+        "command": "tm1.refreshExplorer",
+        "title": "%tm1.refreshExplorer.title%",
+        "category": "TM1",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "tm1.showControlObjects",
+        "title": "%tm1.showControlObjects.title%",
+        "category": "TM1",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "tm1.hideControlObjects",
+        "title": "%tm1.hideControlObjects.title%",
+        "category": "TM1",
+        "icon": "$(eye-closed)"
+      },
+      {
+        "command": "tm1.copyName",
+        "title": "%tm1.copyName.title%",
+        "category": "TM1",
+        "icon": "$(copy)"
+      },
+      {
+        "command": "tm1.saveDataAll",
+        "title": "%tm1.saveDataAll.title%",
+        "category": "TM1",
+        "icon": "$(save-all)"
+      },
+      {
+        "command": "tm1.filterExplorer",
+        "title": "%tm1.filterExplorer.title%",
+        "category": "TM1",
+        "icon": "$(filter)"
+      },
+      {
+        "command": "tm1.clearFilter",
+        "title": "%tm1.clearFilter.title%",
+        "category": "TM1",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "tm1.openCubeRules",
+        "title": "%tm1.openCubeRules.title%",
+        "category": "TM1",
+        "icon": "$(law)"
+      },
+      {
+        "command": "tm1.cubeSaveData",
+        "title": "%tm1.cubeSaveData.title%",
+        "category": "TM1",
+        "icon": "$(save)"
+      },
+      {
+        "command": "tm1.cubeUnload",
+        "title": "%tm1.cubeUnload.title%",
+        "category": "TM1",
+        "icon": "$(circle-slash)"
+      },
+      {
+        "command": "tm1.cubeLoad",
+        "title": "%tm1.cubeLoad.title%",
+        "category": "TM1",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "tm1.scanOverfedCells",
+        "title": "%tm1.scanOverfedCells.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.reorderCubeDimensions",
+        "title": "%tm1.reorderCubeDimensions.title%",
+        "category": "TM1",
+        "icon": "$(list-ordered)"
+      },
+      {
+        "command": "tm1.openCubeViewer",
+        "title": "%tm1.openCubeViewer.title%",
+        "category": "TM1",
+        "icon": "$(table)"
+      },
+      {
+        "command": "tm1.newMdxView",
+        "title": "%tm1.newMdxView.title%",
+        "category": "TM1",
+        "icon": "$(add)"
+      },
+      {
+        "command": "tm1.browseElements",
+        "title": "%tm1.browseElements.title%",
+        "category": "TM1",
+        "icon": "$(type-hierarchy)"
+      },
+      {
+        "command": "tm1.editDimension",
+        "title": "%tm1.editDimension.title%",
+        "category": "TM1",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "tm1.formatElements",
+        "title": "%tm1.formatElements.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.sortOrder",
+        "title": "%tm1.sortOrder.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.analyzeChoreRuns",
+        "title": "%tm1.analyzeChoreRuns.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.executeChoreFromTree",
+        "title": "%tm1.executeChoreFromTree.title%",
+        "category": "TM1",
+        "icon": "$(play)"
+      },
+      {
+        "command": "tm1.activateChore",
+        "title": "%tm1.activateChore.title%",
+        "category": "TM1",
+        "icon": "$(check)"
+      },
+      {
+        "command": "tm1.deactivateChore",
+        "title": "%tm1.deactivateChore.title%",
+        "category": "TM1",
+        "icon": "$(circle-slash)"
+      },
+      {
+        "command": "tm1.createChore",
+        "title": "%tm1.createChore.title%",
+        "category": "TM1",
+        "icon": "$(add)"
+      },
+      {
+        "command": "tm1.editChore",
+        "title": "%tm1.editChore.title%",
+        "category": "TM1",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "tm1.choreOverview",
+        "title": "%tm1.choreOverview.title%",
+        "category": "TM1",
+        "icon": "$(list-flat)"
+      },
+      {
+        "command": "tm1.deleteChore",
+        "title": "%tm1.deleteChore.title%",
+        "category": "TM1",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.executeProcessFromTree",
+        "title": "%tm1.executeProcessFromTree.title%",
+        "category": "TM1",
+        "icon": "$(play)"
+      },
+      {
+        "command": "tm1.processOverview",
+        "title": "%tm1.processOverview.title%",
+        "category": "TM1",
+        "icon": "$(list-flat)"
+      },
+      {
+        "command": "tm1.insertNodeRef",
+        "title": "%tm1.insertNodeRef.title%",
+        "category": "TM1",
+        "icon": "$(arrow-left)"
+      },
+      {
+        "command": "tm1.editor.insertText",
+        "title": "%tm1.editor.insertText.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.setProcessGrouping",
+        "title": "%tm1.setProcessGrouping.title%",
+        "category": "TM1",
+        "icon": "$(symbol-misc)"
+      },
+      {
+        "command": "tm1.resetProcessGrouping",
+        "title": "%tm1.resetProcessGrouping.title%",
+        "category": "TM1",
+        "icon": "$(discard)"
+      },
+      {
+        "command": "tm1.openCubeStatsDashboard",
+        "title": "%tm1.openCubeStatsDashboard.title%",
+        "category": "TM1",
+        "icon": "$(graph)"
+      },
+      {
+        "command": "tm1.createDimension",
+        "title": "%tm1.createDimension.title%",
+        "category": "TM1",
+        "icon": "$(add)"
+      },
+      {
+        "command": "tm1.createCube",
+        "title": "%tm1.createCube.title%",
+        "category": "TM1",
+        "icon": "$(add)"
+      },
+      {
+        "command": "tm1.cubeOverview",
+        "title": "%tm1.cubeOverview.title%",
+        "category": "TM1",
+        "icon": "$(list-flat)"
+      },
+      {
+        "command": "tm1.dimensionOverview",
+        "title": "%tm1.dimensionOverview.title%",
+        "category": "TM1",
+        "icon": "$(list-flat)"
+      },
+      {
+        "command": "tm1.applicationOverview",
+        "title": "%tm1.applicationOverview.title%",
+        "category": "TM1",
+        "icon": "$(list-flat)"
+      },
+      {
+        "command": "tm1.deployProcessFromTree",
+        "title": "%tm1.deployProcessFromTree.title%",
+        "category": "TM1",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "tm1.deployProcessToServer",
+        "title": "%tm1.deployProcessToServer.title%",
+        "category": "TM1",
+        "icon": "$(arrow-right)"
+      },
+      {
+        "command": "tm1.deployToServer",
+        "title": "%tm1.deployToServer.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.deployMultipleProcessesToServer",
+        "title": "%tm1.deployMultipleProcessesToServer.title%",
+        "category": "TM1",
+        "icon": "$(arrow-right)"
+      },
+      {
+        "command": "tm1.exportSelectedProcesses",
+        "title": "%tm1.exportSelectedProcesses.title%",
+        "category": "TM1",
+        "icon": "$(save-as)"
+      },
+      {
+        "command": "tm1.git.openProcessAsFile",
+        "title": "%tm1.git.openProcessAsFile.title%",
+        "category": "TM1 Git",
+        "icon": "$(go-to-file)"
+      },
+      {
+        "command": "tm1.git.pullProcess",
+        "title": "%tm1.git.pullProcess.title%",
+        "category": "TM1 Git",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "tm1.git.pushProcess",
+        "title": "%tm1.git.pushProcess.title%",
+        "category": "TM1 Git",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "tm1.git.pullRules",
+        "title": "%tm1.git.pullRules.title%",
+        "category": "TM1 Git",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "tm1.git.pushRules",
+        "title": "%tm1.git.pushRules.title%",
+        "category": "TM1 Git",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "tm1.git.pullAll",
+        "title": "%tm1.git.pullAll.title%",
+        "category": "TM1 Git",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "tm1.git.diffProcess",
+        "title": "%tm1.git.diffProcess.title%",
+        "category": "TM1 Git",
+        "icon": "$(diff)"
+      },
+      {
+        "command": "tm1.git.diffRules",
+        "title": "%tm1.git.diffRules.title%",
+        "category": "TM1 Git",
+        "icon": "$(diff)"
+      },
+      {
+        "command": "tm1.configureGit",
+        "title": "%tm1.configureGit.title%",
+        "category": "TM1 Git",
+        "icon": "$(git-commit)"
+      },
+      {
+        "command": "tm1.deleteProcess",
+        "title": "%tm1.deleteProcess.title%",
+        "category": "TM1",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.findReferences",
+        "title": "%tm1.findReferences.title%",
+        "category": "TM1",
+        "icon": "$(references)"
+      },
+      {
+        "command": "tm1.runProcessCoverage",
+        "title": "%tm1.runProcessCoverage.title%",
+        "category": "TM1",
+        "icon": "$(checklist)"
+      },
+      {
+        "command": "tm1.debugProcessFromTree",
+        "title": "%tm1.debugProcessFromTree.title%",
+        "category": "TM1",
+        "icon": "$(debug-alt)"
+      },
+      {
+        "command": "tm1.retryNode",
+        "title": "%tm1.retryNode.title%",
+        "category": "TM1",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "tm1.openProcessEditor",
+        "title": "%tm1.openProcessEditor.title%",
+        "category": "TM1",
+        "icon": "$(notebook-open-as-text)"
+      },
+      {
+        "command": "tm1.toggleV12Mode",
+        "title": "%tm1.toggleV12Mode.title%",
+        "category": "TM1",
+        "icon": "$(warning)"
+      },
+      {
+        "command": "tm1.openSubset",
+        "title": "%tm1.openSubset.title%",
+        "category": "TM1",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "tm1.editSubset",
+        "title": "%tm1.editSubset.title%",
+        "category": "TM1",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "tm1.deleteSubset",
+        "title": "%tm1.deleteSubset.title%",
+        "category": "TM1",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.deleteDimension",
+        "title": "%tm1.deleteDimension.title%",
+        "category": "TM1",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.deleteCube",
+        "title": "%tm1.deleteCube.title%",
+        "category": "TM1",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.createPicklistCube",
+        "title": "%tm1.createPicklistCube.title%",
+        "category": "TM1",
+        "icon": "$(add)"
+      },
+      {
+        "command": "tm1.deletePicklistCube",
+        "title": "%tm1.deletePicklistCube.title%",
+        "category": "TM1",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.createHierarchy",
+        "title": "%tm1.createHierarchy.title%",
+        "category": "TM1",
+        "icon": "$(add)"
+      },
+      {
+        "command": "tm1.deleteHierarchy",
+        "title": "%tm1.deleteHierarchy.title%",
+        "category": "TM1",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.deleteCubeView",
+        "title": "%tm1.deleteCubeView.title%",
+        "category": "TM1",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.deployViewsToServer",
+        "title": "%tm1.deployViewsToServer.title%",
+        "category": "TM1",
+        "icon": "$(arrow-right)"
+      },
+      {
+        "command": "tm1.deploySubsetsToServer",
+        "title": "%tm1.deploySubsetsToServer.title%",
+        "category": "TM1",
+        "icon": "$(arrow-right)"
+      },
+      {
+        "command": "tm1.snippet.new",
+        "title": "%tm1.snippet.new.title%",
+        "category": "TM1",
+        "icon": "$(add)"
+      },
+      {
+        "command": "tm1.snippet.edit",
+        "title": "%tm1.snippet.edit.title%",
+        "category": "TM1",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "tm1.snippet.delete",
+        "title": "%tm1.snippet.delete.title%",
+        "category": "TM1",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.snippet.export",
+        "title": "%tm1.snippet.export.title%",
+        "category": "TM1",
+        "icon": "$(export)"
+      },
+      {
+        "command": "tm1.snippet.import",
+        "title": "%tm1.snippet.import.title%",
+        "category": "TM1",
+        "icon": "$(import)"
+      },
+      {
+        "command": "tm1.processTemplate.saveFromProcess",
+        "title": "%tm1.processTemplate.saveFromProcess.title%",
+        "category": "TM1",
+        "icon": "$(save-as)"
+      },
+      {
+        "command": "tm1.processTemplate.edit",
+        "title": "%tm1.processTemplate.edit.title%",
+        "category": "TM1",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "tm1.processTemplate.delete",
+        "title": "%tm1.processTemplate.delete.title%",
+        "category": "TM1",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.processTemplate.export",
+        "title": "%tm1.processTemplate.export.title%",
+        "category": "TM1",
+        "icon": "$(export)"
+      },
+      {
+        "command": "tm1.processTemplate.import",
+        "title": "%tm1.processTemplate.import.title%",
+        "category": "TM1",
+        "icon": "$(import)"
+      },
+      {
+        "command": "tm1.processTemplate.new",
+        "title": "%tm1.processTemplate.new.title%",
+        "category": "TM1",
+        "icon": "$(add)"
+      },
+      {
+        "command": "tm1.bedrock.install",
+        "title": "%tm1.bedrock.install.title%",
+        "category": "TM1",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "tm1.bedrock.update",
+        "title": "%tm1.bedrock.update.title%",
+        "category": "TM1",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "tm1.bedrock.uninstall",
+        "title": "%tm1.bedrock.uninstall.title%",
+        "category": "TM1",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.sandbox.create",
+        "title": "%tm1.sandbox.create.title%",
+        "category": "TM1",
+        "icon": "$(add)"
+      },
+      {
+        "command": "tm1.sandbox.delete",
+        "title": "%tm1.sandbox.delete.title%",
+        "category": "TM1",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.sandbox.commit",
+        "title": "%tm1.sandbox.commit.title%",
+        "category": "TM1",
+        "icon": "$(check)"
+      },
+      {
+        "command": "tm1.sandbox.setActive",
+        "title": "%tm1.sandbox.setActive.title%",
+        "category": "TM1",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "tm1.sandbox.clearActive",
+        "title": "%tm1.sandbox.clearActive.title%",
+        "category": "TM1",
+        "icon": "$(close)"
+      },
+      {
+        "command": "tm1.server.connect",
+        "title": "%tm1.server.connect.title%",
+        "category": "TM1",
+        "icon": "$(plug)"
+      },
+      {
+        "command": "tm1.server.disconnect",
+        "title": "%tm1.server.disconnect.title%",
+        "category": "TM1",
+        "icon": "$(debug-disconnect)"
+      },
+      {
+        "command": "tm1.server.refresh",
+        "title": "%tm1.server.refresh.title%",
+        "category": "TM1",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "tm1.server.openConfig",
+        "title": "%tm1.server.openConfig.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.server.v12ManageDatabases",
+        "title": "%tm1.server.v12ManageDatabases.title%",
+        "category": "TM1",
+        "icon": "$(database)"
+      },
+      {
+        "command": "tm1.refreshSecurity",
+        "title": "%tm1.refreshSecurity.title%",
+        "category": "TM1",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "tm1.uploadFile",
+        "title": "%tm1.uploadFile.title%",
+        "category": "TM1",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "tm1.downloadFile",
+        "title": "%tm1.downloadFile.title%",
+        "category": "TM1",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "tm1.replaceFile",
+        "title": "%tm1.replaceFile.title%",
+        "category": "TM1",
+        "icon": "$(replace)"
+      },
+      {
+        "command": "tm1.deleteFile",
+        "title": "%tm1.deleteFile.title%",
+        "category": "TM1",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.app.openDocument",
+        "title": "%tm1.app.openDocument.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.app.downloadDocument",
+        "title": "%tm1.app.downloadDocument.title%",
+        "category": "TM1",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "tm1.app.openLink",
+        "title": "%tm1.app.openLink.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.app.createFolder",
+        "title": "%tm1.app.createFolder.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.app.createLink",
+        "title": "%tm1.app.createLink.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.app.rename",
+        "title": "%tm1.app.rename.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.app.move",
+        "title": "%tm1.app.move.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.app.togglePrivate",
+        "title": "%tm1.app.togglePrivate.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.app.delete",
+        "title": "%tm1.app.delete.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.app.uploadDocument",
+        "title": "%tm1.app.uploadDocument.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.app.createReference",
+        "title": "%tm1.app.createReference.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.tiTest.captureProcess",
+        "title": "%tm1.tiTest.captureProcess.title%",
+        "category": "TM1 TI Tests",
+        "icon": "$(record)"
+      },
+      {
+        "command": "tm1.tiTest.showLastDiff",
+        "title": "%tm1.tiTest.showLastDiff.title%",
+        "category": "TM1 TI Tests",
+        "icon": "$(diff)"
+      },
+      {
+        "command": "tm1.tiTest.toggleActive",
+        "title": "%tm1.tiTest.toggleActive.title%",
+        "category": "TM1 TI Tests",
+        "icon": "$(check)"
+      },
+      {
+        "command": "tm1.tiTest.refresh",
+        "title": "%tm1.tiTest.refresh.title%",
+        "category": "TM1 TI Tests",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "tm1.tiTest.delete",
+        "title": "%tm1.tiTest.delete.title%",
+        "category": "TM1 TI Tests",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.tiTest.simulate",
+        "title": "%tm1.tiTest.simulate.title%",
+        "category": "TM1 TI Tests",
+        "icon": "$(beaker)"
+      },
+      {
+        "command": "tm1.tiTest.simulateFolder",
+        "title": "%tm1.tiTest.simulateFolder.title%",
+        "category": "TM1 TI Tests",
+        "icon": "$(run-all)"
+      },
+      {
+        "command": "tm1.tiTest.simulateAll",
+        "title": "%tm1.tiTest.simulateAll.title%",
+        "category": "TM1 TI Tests",
+        "icon": "$(run-all)"
+      },
+      {
+        "command": "tm1.tiTest.showFolderSummary",
+        "title": "%tm1.tiTest.showFolderSummary.title%",
+        "category": "TM1 TI Tests",
+        "icon": "$(table)"
+      },
+      {
+        "command": "tm1.tiTest.createFolder",
+        "title": "%tm1.tiTest.createFolder.title%",
+        "category": "TM1 TI Tests",
+        "icon": "$(new-folder)"
+      },
+      {
+        "command": "tm1.tiTest.replaceTiFromServer",
+        "title": "%tm1.tiTest.replaceTiFromServer.title%",
+        "category": "TM1 TI Tests",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "tm1.tiTest.refreshFixtures",
+        "title": "%tm1.tiTest.refreshFixtures.title%",
+        "category": "TM1 TI Tests",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "tm1.cancelRun",
+        "title": "%tm1.cancelRun.title%",
+        "category": "TM1",
+        "icon": "$(stop-circle)"
+      },
+      {
+        "command": "tm1.forgetRun",
+        "title": "%tm1.forgetRun.title%",
+        "category": "TM1",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.running.focus",
+        "title": "%tm1.running.focus.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.recent.open",
+        "title": "%tm1.recent.open.title%",
+        "category": "TM1 Recent",
+        "icon": "$(history)"
+      },
+      {
+        "command": "tm1.recent.remove",
+        "title": "%tm1.recent.remove.title%",
+        "category": "TM1 Recent",
+        "icon": "$(close)"
+      },
+      {
+        "command": "tm1.recent.pin",
+        "title": "%tm1.recent.pin.title%",
+        "category": "TM1 Recent",
+        "icon": "$(pin)"
+      },
+      {
+        "command": "tm1.recent.unpin",
+        "title": "%tm1.recent.unpin.title%",
+        "category": "TM1 Recent",
+        "icon": "$(pinned)"
+      },
+      {
+        "command": "tm1.recent.clear",
+        "title": "%tm1.recent.clear.title%",
+        "category": "TM1 Recent",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "tm1.security.cubes.matrix",
+        "title": "%tm1.security.cubes.matrix.title%",
+        "category": "TM1",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "tm1.security.dims.matrix",
+        "title": "%tm1.security.dims.matrix.title%",
+        "category": "TM1",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "tm1.security.processes.matrix",
+        "title": "%tm1.security.processes.matrix.title%",
+        "category": "TM1",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "tm1.security.element",
+        "title": "%tm1.security.element.title%",
+        "category": "TM1",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "tm1.security.cell",
+        "title": "%tm1.security.cell.title%",
+        "category": "TM1",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "tm1.security.users",
+        "title": "%tm1.security.users.title%",
+        "category": "TM1",
+        "icon": "$(organization)"
+      },
+      {
+        "command": "tm1.findReplaceObjects",
+        "title": "%tm1.findReplaceObjects.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.goToObject",
+        "title": "%tm1.goToObject.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.showLineage",
+        "title": "%tm1.showLineage.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.v12ReadinessCheck",
+        "title": "%tm1.v12ReadinessCheck.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.server.exportList",
+        "title": "%tm1.server.exportList.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.server.importList",
+        "title": "%tm1.server.importList.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.notebook.new",
+        "title": "%tm1.notebook.new.title%",
+        "category": "TM1",
+        "icon": "$(notebook)"
+      },
+      {
+        "command": "tm1.notebook.exportReport",
+        "title": "%tm1.notebook.exportReport.title%",
+        "category": "TM1",
+        "icon": "$(output)"
+      },
+      {
+        "command": "tm1.notebook.selectServer",
+        "title": "%tm1.notebook.selectServer.title%",
+        "category": "TM1",
+        "icon": "$(server)"
+      },
+      {
+        "command": "tm1.tiConsole.open",
+        "title": "%tm1.tiConsole.open.title%",
+        "category": "TM1",
+        "icon": "$(terminal)"
+      },
+      {
+        "command": "tm1.bulkDelete.open",
+        "title": "%tm1.bulkDelete.open.title%",
+        "category": "TM1",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "tm1.bulkDeploy.open",
+        "title": "%tm1.bulkDeploy.open.title%",
+        "category": "TM1",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "tm1.impersonate.start",
+        "title": "%tm1.impersonate.start.title%",
+        "category": "TM1",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "tm1.impersonate.stop",
+        "title": "%tm1.impersonate.stop.title%",
+        "category": "TM1",
+        "icon": "$(eye-closed)"
+      },
+      {
+        "command": "tm1.openConsistencyNormalizer",
+        "title": "%tm1.openConsistencyNormalizer.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.openValueNaming",
+        "title": "%tm1.openValueNaming.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.compareConsolidations",
+        "title": "%tm1.compareConsolidations.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.showReleaseNotes",
+        "title": "%tm1.showReleaseNotes.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.workbench.save",
+        "title": "%tm1.workbench.save.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.workbench.edit",
+        "title": "%tm1.workbench.edit.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.workbench.restore",
+        "title": "%tm1.workbench.restore.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.workbench.rename",
+        "title": "%tm1.workbench.rename.title%",
+        "category": "TM1"
+      },
+      {
+        "command": "tm1.workbench.delete",
+        "title": "%tm1.workbench.delete.title%",
+        "category": "TM1"
+      }
+    ],
+    "breakpoints": [
+      {
+        "language": "ti"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "tm1-ide",
+        "label": "TM1 Turbo Integrator",
+        "languages": [
+          "ti"
+        ],
+        "configurationAttributes": {
+          "launch": {
+            "required": [
+              "processName"
+            ],
+            "properties": {
+              "processName": {
+                "type": "string",
+                "description": "%debug.processName.description%",
+                "default": "${fileBasenameNoExtension}"
+              },
+              "serverId": {
+                "type": "string",
+                "description": "%debug.serverId.description%"
+              }
+            }
+          }
+        },
+        "configurationSnippets": [
+          {
+            "label": "%debug.initialConfig.name%",
+            "description": "%debug.initialConfig.name%",
+            "body": {
+              "type": "tm1-ide",
+              "request": "launch",
+              "name": "%debug.initialConfig.name%",
+              "processName": "^\"\\${fileBasenameNoExtension}\""
+            }
+          }
+        ],
+        "initialConfigurations": [
+          {
+            "type": "tm1-ide",
+            "request": "launch",
+            "name": "%debug.initialConfig.name%",
+            "processName": "${fileBasenameNoExtension}"
+          }
+        ]
+      }
+    ],
+    "submenus": [
+      {
+        "id": "tm1.findReplace",
+        "label": "%tm1.findReplaceSubmenu.label%"
+      }
+    ],
+    "menus": {
+      "notebook/toolbar": [
+        {
+          "command": "tm1.notebook.selectServer",
+          "when": "notebookType == tm1-notebook",
+          "group": "navigation"
+        },
+        {
+          "command": "tm1.notebook.exportReport",
+          "when": "notebookType == tm1-notebook",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "tm1.tiTest.simulate",
+          "when": "false"
+        },
+        {
+          "command": "tm1.tiTest.showLastDiff",
+          "when": "false"
+        },
+        {
+          "command": "tm1.tiTest.replaceTiFromServer",
+          "when": "false"
+        },
+        {
+          "command": "tm1.tiTest.refreshFixtures",
+          "when": "false"
+        },
+        {
+          "command": "tm1.tiTest.toggleActive",
+          "when": "false"
+        },
+        {
+          "command": "tm1.tiTest.delete",
+          "when": "false"
+        },
+        {
+          "command": "tm1.tiTest.simulateFolder",
+          "when": "false"
+        },
+        {
+          "command": "tm1.tiTest.captureProcess",
+          "when": "false"
+        },
+        {
+          "command": "tm1.openCubeViewer",
+          "when": "false"
+        },
+        {
+          "command": "tm1.openCubeRules",
+          "when": "false"
+        },
+        {
+          "command": "tm1.newMdxView",
+          "when": "false"
+        },
+        {
+          "command": "tm1.cubeSaveData",
+          "when": "false"
+        },
+        {
+          "command": "tm1.cubeUnload",
+          "when": "false"
+        },
+        {
+          "command": "tm1.cubeLoad",
+          "when": "false"
+        },
+        {
+          "command": "tm1.reorderCubeDimensions",
+          "when": "false"
+        },
+        {
+          "command": "tm1.security.cubes.matrix",
+          "when": "false"
+        },
+        {
+          "command": "tm1.security.dims.matrix",
+          "when": "false"
+        },
+        {
+          "command": "tm1.security.processes.matrix",
+          "when": "false"
+        },
+        {
+          "command": "tm1.security.element",
+          "when": "false"
+        },
+        {
+          "command": "tm1.security.cell",
+          "when": "false"
+        },
+        {
+          "command": "tm1.security.users",
+          "when": "false"
+        },
+        {
+          "command": "tm1.findReplaceObjects",
+          "when": "false"
+        },
+        {
+          "command": "tm1.openConsistencyNormalizer",
+          "when": "false"
+        },
+        {
+          "command": "tm1.v12ReadinessCheck",
+          "when": "false"
+        },
+        {
+          "command": "tm1.openValueNaming",
+          "when": "false"
+        },
+        {
+          "command": "tm1.compareConsolidations",
+          "when": "false"
+        },
+        {
+          "command": "tm1.deleteCubeView",
+          "when": "false"
+        },
+        {
+          "command": "tm1.deployViewsToServer",
+          "when": "false"
+        },
+        {
+          "command": "tm1.deploySubsetsToServer",
+          "when": "false"
+        },
+        {
+          "command": "tm1.openSubset",
+          "when": "false"
+        },
+        {
+          "command": "tm1.editSubset",
+          "when": "false"
+        },
+        {
+          "command": "tm1.deleteSubset",
+          "when": "false"
+        },
+        {
+          "command": "tm1.deleteDimension",
+          "when": "false"
+        },
+        {
+          "command": "tm1.deleteCube",
+          "when": "false"
+        },
+        {
+          "command": "tm1.createPicklistCube",
+          "when": "false"
+        },
+        {
+          "command": "tm1.deletePicklistCube",
+          "when": "false"
+        },
+        {
+          "command": "tm1.createHierarchy",
+          "when": "false"
+        },
+        {
+          "command": "tm1.deleteHierarchy",
+          "when": "false"
+        },
+        {
+          "command": "tm1.browseElements",
+          "when": "false"
+        },
+        {
+          "command": "tm1.editDimension",
+          "when": "false"
+        },
+        {
+          "command": "tm1.findReferences",
+          "when": "false"
+        },
+        {
+          "command": "tm1.insertNodeRef",
+          "when": "false"
+        },
+        {
+          "command": "tm1.editor.insertText",
+          "when": "false"
+        },
+        {
+          "command": "tm1.setProcessGrouping",
+          "when": "false"
+        },
+        {
+          "command": "tm1.resetProcessGrouping",
+          "when": "false"
+        },
+        {
+          "command": "tm1.openCubeStatsDashboard",
+          "when": "false"
+        },
+        {
+          "command": "tm1.createCube",
+          "when": "false"
+        },
+        {
+          "command": "tm1.cubeOverview",
+          "when": "false"
+        },
+        {
+          "command": "tm1.createDimension",
+          "when": "false"
+        },
+        {
+          "command": "tm1.dimensionOverview",
+          "when": "false"
+        },
+        {
+          "command": "tm1.applicationOverview",
+          "when": "false"
+        },
+        {
+          "command": "tm1.executeProcessFromTree",
+          "when": "false"
+        },
+        {
+          "command": "tm1.openProcessEditor",
+          "when": "false"
+        },
+        {
+          "command": "tm1.deleteProcess",
+          "when": "false"
+        },
+        {
+          "command": "tm1.executeChoreFromTree",
+          "when": "false"
+        },
+        {
+          "command": "tm1.analyzeChoreRuns",
+          "when": "false"
+        },
+        {
+          "command": "tm1.activateChore",
+          "when": "false"
+        },
+        {
+          "command": "tm1.deactivateChore",
+          "when": "false"
+        },
+        {
+          "command": "tm1.editChore",
+          "when": "false"
+        },
+        {
+          "command": "tm1.deleteChore",
+          "when": "false"
+        },
+        {
+          "command": "tm1.createChore",
+          "when": "false"
+        },
+        {
+          "command": "tm1.choreOverview",
+          "when": "false"
+        },
+        {
+          "command": "tm1.processOverview",
+          "when": "false"
+        },
+        {
+          "command": "tm1.retryNode",
+          "when": "false"
+        },
+        {
+          "command": "tm1.newProcess",
+          "when": "false"
+        },
+        {
+          "command": "tm1.bedrock.install",
+          "when": "false"
+        },
+        {
+          "command": "tm1.bedrock.update",
+          "when": "false"
+        },
+        {
+          "command": "tm1.bedrock.uninstall",
+          "when": "false"
+        },
+        {
+          "command": "tm1.deployProcessToServer",
+          "when": "false"
+        },
+        {
+          "command": "tm1.deployToServer",
+          "when": "false"
+        },
+        {
+          "command": "tm1.deployMultipleProcessesToServer",
+          "when": "false"
+        },
+        {
+          "command": "tm1.exportSelectedProcesses",
+          "when": "false"
+        },
+        {
+          "command": "tm1.git.openProcessAsFile",
+          "when": "false"
+        },
+        {
+          "command": "tm1.git.pullProcess",
+          "when": "false"
+        },
+        {
+          "command": "tm1.git.pushProcess",
+          "when": "false"
+        },
+        {
+          "command": "tm1.git.pullRules",
+          "when": "false"
+        },
+        {
+          "command": "tm1.git.pushRules",
+          "when": "false"
+        },
+        {
+          "command": "tm1.git.pullAll",
+          "when": "false"
+        },
+        {
+          "command": "tm1.git.diffProcess",
+          "when": "false"
+        },
+        {
+          "command": "tm1.git.diffRules",
+          "when": "false"
+        },
+        {
+          "command": "tm1.showControlObjects",
+          "when": "false"
+        },
+        {
+          "command": "tm1.hideControlObjects",
+          "when": "false"
+        },
+        {
+          "command": "tm1.saveDataAll",
+          "when": "false"
+        },
+        {
+          "command": "tm1.refreshSecurity",
+          "when": "false"
+        },
+        {
+          "command": "tm1.showThreads",
+          "when": "false"
+        },
+        {
+          "command": "tm1.showTm1Top",
+          "when": "false"
+        },
+        {
+          "command": "tm1.showTransactionLog",
+          "when": "false"
+        },
+        {
+          "command": "tm1.showMessageLogStartup",
+          "when": "false"
+        },
+        {
+          "command": "tm1.tiConsole.open",
+          "when": "false"
+        },
+        {
+          "command": "tm1.bulkDelete.open",
+          "when": "false"
+        },
+        {
+          "command": "tm1.bulkDeploy.open",
+          "when": "false"
+        },
+        {
+          "command": "tm1.impersonate.start",
+          "when": "false"
+        },
+        {
+          "command": "tm1.adminServer.tm1Top",
+          "when": "false"
+        },
+        {
+          "command": "tm1.uploadFile",
+          "when": "false"
+        },
+        {
+          "command": "tm1.downloadFile",
+          "when": "false"
+        },
+        {
+          "command": "tm1.replaceFile",
+          "when": "false"
+        },
+        {
+          "command": "tm1.deleteFile",
+          "when": "false"
+        },
+        {
+          "command": "tm1.app.downloadDocument",
+          "when": "false"
+        },
+        {
+          "command": "tm1.app.createFolder",
+          "when": "false"
+        },
+        {
+          "command": "tm1.app.createLink",
+          "when": "false"
+        },
+        {
+          "command": "tm1.app.uploadDocument",
+          "when": "false"
+        },
+        {
+          "command": "tm1.app.createReference",
+          "when": "false"
+        },
+        {
+          "command": "tm1.app.rename",
+          "when": "false"
+        },
+        {
+          "command": "tm1.app.move",
+          "when": "false"
+        },
+        {
+          "command": "tm1.app.togglePrivate",
+          "when": "false"
+        },
+        {
+          "command": "tm1.app.delete",
+          "when": "false"
+        },
+        {
+          "command": "tm1.editServer",
+          "when": "false"
+        },
+        {
+          "command": "tm1.server.editById",
+          "when": "false"
+        },
+        {
+          "command": "tm1.server.moveToFolder",
+          "when": "false"
+        },
+        {
+          "command": "tm1.server.delete",
+          "when": "false"
+        },
+        {
+          "command": "tm1.adminServer.refresh",
+          "when": "false"
+        },
+        {
+          "command": "tm1.adminServer.edit",
+          "when": "false"
+        },
+        {
+          "command": "tm1.adminServer.editPaw",
+          "when": "false"
+        },
+        {
+          "command": "tm1.adminServer.remove",
+          "when": "false"
+        },
+        {
+          "command": "tm1.adminServer.removePaw",
+          "when": "false"
+        },
+        {
+          "command": "tm1.adminServer.restore",
+          "when": "false"
+        },
+        {
+          "command": "tm1.adminServer.hide",
+          "when": "false"
+        },
+        {
+          "command": "tm1.adminServer.detach",
+          "when": "false"
+        },
+        {
+          "command": "tm1.server.connect",
+          "when": "false"
+        },
+        {
+          "command": "tm1.server.disconnect",
+          "when": "false"
+        },
+        {
+          "command": "tm1.server.refresh",
+          "when": "false"
+        },
+        {
+          "command": "tm1.server.openConfig",
+          "when": "false"
+        },
+        {
+          "command": "tm1.server.v12ManageDatabases",
+          "when": "false"
+        },
+        {
+          "command": "tm1.configureGit",
+          "when": "false"
+        },
+        {
+          "command": "tm1.serverFolder.rename",
+          "when": "false"
+        },
+        {
+          "command": "tm1.serverFolder.delete",
+          "when": "false"
+        },
+        {
+          "command": "tm1.sandbox.create",
+          "when": "false"
+        },
+        {
+          "command": "tm1.sandbox.clearActive",
+          "when": "false"
+        },
+        {
+          "command": "tm1.sandbox.setActive",
+          "when": "false"
+        },
+        {
+          "command": "tm1.sandbox.commit",
+          "when": "false"
+        },
+        {
+          "command": "tm1.sandbox.delete",
+          "when": "false"
+        },
+        {
+          "command": "tm1.snippet.new",
+          "when": "false"
+        },
+        {
+          "command": "tm1.snippet.export",
+          "when": "false"
+        },
+        {
+          "command": "tm1.snippet.import",
+          "when": "false"
+        },
+        {
+          "command": "tm1.snippet.edit",
+          "when": "false"
+        },
+        {
+          "command": "tm1.snippet.delete",
+          "when": "false"
+        },
+        {
+          "command": "tm1.processTemplate.new",
+          "when": "false"
+        },
+        {
+          "command": "tm1.processTemplate.export",
+          "when": "false"
+        },
+        {
+          "command": "tm1.processTemplate.import",
+          "when": "false"
+        },
+        {
+          "command": "tm1.processTemplate.saveFromProcess",
+          "when": "false"
+        },
+        {
+          "command": "tm1.processTemplate.edit",
+          "when": "false"
+        },
+        {
+          "command": "tm1.processTemplate.delete",
+          "when": "false"
+        },
+        {
+          "command": "tm1.copyName",
+          "when": "false"
+        },
+        {
+          "command": "tm1.deployProcessFromTree",
+          "when": "false"
+        },
+        {
+          "command": "tm1.debugProcessFromTree",
+          "when": "false"
+        },
+        {
+          "command": "tm1.runProcessCoverage",
+          "when": "false"
+        },
+        {
+          "command": "tm1.app.openDocument",
+          "when": "false"
+        },
+        {
+          "command": "tm1.app.openLink",
+          "when": "false"
+        },
+        {
+          "command": "tm1.cancelRun",
+          "when": "false"
+        },
+        {
+          "command": "tm1.forgetRun",
+          "when": "false"
+        },
+        {
+          "command": "tm1.recent.open",
+          "when": "false"
+        },
+        {
+          "command": "tm1.recent.remove",
+          "when": "false"
+        },
+        {
+          "command": "tm1.recent.pin",
+          "when": "false"
+        },
+        {
+          "command": "tm1.recent.unpin",
+          "when": "false"
+        },
+        {
+          "command": "tm1.tiTest.showFolderSummary",
+          "when": "false"
+        },
+        {
+          "command": "tm1.workbench.save",
+          "when": "false"
+        },
+        {
+          "command": "tm1.workbench.edit",
+          "when": "false"
+        },
+        {
+          "command": "tm1.workbench.restore",
+          "when": "false"
+        },
+        {
+          "command": "tm1.workbench.rename",
+          "when": "false"
+        },
+        {
+          "command": "tm1.workbench.delete",
+          "when": "false"
+        },
+        {
+          "command": "tm1.showReleaseNotes"
+        },
+        {
+          "command": "tm1.impersonate.stop",
+          "when": "tm1.impersonating"
+        },
+        {
+          "command": "tm1.formatElements",
+          "when": "false"
+        },
+        {
+          "command": "tm1.sortOrder",
+          "when": "false"
+        },
+        {
+          "command": "tm1.scanOverfedCells",
+          "when": "false"
+        },
+        {
+          "command": "tm1.notebook.exportReport",
+          "when": "notebookType == tm1-notebook"
+        },
+        {
+          "command": "tm1.notebook.selectServer",
+          "when": "notebookType == tm1-notebook"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "tm1.addServer",
+          "when": "view == tm1Explorer",
+          "group": "navigation@0"
+        },
+        {
+          "command": "tm1.createServerFolder",
+          "when": "view == tm1Explorer",
+          "group": "navigation@1"
+        },
+        {
+          "command": "tm1.server.exportList",
+          "when": "view == tm1Explorer",
+          "group": "serverList@1"
+        },
+        {
+          "command": "tm1.server.importList",
+          "when": "view == tm1Explorer",
+          "group": "serverList@2"
+        },
+        {
+          "command": "tm1.refreshExplorer",
+          "when": "view == tm1Explorer",
+          "group": "navigation"
+        },
+        {
+          "command": "tm1.filterExplorer",
+          "when": "view == tm1Explorer",
+          "group": "navigation"
+        },
+        {
+          "command": "tm1.clearFilter",
+          "when": "view == tm1Explorer && tm1.filterActive",
+          "group": "navigation"
+        },
+        {
+          "command": "tm1.recent.clear",
+          "when": "view == tm1.recent",
+          "group": "navigation"
+        },
+        {
+          "command": "tm1.tiTest.simulateAll",
+          "when": "view == tm1.tiTests",
+          "group": "navigation@0"
+        },
+        {
+          "command": "tm1.tiTest.createFolder",
+          "when": "view == tm1.tiTests",
+          "group": "navigation@1"
+        },
+        {
+          "command": "tm1.tiTest.refresh",
+          "when": "view == tm1.tiTests",
+          "group": "navigation@2"
+        }
+      ],
+      "tm1.findReplace": [
+        {
+          "command": "tm1.findReplaceObjects",
+          "group": "1_findReplace@1"
+        },
+        {
+          "command": "tm1.openConsistencyNormalizer",
+          "group": "1_findReplace@2"
+        },
+        {
+          "command": "tm1.openValueNaming",
+          "group": "1_findReplace@3"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "tm1.adminServer.refresh",
+          "when": "view == tm1Explorer && viewItem =~ /^adminServerRoot(-paw)?$/",
+          "group": "inline@0"
+        },
+        {
+          "command": "tm1.adminServer.edit",
+          "when": "view == tm1Explorer && viewItem == adminServerRoot",
+          "group": "inline@1"
+        },
+        {
+          "command": "tm1.adminServer.editPaw",
+          "when": "view == tm1Explorer && viewItem == adminServerRoot-paw",
+          "group": "inline@1"
+        },
+        {
+          "command": "tm1.adminServer.restore",
+          "when": "view == tm1Explorer && viewItem =~ /^adminServerRoot(-paw)?$/",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.adminServer.hide",
+          "when": "view == tm1Explorer && viewItem =~ /^adminServerRoot(-paw)?$/",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "tm1.adminServer.tm1Top",
+          "when": "view == tm1Explorer && viewItem == adminServerRoot",
+          "group": "1_actions@3"
+        },
+        {
+          "command": "tm1.cancelRun",
+          "when": "view == tm1.recent && viewItem == tm1.run",
+          "group": "inline@0"
+        },
+        {
+          "command": "tm1.forgetRun",
+          "when": "view == tm1.recent && viewItem == tm1.run.cancelling",
+          "group": "inline@0"
+        },
+        {
+          "command": "tm1.forgetRun",
+          "when": "view == tm1.recent && viewItem =~ /^tm1\\.run/",
+          "group": "1_actions@0"
+        },
+        {
+          "command": "tm1.recent.pin",
+          "when": "view == tm1.recent && viewItem =~ /^recent\\.[a-z]+$/",
+          "group": "inline@0"
+        },
+        {
+          "command": "tm1.recent.unpin",
+          "when": "view == tm1.recent && viewItem =~ /\\.pinned$/",
+          "group": "inline@0"
+        },
+        {
+          "command": "tm1.recent.remove",
+          "when": "view == tm1.recent && viewItem =~ /^recent\\./",
+          "group": "inline@1"
+        },
+        {
+          "command": "tm1.executeProcessFromTree",
+          "when": "view == tm1.recent && viewItem =~ /^recent\\.process/",
+          "group": "1_actions@0"
+        },
+        {
+          "command": "tm1.recent.open",
+          "when": "view == tm1.recent && viewItem =~ /^recent\\.(process|rule)/",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.runProcessCoverage",
+          "when": "view == tm1.recent && viewItem =~ /^recent\\.process/",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.deleteProcess",
+          "when": "view == tm1.recent && viewItem =~ /^recent\\.process/",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "tm1.processTemplate.saveFromProcess",
+          "when": "view == tm1.recent && viewItem =~ /^recent\\.process/",
+          "group": "1_modification@9"
+        },
+        {
+          "command": "tm1.newProcess",
+          "when": "view == tm1.recent && viewItem =~ /^recent\\.process/",
+          "group": "2_crud@0"
+        },
+        {
+          "command": "tm1.deployProcessToServer",
+          "when": "view == tm1.recent && viewItem =~ /^recent\\.process/",
+          "group": "2_crud@1"
+        },
+        {
+          "command": "tm1.deployToServer",
+          "when": "view == tm1.recent && viewItem =~ /^recent\\.rule/",
+          "group": "2_crud@1"
+        },
+        {
+          "command": "tm1.findReferences",
+          "when": "view == tm1.recent && viewItem =~ /^recent\\.process/",
+          "group": "3_refs@0"
+        },
+        {
+          "command": "tm1.insertNodeRef",
+          "when": "view == tm1.recent && viewItem =~ /^recent\\.process/",
+          "group": "3_refs@1"
+        },
+        {
+          "command": "tm1.copyName",
+          "when": "view == tm1.recent && viewItem =~ /^recent\\.(process|rule)/",
+          "group": "9_clipboard"
+        },
+        {
+          "command": "tm1.tiTest.captureProcess",
+          "when": "view == tm1.recent && viewItem =~ /^recent\\.process/",
+          "group": "z_beta@0"
+        },
+        {
+          "command": "tm1.tiTest.simulate",
+          "when": "view == tm1.tiTests && viewItem =~ /^tiTest\\./",
+          "group": "inline@0"
+        },
+        {
+          "command": "tm1.tiTest.showLastDiff",
+          "when": "view == tm1.tiTests && viewItem =~ /^tiTest\\./",
+          "group": "1_actions@0"
+        },
+        {
+          "command": "tm1.tiTest.replaceTiFromServer",
+          "when": "view == tm1.tiTests && viewItem =~ /^tiTest\\./",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.tiTest.refreshFixtures",
+          "when": "view == tm1.tiTests && viewItem =~ /^tiTest\\./",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "tm1.tiTest.toggleActive",
+          "when": "view == tm1.tiTests && viewItem =~ /^tiTest\\./",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "tm1.tiTest.delete",
+          "when": "view == tm1.tiTests && viewItem =~ /^tiTest\\./",
+          "group": "9_destructive@0"
+        },
+        {
+          "command": "tm1.tiTest.simulateFolder",
+          "when": "view == tm1.tiTests && viewItem == tiTestFolder",
+          "group": "inline@0"
+        },
+        {
+          "command": "tm1.tiTest.simulateFolder",
+          "when": "view == tm1.tiTests && viewItem == tiTestFolder",
+          "group": "1_actions@0"
+        },
+        {
+          "command": "tm1.tiTest.createFolder",
+          "when": "view == tm1.tiTests && viewItem == tiTestFolder",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.tiTest.delete",
+          "when": "view == tm1.tiTests && viewItem == tiTestFolder",
+          "group": "9_destructive@0"
+        },
+        {
+          "command": "tm1.tiTest.captureProcess",
+          "when": "view == tm1Explorer && viewItem =~ /^process($|\\.git$)/",
+          "group": "z_beta@0"
+        },
+        {
+          "command": "tm1.openCubeViewer",
+          "when": "viewItem =~ /^cube(-v12)?(-control)?(-haspick)?(\\.loaded|\\.unloaded)?$/",
+          "group": "1_actions@0"
+        },
+        {
+          "command": "tm1.openCubeRules",
+          "when": "viewItem =~ /^cube(-v12)?(-control)?(-haspick)?(\\.loaded|\\.unloaded)?$/",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.newMdxView",
+          "when": "viewItem =~ /^cube(-v12)?(-control)?(-haspick)?(\\.loaded|\\.unloaded)?$/",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "tm1.cubeSaveData",
+          "when": "viewItem =~ /^cube(-control)?(-haspick)?(\\.loaded)?$/",
+          "group": "5_maintenance@0"
+        },
+        {
+          "command": "tm1.cubeUnload",
+          "when": "viewItem =~ /^cube(-v12)?(-control)?(-haspick)?(\\.loaded)?$/",
+          "group": "5_maintenance@1"
+        },
+        {
+          "command": "tm1.scanOverfedCells",
+          "when": "viewItem =~ /^cube(-control)?(-haspick)?(\\.loaded|\\.unloaded)?$/",
+          "group": "5_maintenance@2"
+        },
+        {
+          "command": "tm1.cubeLoad",
+          "when": "viewItem =~ /^cube(-v12)?(-control)?(-haspick)?(\\.unloaded)?$/",
+          "group": "5_maintenance@1"
+        },
+        {
+          "command": "tm1.reorderCubeDimensions",
+          "when": "viewItem =~ /^cube(-v12)?(-control)?(-haspick)?(\\.loaded|\\.unloaded)?$/",
+          "group": "5_maintenance@5"
+        },
+        {
+          "command": "tm1.createPicklistCube",
+          "when": "viewItem =~ /^cube(-v12)?(\\.loaded|\\.unloaded)?$/",
+          "group": "5_maintenance@6"
+        },
+        {
+          "command": "tm1.deletePicklistCube",
+          "when": "viewItem =~ /^cube(-v12)?-haspick(\\.loaded|\\.unloaded)?$/",
+          "group": "5_maintenance@7"
+        },
+        {
+          "command": "tm1.security.cubes.matrix",
+          "when": "viewItem =~ /^category-cubes(\\.ctlShown)?$/",
+          "group": "security"
+        },
+        {
+          "command": "tm1.security.dims.matrix",
+          "when": "viewItem =~ /^category-dimensions(\\.ctlShown)?$/",
+          "group": "security"
+        },
+        {
+          "command": "tm1.security.processes.matrix",
+          "when": "viewItem =~ /^category-processes(-bedrock)?(\\.grouped)?(\\.ctlShown)?$/ || viewItem =~ /^processGroup(\\.grouped)?$/",
+          "group": "security"
+        },
+        {
+          "command": "tm1.security.element",
+          "when": "viewItem =~ /^dimension(-control)?$/ || viewItem == cubeDimension || viewItem =~ /^hierarchy(-control)?$/",
+          "group": "security"
+        },
+        {
+          "command": "tm1.security.cell",
+          "when": "viewItem =~ /^cube(-v12)?(-control)?(-haspick)?(\\.loaded|\\.unloaded)?$/",
+          "group": "security"
+        },
+        {
+          "command": "tm1.security.users",
+          "when": "viewItem =~ /^serverRoot-connected(-v12)?(-imp)?(-adm)?($|\\.git$)/",
+          "group": "security"
+        },
+        {
+          "command": "tm1.openCubeRules",
+          "when": "viewItem =~ /^cubeRule($|\\.git$)/",
+          "group": "1_actions"
+        },
+        {
+          "command": "tm1.openCubeViewer",
+          "when": "viewItem == cubeView",
+          "group": "1_actions@0"
+        },
+        {
+          "command": "tm1.deleteCubeView",
+          "when": "viewItem == cubeView",
+          "group": "2_crud@0"
+        },
+        {
+          "command": "tm1.deployViewsToServer",
+          "when": "viewItem == cubeView",
+          "group": "2_crud@2"
+        },
+        {
+          "command": "tm1.openSubset",
+          "when": "viewItem == subset",
+          "group": "1_actions@0"
+        },
+        {
+          "command": "tm1.editSubset",
+          "when": "viewItem == subset",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.deleteSubset",
+          "when": "viewItem == subset",
+          "group": "2_crud@0"
+        },
+        {
+          "command": "tm1.deploySubsetsToServer",
+          "when": "viewItem == subset",
+          "group": "2_crud@2"
+        },
+        {
+          "command": "tm1.deleteDimension",
+          "when": "viewItem == dimension",
+          "group": "2_crud@1"
+        },
+        {
+          "command": "tm1.deleteCube",
+          "when": "viewItem =~ /^cube(-v12)?(-haspick)?(\\.loaded|\\.unloaded)?$/",
+          "group": "2_crud@1"
+        },
+        {
+          "command": "tm1.createHierarchy",
+          "when": "viewItem =~ /^dimension(-control)?$/ && !listMultiSelection",
+          "group": "2_crud@0"
+        },
+        {
+          "command": "tm1.compareConsolidations",
+          "when": "(viewItem =~ /^dimension(-control)?$/ || viewItem == cubeDimension) && !listMultiSelection",
+          "group": "1_actions@3"
+        },
+        {
+          "command": "tm1.deleteHierarchy",
+          "when": "viewItem == hierarchy && !listMultiSelection",
+          "group": "2_crud@1"
+        },
+        {
+          "command": "tm1.browseElements",
+          "when": "viewItem =~ /^dimension(-control)?$/ || viewItem == cubeDimension || viewItem =~ /^hierarchy(-control)?$/",
+          "group": "1_actions"
+        },
+        {
+          "command": "tm1.editDimension",
+          "when": "viewItem =~ /^dimension(-control)?$/ || viewItem == cubeDimension || viewItem =~ /^hierarchy(-control)?$/",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.formatElements",
+          "when": "viewItem =~ /^dimension(-control)?$/ || viewItem == cubeDimension",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "tm1.sortOrder",
+          "when": "viewItem =~ /^dimension(-control)?$/ || viewItem == cubeDimension || viewItem =~ /^hierarchy(-control)?$/",
+          "group": "1_actions@3"
+        },
+        {
+          "command": "tm1.findReferences",
+          "when": "(viewItem =~ /^cube(-v12)?(-control)?(-haspick)?(\\.loaded|\\.unloaded)?$/ || viewItem =~ /^dimension(-control)?$/ || viewItem == cubeDimension || viewItem =~ /^hierarchy(-control)?$/ || viewItem =~ /^process($|\\.git$)/ || viewItem == chore) && !listMultiSelection",
+          "group": "3_refs@0"
+        },
+        {
+          "command": "tm1.insertNodeRef",
+          "when": "(viewItem =~ /^process($|\\.git$)/ || viewItem == chore || viewItem =~ /^cube(-v12)?(-control)?(-haspick)?(\\.loaded|\\.unloaded)?$/ || viewItem =~ /^dimension(-control)?$/ || viewItem == cubeDimension || viewItem =~ /^hierarchy(-control)?$/) && !listMultiSelection",
+          "group": "3_refs@1"
+        },
+        {
+          "command": "tm1.setProcessGrouping",
+          "when": "viewItem =~ /^category-processes(-bedrock)?(\\.ctlShown)?$/ || viewItem =~ /^processGroup$/",
+          "group": "9_settings@0"
+        },
+        {
+          "command": "tm1.resetProcessGrouping",
+          "when": "viewItem =~ /^category-processes(-bedrock)?\\.grouped(\\.ctlShown)?$/ || viewItem =~ /^processGroup\\.grouped$/",
+          "group": "9_settings@0"
+        },
+        {
+          "command": "tm1.openCubeStatsDashboard",
+          "when": "viewItem =~ /^category-cubes(\\.ctlShown)?$/",
+          "group": "1_actions@0"
+        },
+        {
+          "command": "tm1.createCube",
+          "when": "viewItem =~ /^category-cubes(\\.ctlShown)?$/",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.cubeOverview",
+          "when": "viewItem =~ /^category-cubes(\\.ctlShown)?$/",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "tm1.cubeOverview",
+          "when": "viewItem =~ /^category-cubes(\\.ctlShown)?$/",
+          "group": "inline"
+        },
+        {
+          "command": "tm1.createDimension",
+          "when": "viewItem =~ /^category-dimensions(\\.ctlShown)?$/",
+          "group": "1_actions@0"
+        },
+        {
+          "command": "tm1.dimensionOverview",
+          "when": "viewItem =~ /^category-dimensions(\\.ctlShown)?$/",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.dimensionOverview",
+          "when": "viewItem =~ /^category-dimensions(\\.ctlShown)?$/",
+          "group": "inline"
+        },
+        {
+          "command": "tm1.executeProcessFromTree",
+          "when": "viewItem =~ /^process($|\\.git$)/ && !listMultiSelection",
+          "group": "1_actions@0"
+        },
+        {
+          "command": "tm1.openProcessEditor",
+          "when": "viewItem =~ /^process($|\\.git$)/ && !listMultiSelection",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.runProcessCoverage",
+          "when": "viewItem =~ /^process($|\\.git$)/ && !listMultiSelection",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.deleteProcess",
+          "when": "viewItem =~ /^process($|\\.git$)/",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "tm1.executeChoreFromTree",
+          "when": "viewItem == chore",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.activateChore",
+          "when": "viewItem == chore",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "tm1.deactivateChore",
+          "when": "viewItem == chore",
+          "group": "1_actions@3"
+        },
+        {
+          "command": "tm1.analyzeChoreRuns",
+          "when": "viewItem == chore",
+          "group": "1_actions@4"
+        },
+        {
+          "command": "tm1.editChore",
+          "when": "viewItem == chore",
+          "group": "2_crud@1"
+        },
+        {
+          "command": "tm1.deleteChore",
+          "when": "viewItem == chore",
+          "group": "2_crud@2"
+        },
+        {
+          "command": "tm1.createChore",
+          "when": "viewItem == category-chores",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.choreOverview",
+          "when": "viewItem == category-chores",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "tm1.choreOverview",
+          "when": "viewItem == category-chores",
+          "group": "inline"
+        },
+        {
+          "command": "tm1.retryNode",
+          "when": "viewItem == error",
+          "group": "1_actions"
+        },
+        {
+          "command": "tm1.newProcess",
+          "when": "viewItem =~ /^category-processes(-bedrock)?(\\.grouped)?(\\.ctlShown)?$/",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.processOverview",
+          "when": "viewItem =~ /^category-processes(-bedrock)?(\\.grouped)?(\\.ctlShown)?$/",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "tm1.processOverview",
+          "when": "viewItem =~ /^category-processes(-bedrock)?(\\.grouped)?(\\.ctlShown)?$/",
+          "group": "inline"
+        },
+        {
+          "command": "tm1.bedrock.install",
+          "when": "view == tm1Explorer && viewItem =~ /^category-processes(\\.grouped)?(\\.ctlShown)?$/",
+          "group": "9_bedrock@1"
+        },
+        {
+          "command": "tm1.bedrock.update",
+          "when": "view == tm1Explorer && viewItem =~ /^category-processes-bedrock(\\.grouped)?(\\.ctlShown)?$/",
+          "group": "9_bedrock@2"
+        },
+        {
+          "command": "tm1.bedrock.uninstall",
+          "when": "view == tm1Explorer && viewItem =~ /^category-processes-bedrock(\\.grouped)?(\\.ctlShown)?$/",
+          "group": "9_bedrock@3"
+        },
+        {
+          "command": "tm1.newProcess",
+          "when": "(viewItem =~ /^process($|\\.git$)/ || viewItem =~ /^processGroup(\\.grouped)?$/) && !listMultiSelection",
+          "group": "2_crud@0"
+        },
+        {
+          "command": "tm1.deployProcessToServer",
+          "when": "viewItem =~ /^process($|\\.git$)/ && !listMultiSelection",
+          "group": "2_crud@1"
+        },
+        {
+          "command": "tm1.deployToServer",
+          "when": "viewItem =~ /^cubeRule($|\\.git$)/ && !listMultiSelection",
+          "group": "2_crud@1"
+        },
+        {
+          "command": "tm1.deployToServer",
+          "when": "viewItem == chore && !listMultiSelection",
+          "group": "2_crud@1"
+        },
+        {
+          "command": "tm1.deployMultipleProcessesToServer",
+          "when": "viewItem =~ /^process($|\\.git$)/ && listMultiSelection",
+          "group": "2_crud@2"
+        },
+        {
+          "command": "tm1.exportSelectedProcesses",
+          "when": "viewItem =~ /^process($|\\.git$)/ && listMultiSelection",
+          "group": "2_crud@3"
+        },
+        {
+          "command": "tm1.git.openProcessAsFile",
+          "when": "viewItem == process.git && !listMultiSelection",
+          "group": "5_git@0"
+        },
+        {
+          "command": "tm1.git.pullProcess",
+          "when": "viewItem == process.git && !listMultiSelection",
+          "group": "5_git@1"
+        },
+        {
+          "command": "tm1.git.pushProcess",
+          "when": "viewItem == process.git && !listMultiSelection",
+          "group": "5_git@2"
+        },
+        {
+          "command": "tm1.git.pullRules",
+          "when": "viewItem == cubeRule.git",
+          "group": "5_git@1"
+        },
+        {
+          "command": "tm1.git.pushRules",
+          "when": "viewItem == cubeRule.git",
+          "group": "5_git@2"
+        },
+        {
+          "command": "tm1.git.pullAll",
+          "when": "viewItem =~ /^serverRoot-connected(-v12)?(-imp)?(-adm)?\\.git$/",
+          "group": "5_git@1"
+        },
+        {
+          "command": "tm1.git.diffProcess",
+          "when": "viewItem == process.git && !listMultiSelection",
+          "group": "5_git@3"
+        },
+        {
+          "command": "tm1.git.diffRules",
+          "when": "viewItem == cubeRule.git",
+          "group": "5_git@3"
+        },
+        {
+          "command": "tm1.showControlObjects",
+          "when": "viewItem =~ /^category-(cubes|dimensions|processes(-bedrock)?(\\.grouped)?)$/",
+          "group": "2_filter"
+        },
+        {
+          "command": "tm1.hideControlObjects",
+          "when": "viewItem =~ /^category-(cubes|dimensions|processes(-bedrock)?(\\.grouped)?)\\.ctlShown$/",
+          "group": "2_filter"
+        },
+        {
+          "command": "tm1.saveDataAll",
+          "when": "viewItem =~ /^serverRoot-connected(-imp)?(-adm)?($|\\.git$)/",
+          "group": "1_actions@13"
+        },
+        {
+          "command": "tm1.refreshSecurity",
+          "when": "viewItem =~ /^serverRoot-connected(-v12)?(-imp)?(-adm)?($|\\.git$)/",
+          "group": "1_actions@12"
+        },
+        {
+          "command": "tm1.showThreads",
+          "when": "viewItem =~ /^serverRoot-connected(-v12)?(-imp)?(-adm)?($|\\.git$)/",
+          "group": "5_monitoring@2"
+        },
+        {
+          "command": "tm1.showTm1Top",
+          "when": "view == tm1Explorer && viewItem =~ /^serverRoot-(connected|disconnected)(-imp)?(-adm)?($|\\.git$)/",
+          "group": "5_monitoring@3"
+        },
+        {
+          "command": "tm1.showTransactionLog",
+          "when": "viewItem =~ /^serverRoot-connected(-v12)?(-imp)?(-adm)?($|\\.git$)/",
+          "group": "5_monitoring@4"
+        },
+        {
+          "command": "tm1.showLineage",
+          "when": "view == tm1Explorer && (viewItem =~ /^serverRoot-connected(-v12)?(-imp)?(-adm)?($|\\.git$)/ || viewItem =~ /^category-cubes(\\.ctlShown)?$/)",
+          "group": "1_actions@8.5"
+        },
+        {
+          "submenu": "tm1.findReplace",
+          "when": "view == tm1Explorer && (viewItem =~ /^serverRoot-connected(-v12)?(-imp)?(-adm)?($|\\.git$)/ || viewItem =~ /^category-processes(-bedrock)?(\\.grouped)?(\\.ctlShown)?$/)",
+          "group": "1_actions@6"
+        },
+        {
+          "command": "tm1.tiConsole.open",
+          "when": "view == tm1Explorer && viewItem =~ /^serverRoot-connected(-v12)?(-imp)?(-adm)?($|\\.git$)/",
+          "group": "1_actions@11"
+        },
+        {
+          "command": "tm1.notebook.new",
+          "when": "view == tm1Explorer && viewItem =~ /^serverRoot-connected(-v12)?(-imp)?(-adm)?($|\\.git$)/",
+          "group": "1_actions@11"
+        },
+        {
+          "command": "tm1.bulkDelete.open",
+          "when": "view == tm1Explorer && viewItem =~ /^serverRoot-connected(-v12)?(-imp)?(-adm)?($|\\.git$)/",
+          "group": "1_actions@7"
+        },
+        {
+          "command": "tm1.bulkDeploy.open",
+          "when": "view == tm1Explorer && viewItem =~ /^serverRoot-connected(-v12)?(-imp)?(-adm)?($|\\.git$)/",
+          "group": "1_actions@8"
+        },
+        {
+          "command": "tm1.impersonate.start",
+          "when": "view == tm1Explorer && viewItem =~ /^serverRoot-connected(-adm)?($|\\.git$)/",
+          "group": "1_actions@8"
+        },
+        {
+          "command": "tm1.impersonate.stop",
+          "when": "view == tm1Explorer && viewItem =~ /^serverRoot-connected-imp(-adm)?($|\\.git$)/",
+          "group": "1_actions@14"
+        },
+        {
+          "command": "tm1.uploadFile",
+          "when": "viewItem == filesRoot",
+          "group": "1_actions"
+        },
+        {
+          "command": "tm1.downloadFile",
+          "when": "viewItem == serverFile",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.replaceFile",
+          "when": "viewItem == serverFile",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "tm1.deleteFile",
+          "when": "viewItem == serverFile",
+          "group": "1_actions@3"
+        },
+        {
+          "command": "tm1.app.downloadDocument",
+          "when": "view == tm1Explorer && viewItem == applicationDoc",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.applicationOverview",
+          "when": "view == tm1Explorer && viewItem == applicationsRoot",
+          "group": "1_actions@0"
+        },
+        {
+          "command": "tm1.applicationOverview",
+          "when": "view == tm1Explorer && viewItem == applicationsRoot",
+          "group": "inline"
+        },
+        {
+          "command": "tm1.app.createFolder",
+          "when": "view == tm1Explorer && viewItem =~ /^(applicationsRoot|applicationFolder)$/",
+          "group": "1_new@1"
+        },
+        {
+          "command": "tm1.app.createLink",
+          "when": "view == tm1Explorer && viewItem =~ /^(applicationsRoot|applicationFolder)$/",
+          "group": "1_new@2"
+        },
+        {
+          "command": "tm1.app.uploadDocument",
+          "when": "view == tm1Explorer && viewItem =~ /^(applicationsRoot|applicationFolder)$/",
+          "group": "1_new@3"
+        },
+        {
+          "command": "tm1.app.createReference",
+          "when": "view == tm1Explorer && viewItem =~ /^(applicationsRoot|applicationFolder)$/",
+          "group": "1_new@4"
+        },
+        {
+          "command": "tm1.app.rename",
+          "when": "view == tm1Explorer && viewItem =~ /^application(Folder|Doc|Link|Ref)$/",
+          "group": "7_modify@1"
+        },
+        {
+          "command": "tm1.app.move",
+          "when": "view == tm1Explorer && viewItem =~ /^application(Folder|Doc|Link|Ref)$/",
+          "group": "7_modify@2"
+        },
+        {
+          "command": "tm1.app.togglePrivate",
+          "when": "view == tm1Explorer && viewItem =~ /^application(Folder|Doc|Link|Ref)$/",
+          "group": "7_modify@3"
+        },
+        {
+          "command": "tm1.app.delete",
+          "when": "view == tm1Explorer && viewItem =~ /^application(Folder|Doc|Link|Ref)$/",
+          "group": "9_danger@1"
+        },
+        {
+          "command": "tm1.editServer",
+          "when": "view == tm1Explorer && (viewItem =~ /^serverRoot-connected(-v12)?(-imp)?(-adm)?($|\\.git$)/ || viewItem =~ /^serverRoot-disconnected(-adm)?$/)",
+          "group": "inline@1"
+        },
+        {
+          "command": "tm1.server.moveToFolder",
+          "when": "view == tm1Explorer && (viewItem =~ /^serverRoot-connected(-v12)?(-imp)?($|\\.git$)/ || viewItem =~ /^serverRoot-disconnected$/)",
+          "group": "1_actions@10"
+        },
+        {
+          "command": "tm1.server.delete",
+          "when": "view == tm1Explorer && listMultiSelection && viewItem =~ /^serverRoot-/",
+          "group": "1_actions@16"
+        },
+        {
+          "command": "tm1.server.connect",
+          "when": "view == tm1Explorer && viewItem =~ /^serverRoot-disconnected(-adm)?$/",
+          "group": "inline@2"
+        },
+        {
+          "command": "tm1.server.connect",
+          "when": "view == tm1Explorer && viewItem =~ /^serverRoot-disconnected(-adm)?$/",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "tm1.server.disconnect",
+          "when": "view == tm1Explorer && viewItem =~ /^serverRoot-connected(-v12)?(-imp)?(-adm)?($|\\.git$)/",
+          "group": "inline@2"
+        },
+        {
+          "command": "tm1.server.refresh",
+          "when": "view == tm1Explorer && viewItem =~ /^serverRoot-connected(-v12)?(-imp)?(-adm)?($|\\.git$)/",
+          "group": "inline@0"
+        },
+        {
+          "command": "tm1.server.openConfig",
+          "when": "view == tm1Explorer && viewItem =~ /^serverRoot-connected(-v12)?(-imp)?(-adm)?($|\\.git$)/",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.server.v12ManageDatabases",
+          "when": "view == tm1Explorer && viewItem =~ /^serverRoot-connected-v12(-imp)?(-adm)?($|\\.git$)/",
+          "group": "1_actions@3"
+        },
+        {
+          "command": "tm1.configureGit",
+          "when": "view == tm1Explorer && (viewItem =~ /^serverRoot-connected(-v12)?(-imp)?(-adm)?($|\\.git$)/ || viewItem =~ /^serverRoot-disconnected(-adm)?$/)",
+          "group": "9_config@1"
+        },
+        {
+          "command": "tm1.adminServer.detach",
+          "when": "view == tm1Explorer && viewItem =~ /^serverRoot-.*-adm(\\.git)?$/",
+          "group": "1_actions@15"
+        },
+        {
+          "command": "tm1.serverFolder.rename",
+          "when": "view == tm1Explorer && viewItem == serverFolder",
+          "group": "inline@0"
+        },
+        {
+          "command": "tm1.serverFolder.rename",
+          "when": "view == tm1Explorer && viewItem == serverFolder",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.serverFolder.delete",
+          "when": "view == tm1Explorer && viewItem == serverFolder",
+          "group": "inline@1"
+        },
+        {
+          "command": "tm1.serverFolder.delete",
+          "when": "view == tm1Explorer && viewItem == serverFolder",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "tm1.sandbox.create",
+          "when": "view == tm1Explorer && viewItem == sandboxesRoot",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.sandbox.clearActive",
+          "when": "view == tm1Explorer && viewItem == sandboxesRoot",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "tm1.sandbox.setActive",
+          "when": "view == tm1Explorer && viewItem == sandbox",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.sandbox.clearActive",
+          "when": "view == tm1Explorer && viewItem == sandbox-active",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.sandbox.commit",
+          "when": "view == tm1Explorer && (viewItem == sandbox || viewItem == sandbox-active)",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "tm1.sandbox.delete",
+          "when": "view == tm1Explorer && (viewItem == sandbox || viewItem == sandbox-active)",
+          "group": "9_danger@1"
+        },
+        {
+          "command": "tm1.snippet.new",
+          "when": "viewItem == snippetsRoot",
+          "group": "1_actions"
+        },
+        {
+          "command": "tm1.snippet.export",
+          "when": "viewItem == snippetsRoot",
+          "group": "2_io@0"
+        },
+        {
+          "command": "tm1.snippet.import",
+          "when": "viewItem == snippetsRoot",
+          "group": "2_io@1"
+        },
+        {
+          "command": "tm1.snippet.edit",
+          "when": "viewItem == snippet",
+          "group": "1_actions@0"
+        },
+        {
+          "command": "tm1.snippet.delete",
+          "when": "viewItem == snippet",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.processTemplate.new",
+          "when": "view == tm1Explorer && viewItem == processTemplatesRoot",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.processTemplate.export",
+          "when": "view == tm1Explorer && viewItem == processTemplatesRoot",
+          "group": "2_io@0"
+        },
+        {
+          "command": "tm1.processTemplate.import",
+          "when": "view == tm1Explorer && viewItem == processTemplatesRoot",
+          "group": "2_io@1"
+        },
+        {
+          "command": "tm1.processTemplate.saveFromProcess",
+          "when": "view == tm1Explorer && viewItem =~ /^process($|\\.git$)/",
+          "group": "1_modification@9"
+        },
+        {
+          "command": "tm1.processTemplate.edit",
+          "when": "view == tm1Explorer && viewItem == processTemplate",
+          "group": "1_modification@1"
+        },
+        {
+          "command": "tm1.processTemplate.delete",
+          "when": "view == tm1Explorer && viewItem == processTemplate",
+          "group": "1_modification@2"
+        },
+        {
+          "command": "tm1.copyName",
+          "when": "(viewItem =~ /^process($|\\.git$)/ || viewItem =~ /^processGroup(\\.grouped)?$/ || viewItem =~ /^cube(-v12)?(-control)?(-haspick)?(\\.loaded|\\.unloaded)?$/ || viewItem =~ /^cubeRule($|\\.git$)/ || viewItem == cubeView || viewItem == cubeDimension || viewItem =~ /^dimension(-control)?$/ || viewItem =~ /^hierarchy(-control)?$/ || viewItem == attribute || viewItem == subset || viewItem == chore) && !listMultiSelection",
+          "group": "9_clipboard"
+        },
+        {
+          "command": "tm1.workbench.save",
+          "when": "viewItem == workbenchesRoot",
+          "group": "1_actions"
+        },
+        {
+          "command": "tm1.workbench.edit",
+          "when": "viewItem == workbench",
+          "group": "1_actions@0"
+        },
+        {
+          "command": "tm1.workbench.rename",
+          "when": "viewItem == workbench",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "tm1.workbench.delete",
+          "when": "viewItem == workbench",
+          "group": "9_delete@1"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "TM1",
+      "properties": {
+        "tm1.nativeApiPath": {
+          "type": "string",
+          "default": "",
+          "scope": "machine",
+          "description": "%config.tm1.nativeApiPath.description%"
+        },
+        "tm1.password": {
+          "type": "string",
+          "default": "",
+          "scope": "application",
+          "markdownDeprecationMessage": "%config.tm1.password.deprecation%",
+          "description": "%config.tm1.password.description%"
+        },
+        "tm1.cubeViewer.copyDecimalSeparator": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "point",
+            "comma"
+          ],
+          "default": "auto",
+          "enumDescriptions": [
+            "%config.tm1.cubeViewer.copyDecimalSeparator.auto%",
+            "%config.tm1.cubeViewer.copyDecimalSeparator.point%",
+            "%config.tm1.cubeViewer.copyDecimalSeparator.comma%"
+          ],
+          "description": "%config.tm1.cubeViewer.copyDecimalSeparator.description%"
+        },
+        "tm1.timeoutMs": {
+          "type": "number",
+          "default": 0,
+          "minimum": 0,
+          "scope": "machine-overridable",
+          "description": "%config.tm1.timeoutMs.description%"
+        },
+        "tm1.connectTimeoutMs": {
+          "type": "number",
+          "default": 20000,
+          "minimum": 1000,
+          "scope": "machine-overridable",
+          "description": "%config.tm1.connectTimeoutMs.description%"
+        },
+        "tm1.debugPollTimeoutMs": {
+          "type": "number",
+          "default": 30000,
+          "minimum": 1000,
+          "scope": "machine-overridable",
+          "description": "%config.tm1.debugPollTimeoutMs.description%"
+        },
+        "tm1.references.debugLog": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.tm1.references.debugLog.description%"
+        },
+        "tm1.cubeStats.debugLog": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.tm1.cubeStats.debugLog.description%"
+        },
+        "tm1.maxSockets": {
+          "type": "number",
+          "default": 4,
+          "minimum": 1,
+          "maximum": 16,
+          "scope": "machine-overridable",
+          "description": "%config.tm1.maxSockets.description%"
+        },
+        "tm1.threadRefreshMs": {
+          "type": "number",
+          "default": 2000,
+          "minimum": 250,
+          "scope": "machine-overridable",
+          "description": "%config.tm1.threadRefreshMs.description%"
+        },
+        "tm1.threadRefreshTimeoutMs": {
+          "type": "number",
+          "default": 5000,
+          "minimum": 1000,
+          "scope": "machine-overridable",
+          "description": "%config.tm1.threadRefreshTimeoutMs.description%"
+        },
+        "tm1.messageLogRefreshMs": {
+          "type": "number",
+          "default": 5000,
+          "minimum": 250,
+          "scope": "machine-overridable",
+          "description": "%config.tm1.messageLogRefreshMs.description%"
+        },
+        "tm1.objectExplorerAutoRefreshMs": {
+          "type": "number",
+          "default": 0,
+          "minimum": 0,
+          "scope": "machine-overridable",
+          "description": "%config.tm1.objectExplorerAutoRefreshMs.description%"
+        },
+        "tm1.diagnostics.logActivationTiming": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.tm1.diagnostics.logActivationTiming.description%"
+        },
+        "tm1.v12Mode": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.tm1.v12Mode.description%"
+        },
+        "tm1.lint.nameWhitespaceInsensitive": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.tm1.lint.nameWhitespaceInsensitive.description%"
+        },
+        "tm1.tests.rootFolder": {
+          "type": "string",
+          "default": "tm1tests",
+          "description": "%config.tm1.tests.rootFolder.description%"
+        },
+        "tm1.tests.floatTolerance": {
+          "type": "number",
+          "default": 1e-9,
+          "description": "%config.tm1.tests.floatTolerance.description%"
+        },
+        "tm1.tests.maxDiffRows": {
+          "type": "integer",
+          "default": 2000,
+          "minimum": 0,
+          "maximum": 200000,
+          "description": "%config.tm1.tests.maxDiffRows.description%"
+        },
+        "tm1.tests.keepCloneOnError": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.tm1.tests.keepCloneOnError.description%"
+        }
+      }
+    },
+    "customEditors": [
+      {
+        "viewType": "tm1.processFile",
+        "displayName": "%tm1.processFile.displayName%",
+        "selector": [
+          {
+            "filenamePattern": "*.ti"
+          }
+        ],
+        "priority": "option"
+      }
+    ]
+  },
+  "scripts": {
+    "check": "npm run typecheck && npm run lint && npm run lint:dead && npm run lint:promises && npm run compile && npm test && npm run lint:deps",
+    "build:signatures": "node scripts/build-signatures.cjs",
+    "compile": "npm run build:signatures && node esbuild.config.mjs",
+    "compile:tsc": "tsc -p ./",
+    "typecheck": "tsc -p ./ --noEmit && tsc -p src/webviewClient/tsconfig.json --noEmit && tsc -p src/test-integration/tsconfig.json --noEmit && tsc -p src/test/tsconfig.json --noEmit",
+    "typecheck:webview": "tsc -p src/webviewClient/tsconfig.json --noEmit",
+    "build:webview": "node esbuild.config.mjs",
+    "watch": "node esbuild.config.mjs --watch",
+    "watch:tsc": "tsc -watch -p ./",
+    "vscode:prepublish": "npm run typecheck && npm run lint && npm run compile && node scripts/check-bundle.cjs",
+    "test": "vitest --run",
+    "test:coverage": "vitest --run --coverage",
+    "test:integration": "npm run compile && tsc -p src/test-integration/tsconfig.json && vscode-test",
+    "lint": "eslint src --max-warnings 0",
+    "lint:promises": "eslint src -c eslint.promises.config.mjs",
+    "lint:fix": "eslint src --fix",
+    "lint:dead": "knip",
+    "audit": "npm audit --omit=dev --audit-level=high",
+    "lint:deps": "depcruise --config .dependency-cruiser.js src",
+    "lint:deps:graph": "depcruise --config .dependency-cruiser.js --output-type dot src | dot -T svg -o deps.svg"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.19.43",
+    "@types/vscode": "^1.85.0",
+    "@vitest/coverage-v8": "^4.1.12",
+    "@vscode/test-cli": "^0.0.15",
+    "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^3.9.2",
+    "dependency-cruiser": "^17.4.3",
+    "esbuild": "^0.28.2",
+    "eslint": "^9.39.4",
+    "fast-check": "^4.10.2",
+    "knip": "^6.44.1",
+    "mocha": "^12.0.3",
+    "ovsx": "~1.1.1",
+    "typescript": "^5.3.0",
+    "typescript-eslint": "^8.72.1",
+    "vitest": "^4.1.1"
+  },
+  "dependencies": {
+    "http-proxy-agent": "^9.1.0",
+    "https-proxy-agent": "^9.1.0",
+    "jszip": "^3.10.2",
+    "marked": "^18.1.2",
+    "monaco-editor": "^0.55.1"
+  },
+  "overrides": {
+    "dompurify": "3.4.17"
+  }
+}

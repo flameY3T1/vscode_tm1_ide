@@ -1,0 +1,284 @@
+{
+  "title": "Task 6j — View-Misc + Subset-Legacy (24 Fn)",
+  "entries": [
+    [
+      "subsetaliasget",
+      {
+        "name": "SubsetAliasGet",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "subsetaliasset",
+      {
+        "name": "SubsetAliasSet",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          },
+          {
+            "name": "AliasName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "subsetdeleteallelements",
+      {
+        "name": "SubsetDeleteAllElements",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "subsetdestroy",
+      {
+        "name": "SubsetDestroy",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "subsetelementexists",
+      {
+        "name": "SubsetElementExists",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "subsetelementgetindex",
+      {
+        "name": "SubsetElementGetIndex",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "subsetelementinsert",
+      {
+        "name": "SubsetElementInsert",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          },
+          {
+            "name": "Position",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "subsetisallset",
+      {
+        "name": "SubsetIsAllSet",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          },
+          {
+            "name": "Flag",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "subsetmdxget",
+      {
+        "name": "SubsetMDXGet",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "subsetmdxset",
+      {
+        "name": "SubsetMDXSet",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          },
+          {
+            "name": "MDXExpression",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "viewdestroy",
+      {
+        "name": "ViewDestroy",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "viewmdxget",
+      {
+        "name": "ViewMDXGet",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "viewmdxset",
+      {
+        "name": "ViewMDXSet",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          },
+          {
+            "name": "MDXExpression",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "title": "System/IO functions",
+  "entries": [
+    [
+      "fileexists",
+      {
+        "name": "FileExists",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "FileName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "asciidelete",
+      {
+        "name": "ASCIIDelete",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "FileName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "wildcardfilesearch",
+      {
+        "name": "WildcardFileSearch",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "WildcardName",
+            "type": "string"
+          },
+          {
+            "name": "PreviousMatch",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "odbcopen",
+      {
+        "name": "ODBCOpen",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DataSourceName",
+            "type": "string"
+          },
+          {
+            "name": "UserName",
+            "type": "string"
+          },
+          {
+            "name": "Password",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "odbcclose",
+      {
+        "name": "ODBCClose",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "DataSourceName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "odbcoutput",
+      {
+        "name": "ODBCOutput",
+        "minParams": 3,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "DataSourceName",
+            "type": "string"
+          },
+          {
+            "name": "TableName",
+            "type": "string"
+          },
+          {
+            "name": "Value1",
+            "type": "any"
+          }
+        ],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

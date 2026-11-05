@@ -1,0 +1,328 @@
+{
+  "title": "String functions",
+  "entries": [
+    [
+      "str",
+      {
+        "name": "STR",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "Number",
+            "type": "numeric"
+          },
+          {
+            "name": "Width",
+            "type": "numeric"
+          },
+          {
+            "name": "Decimals",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "subst",
+      {
+        "name": "SUBST",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "String",
+            "type": "string"
+          },
+          {
+            "name": "Start",
+            "type": "numeric"
+          },
+          {
+            "name": "Length",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "scan",
+      {
+        "name": "SCAN",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "Substring",
+            "type": "string"
+          },
+          {
+            "name": "String",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "trim",
+      {
+        "name": "TRIM",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "String",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "upper",
+      {
+        "name": "UPPER",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "String",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "lower",
+      {
+        "name": "LOWER",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "String",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "long",
+      {
+        "name": "LONG",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "String",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "char",
+      {
+        "name": "CHAR",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Number",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "code",
+      {
+        "name": "CODE",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "String",
+            "type": "string"
+          },
+          {
+            "name": "Position",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "fill",
+      {
+        "name": "FILL",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "String",
+            "type": "string"
+          },
+          {
+            "name": "Length",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "string",
+        "rulesOnly": true
+      }
+    ],
+    [
+      "capit",
+      {
+        "name": "CAPIT",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "String",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "delet",
+      {
+        "name": "DELET",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "String",
+            "type": "string"
+          },
+          {
+            "name": "Start",
+            "type": "numeric"
+          },
+          {
+            "name": "Length",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "insrt",
+      {
+        "name": "INSRT",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "Insert",
+            "type": "string"
+          },
+          {
+            "name": "String",
+            "type": "string"
+          },
+          {
+            "name": "Position",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "numbr",
+      {
+        "name": "NUMBR",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "String",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "expand",
+      {
+        "name": "Expand",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "String",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "numbertostring",
+      {
+        "name": "NumberToString",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Number",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "stringtonumber",
+      {
+        "name": "StringToNumber",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "String",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "stringtonumberex",
+      {
+        "name": "StringToNumberEx",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "String",
+            "type": "string"
+          },
+          {
+            "name": "DecimalSeparator",
+            "type": "string"
+          },
+          {
+            "name": "ThousandSeparator",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ]
+  ]
+}

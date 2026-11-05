@@ -1,0 +1,1080 @@
+{
+  "title": "Process-Control (Task 4)",
+  "entries": [
+    [
+      "addinfocuberestriction",
+      {
+        "name": "AddInfoCubeRestriction",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "User",
+            "type": "string"
+          },
+          {
+            "name": "Access",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "allowexternalrequests",
+      {
+        "name": "AllowExternalRequests",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Allow",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "associatecamidtogroup",
+      {
+        "name": "AssociateCAMIDToGroup",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "CAMID",
+            "type": "string"
+          },
+          {
+            "name": "Group",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "batchcellincrement",
+      {
+        "name": "BatchCellIncrement",
+        "minParams": 4,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "Value",
+            "type": "numeric"
+          },
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Elem1",
+            "type": "string"
+          },
+          {
+            "name": "ElemN",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "batchupdatefinish",
+      {
+        "name": "BatchUpdateFinish",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "batchupdatefinishwait",
+      {
+        "name": "BatchUpdateFinishWait",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "break",
+      {
+        "name": "Break",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void",
+        "description": "Verlässt die innerste While-Schleife sofort (control-flow keyword)."
+      }
+    ],
+    [
+      "cgaddpromptvalues",
+      {
+        "name": "CGAddPromptValues",
+        "minParams": 2,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "CGName",
+            "type": "string"
+          },
+          {
+            "name": "Value",
+            "type": "any"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "cgpromptgetnextmember",
+      {
+        "name": "CGPromptGetNextMember",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "CGName",
+            "type": "string"
+          }
+        ],
+        "returnType": "string",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "cgpromptsize",
+      {
+        "name": "CGPromptSize",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "CGName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "createhierarchybyattribute",
+      {
+        "name": "CreateHierarchyByAttribute",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimName",
+            "type": "string"
+          },
+          {
+            "name": "HierName",
+            "type": "string"
+          },
+          {
+            "name": "AttrName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "cubedatareservationacquire",
+      {
+        "name": "CubeDataReservationAcquire",
+        "minParams": 3,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Elem1",
+            "type": "string"
+          },
+          {
+            "name": "ElemN",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "cubedatareservationget",
+      {
+        "name": "CubeDataReservationGet",
+        "minParams": 3,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Elem1",
+            "type": "string"
+          },
+          {
+            "name": "ElemN",
+            "type": "string"
+          }
+        ],
+        "returnType": "string",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "cubedatareservationgetconflicts",
+      {
+        "name": "CubeDataReservationGetConflicts",
+        "minParams": 3,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Elem1",
+            "type": "string"
+          },
+          {
+            "name": "ElemN",
+            "type": "string"
+          }
+        ],
+        "returnType": "string",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "cubedatareservationrelease",
+      {
+        "name": "CubeDataReservationRelease",
+        "minParams": 3,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Elem1",
+            "type": "string"
+          },
+          {
+            "name": "ElemN",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "cubedatareservationreleaseall",
+      {
+        "name": "CubeDataReservationReleaseAll",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "cubesavedata",
+      {
+        "name": "CubeSaveData",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "cubesetconnparams",
+      {
+        "name": "CubeSetConnParams",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Param",
+            "type": "string"
+          },
+          {
+            "name": "Value",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "cubeunload",
+      {
+        "name": "CubeUnload",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "dataminorerrorcount",
+      {
+        "name": "DataMinorErrorCount",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "datasourceasciidecimalseparator",
+      {
+        "name": "DatasourceASCIIDecimalSeparator",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true
+      }
+    ],
+    [
+      "datasourceasciidelimiter",
+      {
+        "name": "DatasourceASCIIDelimiter",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true
+      }
+    ],
+    [
+      "datasourceasciiheaderrecords",
+      {
+        "name": "DatasourceASCIIHeaderRecords",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric",
+        "assignable": true
+      }
+    ],
+    [
+      "datasourceasciiquotecharacter",
+      {
+        "name": "DatasourceASCIIQuoteCharacter",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true
+      }
+    ],
+    [
+      "datasourceasciithousandseparator",
+      {
+        "name": "DatasourceASCIIThousandSeparator",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true
+      }
+    ],
+    [
+      "datasourcecubeview",
+      {
+        "name": "DatasourceCubeview",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true
+      }
+    ],
+    [
+      "datasourcedimensionsubset",
+      {
+        "name": "DatasourceDimensionSubset",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true
+      }
+    ],
+    [
+      "datasourcenameforclient",
+      {
+        "name": "DatasourceNameForClient",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true
+      }
+    ],
+    [
+      "datasourcenameforserver",
+      {
+        "name": "DatasourceNameForServer",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true
+      }
+    ],
+    [
+      "datasourceodbocatalog",
+      {
+        "name": "DatasourceODBOCatalog",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true,
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "datasourceodboconnectionstring",
+      {
+        "name": "DatasourceODBOConnectionString",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true,
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "datasourceodbocubename",
+      {
+        "name": "DatasourceODBOCubeName",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true,
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "datasourceodbohierarchyname",
+      {
+        "name": "DatasourceODBOHierarchyName",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true,
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "datasourceodbolocation",
+      {
+        "name": "DatasourceODBOLocation",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true,
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "datasourceodboprovider",
+      {
+        "name": "DatasourceODBOProvider",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true,
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "datasourceodbosapclientid",
+      {
+        "name": "DatasourceODBOSAPClientID",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true,
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "datasourceodbosapclientlanguage",
+      {
+        "name": "DatasourceODBOSAPClientLanguage",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true,
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "datasourcepassword",
+      {
+        "name": "DatasourcePassword",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true
+      }
+    ],
+    [
+      "datasourcequery",
+      {
+        "name": "DatasourceQuery",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true
+      }
+    ],
+    [
+      "datasourcesapusingroleauths",
+      {
+        "name": "DatasourceSAPUsingRoleAuths",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric",
+        "assignable": true,
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "datasourcesapusingtexts",
+      {
+        "name": "DatasourceSAPUsingTexts",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric",
+        "assignable": true,
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "datasourcetype",
+      {
+        "name": "DatasourceType",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true
+      }
+    ],
+    [
+      "datasourceusername",
+      {
+        "name": "DatasourceUsername",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "assignable": true
+      }
+    ],
+    [
+      "disablebulkloadmode",
+      {
+        "name": "DisableBulkLoadMode",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "enablebatchcellincrement",
+      {
+        "name": "EnableBatchCellIncrement",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Enable",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "enablebulkloadmode",
+      {
+        "name": "EnableBulkLoadMode",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "executecommand",
+      {
+        "name": "ExecuteCommand",
+        "minParams": 1,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "Command",
+            "type": "string"
+          },
+          {
+            "name": "Wait",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true,
+        "v12Replacement": "ExecuteHttpRequest"
+      }
+    ],
+    [
+      "executejavan",
+      {
+        "name": "ExecuteJavaN",
+        "minParams": 2,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "ClassName",
+            "type": "string"
+          },
+          {
+            "name": "MethodName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "executejavas",
+      {
+        "name": "ExecuteJavaS",
+        "minParams": 2,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "ClassName",
+            "type": "string"
+          },
+          {
+            "name": "MethodName",
+            "type": "string"
+          }
+        ],
+        "returnType": "string",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "forceskipcheck",
+      {
+        "name": "ForceSkipCheck",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void"
+      }
+    ],
+    [
+      "itemreject",
+      {
+        "name": "ItemReject",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "ErrorMessage",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "itemskip",
+      {
+        "name": "ItemSkip",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void"
+      }
+    ],
+    [
+      "lockoff",
+      {
+        "name": "LockOff",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "lockon",
+      {
+        "name": "LockOn",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "metadataminorerrorcount",
+      {
+        "name": "MetadataMinorErrorCount",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "minorerrorlogmax",
+      {
+        "name": "MinorErrorLogMax",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric",
+        "description": "Obergrenze fuer die Zahl der Nebenfehler im Fehlerprotokoll — vor dem Datenteil setzen.",
+        "assignable": true
+      }
+    ],
+    [
+      "newdateformatter",
+      {
+        "name": "NewDateFormatter",
+        "minParams": 1,
+        "maxParams": 6,
+        "params": [
+          {
+            "name": "Locale",
+            "type": "string"
+          },
+          {
+            "name": "TimeZone",
+            "type": "string"
+          },
+          {
+            "name": "UseUNIXTime",
+            "type": "numeric"
+          },
+          {
+            "name": "FormatterStyle",
+            "type": "numeric"
+          },
+          {
+            "name": "FormatterType",
+            "type": "numeric"
+          },
+          {
+            "name": "TimeType",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "string",
+        "performanceNote": {
+          "recommended": "prolog",
+          "reason": "NewDateFormatter erzeugt ein Formatter-Objekt und sollte nur einmal im Prolog erstellt werden, nicht pro Datensatz."
+        }
+      }
+    ],
+    [
+      "nvalue",
+      {
+        "name": "NValue",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric",
+        "description": "Der numerische Zellwert des gerade gelesenen Satzes — nur bei einer Cube-View als Datenquelle.",
+        "assignable": true
+      }
+    ],
+    [
+      "onminorerrordoitemskip",
+      {
+        "name": "OnMinorErrorDoItemSkip",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric",
+        "description": "Auf 1 gesetzt ueberspringt der Prozess bei einem Nebenfehler den Satz, statt weiterzulaufen.",
+        "assignable": true
+      }
+    ],
+    [
+      "processbreak",
+      {
+        "name": "ProcessBreak",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void"
+      }
+    ],
+    [
+      "processerror",
+      {
+        "name": "ProcessError",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void"
+      }
+    ],
+    [
+      "processquit",
+      {
+        "name": "ProcessQuit",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void"
+      }
+    ],
+    [
+      "prologminorerrorcount",
+      {
+        "name": "PrologMinorErrorCount",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "refreshmdxhierarchy",
+      {
+        "name": "RefreshMDXHierarchy",
+        "minParams": 1,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimName",
+            "type": "string"
+          },
+          {
+            "name": "HierName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "removecamidassociation",
+      {
+        "name": "RemoveCAMIDAssociation",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "CAMID",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "removecamidassociationfromgroup",
+      {
+        "name": "RemoveCAMIDAssociationFromGroup",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "CAMID",
+            "type": "string"
+          },
+          {
+            "name": "Group",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "setchoreverbosemessages",
+      {
+        "name": "SetChoreVerboseMessages",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Enable",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "setodbcunicodeinterface",
+      {
+        "name": "SetOdbcUnicodeInterface",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Enable",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "svalue",
+      {
+        "name": "SValue",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "description": "Der Textwert des gerade gelesenen Satzes — nur bei einer Cube-View als Datenquelle.",
+        "assignable": true
+      }
+    ],
+    [
+      "swapaliaswithprincipalname",
+      {
+        "name": "SwapAliasWithPrincipalName",
+        "minParams": 2,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimName",
+            "type": "string"
+          },
+          {
+            "name": "AliasAttr",
+            "type": "string"
+          },
+          {
+            "name": "Flag",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "tm1user",
+      {
+        "name": "TM1User",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string"
+      }
+    ],
+    [
+      "value_is_string",
+      {
+        "name": "Value_Is_String",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric",
+        "description": "Ungleich 0, wenn der gerade gelesene Zellwert Text ist — entscheidet zwischen SValue und NValue.",
+        "assignable": true
+      }
+    ]
+  ]
+}

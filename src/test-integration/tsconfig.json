@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out/test-integration",
+    "rootDir": ".",
+    "module": "commonjs",
+    "types": ["node", "mocha"],
+    "skipLibCheck": true,
+    "noEmit": false
+  },
+  "include": ["**/*.ts"],
+  "exclude": []
+}

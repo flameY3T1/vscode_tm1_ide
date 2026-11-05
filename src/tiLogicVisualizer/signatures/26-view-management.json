@@ -1,0 +1,274 @@
+{
+  "title": "View management",
+  "entries": [
+    [
+      "viewcreatebymdx",
+      {
+        "name": "ViewCreateByMDX",
+        "minParams": 3,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          },
+          {
+            "name": "MDX",
+            "type": "string"
+          },
+          {
+            "name": "AsTemporary",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "viewexists",
+      {
+        "name": "ViewExists",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "viewconstruct",
+      {
+        "name": "ViewConstruct",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "viewcolumndimensionset",
+      {
+        "name": "ViewColumnDimensionSet",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          },
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "Position",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "viewrowdimensionset",
+      {
+        "name": "ViewRowDimensionSet",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          },
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "Position",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "viewtitledimensionset",
+      {
+        "name": "ViewTitleDimensionSet",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          },
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "Position",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "viewtitleelementset",
+      {
+        "name": "ViewTitleElementSet",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          },
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "ElementName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "viewsubsetassign",
+      {
+        "name": "ViewSubsetAssign",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          },
+          {
+            "name": "DimensionName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "viewextractskipcalcsset",
+      {
+        "name": "ViewExtractSkipCalcsSet",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          },
+          {
+            "name": "Skip",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "viewextractskiprulevaluesset",
+      {
+        "name": "ViewExtractSkipRuleValuesSet",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          },
+          {
+            "name": "Skip",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "viewextractskipzeroesset",
+      {
+        "name": "ViewExtractSkipZeroesSet",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          },
+          {
+            "name": "Skip",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

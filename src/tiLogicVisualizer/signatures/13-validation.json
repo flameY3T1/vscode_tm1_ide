@@ -1,0 +1,20 @@
+{
+  "title": "Validation",
+  "entries": [
+    [
+      "isund",
+      {
+        "name": "ISUND",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Value",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ]
+  ]
+}

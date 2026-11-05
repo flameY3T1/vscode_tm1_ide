@@ -1,0 +1,36 @@
+{
+  "title": "Drillthrough handles (Epilog of a }Drill_* process)",
+  "entries": [
+    [
+      "returnviewhandle",
+      {
+        "name": "ReturnViewHandle",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "description": "Returns a cube view as the drillthrough result. Belongs in the Epilog of a }Drill_* process, inside the generated-statements block."
+      }
+    ],
+    [
+      "returnsqltablehandle",
+      {
+        "name": "ReturnSQLTableHandle",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void",
+        "description": "Returns the ODBC result set of the process datasource as the drillthrough result. Takes no arguments and is written bare: ReturnSQLTableHandle; Belongs in the Epilog of a }Drill_* process."
+      }
+    ]
+  ]
+}

@@ -1,0 +1,717 @@
+{
+  "title": "Rules functions (math, financial, consolidation, cube-data, element, hierarchy, date)",
+  "entries": [
+    [
+      "acos",
+      {
+        "name": "ACOS",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Number",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "asin",
+      {
+        "name": "ASIN",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Number",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "atan",
+      {
+        "name": "ATAN",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Number",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "cos",
+      {
+        "name": "COS",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Number",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "tan",
+      {
+        "name": "TAN",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Number",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "ln",
+      {
+        "name": "LN",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Number",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "sign",
+      {
+        "name": "SIGN",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Number",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "fv",
+      {
+        "name": "FV",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "Payment",
+            "type": "numeric"
+          },
+          {
+            "name": "Interest",
+            "type": "numeric"
+          },
+          {
+            "name": "Periods",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "pv",
+      {
+        "name": "PV",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "Payment",
+            "type": "numeric"
+          },
+          {
+            "name": "Interest",
+            "type": "numeric"
+          },
+          {
+            "name": "Periods",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "paymt",
+      {
+        "name": "PAYMT",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "Principal",
+            "type": "numeric"
+          },
+          {
+            "name": "Interest",
+            "type": "numeric"
+          },
+          {
+            "name": "Periods",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "consolidatechildren",
+      {
+        "name": "ConsolidateChildren",
+        "minParams": 1,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "DimName1",
+            "type": "string"
+          },
+          {
+            "name": "DimNameN",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric",
+        "rulesOnly": true
+      }
+    ],
+    [
+      "consolidatedavg",
+      {
+        "name": "ConsolidatedAvg",
+        "minParams": 3,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "FlagValue",
+            "type": "numeric"
+          },
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Element1",
+            "type": "string"
+          },
+          {
+            "name": "ElementN",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "consolidatedcount",
+      {
+        "name": "ConsolidatedCount",
+        "minParams": 3,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "FlagValue",
+            "type": "numeric"
+          },
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Element1",
+            "type": "string"
+          },
+          {
+            "name": "ElementN",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "consolidatedcountunique",
+      {
+        "name": "ConsolidatedCountUnique",
+        "minParams": 5,
+        "maxParams": 6,
+        "params": [
+          {
+            "name": "SkipRules",
+            "type": "numeric"
+          },
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Elem1",
+            "type": "string"
+          },
+          {
+            "name": "Elem2",
+            "type": "string"
+          },
+          {
+            "name": "ElemN",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "consolidatedmax",
+      {
+        "name": "ConsolidatedMax",
+        "minParams": 3,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "FlagValue",
+            "type": "numeric"
+          },
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Element1",
+            "type": "string"
+          },
+          {
+            "name": "ElementN",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "consolidatedmin",
+      {
+        "name": "ConsolidatedMin",
+        "minParams": 3,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "FlagValue",
+            "type": "numeric"
+          },
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Element1",
+            "type": "string"
+          },
+          {
+            "name": "ElementN",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "undef",
+      {
+        "name": "UNDEF",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric",
+        "rulesOnly": true
+      }
+    ],
+    [
+      "stet",
+      {
+        "name": "STET",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "any",
+        "rulesOnly": true
+      }
+    ],
+    [
+      "undefvals",
+      {
+        "name": "UNDEFVALS",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void",
+        "rulesOnly": true
+      }
+    ],
+    [
+      "undefinedcellvalue",
+      {
+        "name": "UNDEFINEDCELLVALUE",
+        "minParams": 0,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Cube",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric",
+        "rulesOnly": true
+      }
+    ],
+    [
+      "isundefinedcellvalue",
+      {
+        "name": "ISUNDEFINEDCELLVALUE",
+        "minParams": 1,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "TestValue",
+            "type": "numeric"
+          },
+          {
+            "name": "Cube",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric",
+        "rulesOnly": true
+      }
+    ],
+    [
+      "cellvaluen",
+      {
+        "name": "CellValueN",
+        "minParams": 2,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "Cube",
+            "type": "string"
+          },
+          {
+            "name": "Element1",
+            "type": "string"
+          },
+          {
+            "name": "ElementN",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric",
+        "rulesOnly": true
+      }
+    ],
+    [
+      "cellvalues",
+      {
+        "name": "CellValueS",
+        "minParams": 2,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "Cube",
+            "type": "string"
+          },
+          {
+            "name": "Element1",
+            "type": "string"
+          },
+          {
+            "name": "ElementN",
+            "type": "string"
+          }
+        ],
+        "returnType": "string",
+        "rulesOnly": true
+      }
+    ],
+    [
+      "isleaf",
+      {
+        "name": "ISLEAF",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric",
+        "rulesOnly": true
+      }
+    ],
+    [
+      "elementfirst",
+      {
+        "name": "ElementFirst",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "Dimension",
+            "type": "string"
+          },
+          {
+            "name": "Hierarchy",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "elementnext",
+      {
+        "name": "ElementNext",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "Dimension",
+            "type": "string"
+          },
+          {
+            "name": "Hierarchy",
+            "type": "string"
+          },
+          {
+            "name": "Element",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "elementisancestor",
+      {
+        "name": "ElementIsAncestor",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "Dimension",
+            "type": "string"
+          },
+          {
+            "name": "Hierarchy",
+            "type": "string"
+          },
+          {
+            "name": "Element1",
+            "type": "string"
+          },
+          {
+            "name": "Element2",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "elementiscomponent",
+      {
+        "name": "ElementIsComponent",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "Dimension",
+            "type": "string"
+          },
+          {
+            "name": "Hierarchy",
+            "type": "string"
+          },
+          {
+            "name": "Element1",
+            "type": "string"
+          },
+          {
+            "name": "Element2",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "elementisparent",
+      {
+        "name": "ElementIsParent",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "Dimension",
+            "type": "string"
+          },
+          {
+            "name": "Hierarchy",
+            "type": "string"
+          },
+          {
+            "name": "Element1",
+            "type": "string"
+          },
+          {
+            "name": "Element2",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "eliscomp",
+      {
+        "name": "ELISCOMP",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "Dimension",
+            "type": "string"
+          },
+          {
+            "name": "Element1",
+            "type": "string"
+          },
+          {
+            "name": "Element2",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "hierarchy",
+      {
+        "name": "Hierarchy",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "DimName",
+            "type": "string"
+          }
+        ],
+        "returnType": "string",
+        "rulesOnly": true
+      }
+    ],
+    [
+      "hierarchycount",
+      {
+        "name": "HierarchyCount",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "DimName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric",
+        "rulesOnly": true
+      }
+    ],
+    [
+      "hierarchyindex",
+      {
+        "name": "HierarchyIndex",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimName",
+            "type": "string"
+          },
+          {
+            "name": "HierName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric",
+        "rulesOnly": true
+      }
+    ],
+    [
+      "hierarchyn",
+      {
+        "name": "HierarchyN",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "DimName",
+            "type": "string"
+          },
+          {
+            "name": "Index",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "string",
+        "rulesOnly": true
+      }
+    ],
+    [
+      "dates",
+      {
+        "name": "DATES",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "Year",
+            "type": "numeric"
+          },
+          {
+            "name": "Month",
+            "type": "numeric"
+          },
+          {
+            "name": "Day",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "time",
+      {
+        "name": "TIME",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string"
+      }
+    ]
+  ]
+}

@@ -1,0 +1,65 @@
+import type { LintRuleId, LintSeverity } from '../../tiLogicVisualizer/lintTypes';
+import { getL10n } from '../_shared/l10n';
+
+const L = getL10n();
+
+/** Human-readable name + one-line description per ruleId. */
+export const RULE_LABELS: Record<LintRuleId, { name: string; desc: string }> = {
+  'exec-command-forbidden':    { name: L.lrExecCommandName,    desc: L.lrExecCommandDesc },
+  'process-call-not-literal':  { name: L.lrProcCallName,       desc: L.lrProcCallDesc },
+  'processquit-unreachable':   { name: L.lrProcessQuitName,    desc: L.lrProcessQuitDesc },
+  'readonly-param-write':      { name: L.lrReadonlyParamName,  desc: L.lrReadonlyParamDesc },
+  'odbc-password-not-param':   { name: L.lrOdbcPwName,         desc: L.lrOdbcPwDesc },
+  'var-naming-prefix':         { name: L.lrVarPrefixName,      desc: L.lrVarPrefixDesc },
+  'param-naming-prefix':       { name: L.lrParamPrefixName,    desc: L.lrParamPrefixDesc },
+  'datasource-var-naming':     { name: L.lrDsPrefixName,       desc: L.lrDsPrefixDesc },
+  'missing-docstring':         { name: L.lrMissingDocName,     desc: L.lrMissingDocDesc },
+  'endless-loop':              { name: L.lrEndlessLoopName,    desc: L.lrEndlessLoopDesc },
+  'wrong-arg-count':           { name: L.lrArgCountName,       desc: L.lrArgCountDesc },
+  'string-compare-without-at': { name: L.lrStrCompareName,     desc: L.lrStrCompareDesc },
+  'numeric-compare-with-at':   { name: L.lrNumCompareName,     desc: L.lrNumCompareDesc },
+  'type-mismatch-assignment':  { name: L.lrTypeMismatchName,   desc: L.lrTypeMismatchDesc },
+  'wrong-param-type':          { name: L.lrParamTypeName,      desc: L.lrParamTypeDesc },
+  'unused-variable':           { name: L.lrUnusedVarName,      desc: L.lrUnusedVarDesc },
+  'dead-store':                { name: L.lrDeadStoreName,      desc: L.lrDeadStoreDesc },
+  'empty-if':                  { name: L.lrEmptyIfName,        desc: L.lrEmptyIfDesc },
+  'empty-while':               { name: L.lrEmptyWhileName,     desc: L.lrEmptyWhileDesc },
+  'cellput-no-error-handling': { name: L.lrCellPutGuardName,   desc: L.lrCellPutGuardDesc },
+  'unknown-function':          { name: L.lrUnknownFuncName,    desc: L.lrUnknownFuncDesc },
+  'missing-semicolon':         { name: L.lrMissingSemiName,    desc: L.lrMissingSemiDesc },
+  'wrong-section':             { name: L.lrWrongSectionName,   desc: L.lrWrongSectionDesc },
+  'undefined-variable':        { name: L.lrUndefVarName,       desc: L.lrUndefVarDesc },
+  'v12-deprecated':            { name: L.lrV12DeprecatedName,  desc: L.lrV12DeprecatedDesc },
+  'v12-only':                  { name: L.lrV12OnlyName,        desc: L.lrV12OnlyDesc },
+  'v12-file-path':             { name: L.lrV12FilePathName,    desc: L.lrV12FilePathDesc },
+  'process-return-code-literal': { name: L.lrProcessReturnLiteralName, desc: L.lrProcessReturnLiteralDesc },
+  'ti-unknown-cube':           { name: L.lrUnknownCubeName,    desc: L.lrUnknownCubeDesc },
+  'ti-unknown-dimension':      { name: L.lrUnknownDimName,     desc: L.lrUnknownDimDesc },
+  'ti-unknown-process':        { name: L.lrUnknownProcName,    desc: L.lrUnknownProcDesc },
+  'ti-wrong-process-params':   { name: L.lrWrongProcParamName, desc: L.lrWrongProcParamDesc },
+  'dead-code-condition':       { name: L.lrDeadCondName,       desc: L.lrDeadCondDesc },
+  'tm1-error-code':            { name: L.lrTm1ErrCodeName,     desc: L.lrTm1ErrCodeDesc },
+  'performance-hint':          { name: L.lrPerfHintName,       desc: L.lrPerfHintDesc },
+  'hardcoded-path':            { name: L.lrHardcodedPathName,  desc: L.lrHardcodedPathDesc },
+  'expand-missing':            { name: L.lrExpandMissingName,  desc: L.lrExpandMissingDesc },
+  'non-ascii-identifier':      { name: L.lrNonAsciiName,       desc: L.lrNonAsciiDesc },
+  'parse-error':               { name: L.lrParseErrorName,     desc: L.lrParseErrorDesc },
+  'invalid-object-name':       { name: L.lrInvalidObjNameName, desc: L.lrInvalidObjNameDesc },
+  'comment-before-if':         { name: L.lrCommentIfName,      desc: L.lrCommentIfDesc },
+  'comment-before-while':      { name: L.lrCommentWhileName,   desc: L.lrCommentWhileDesc },
+  'cube-logging-not-restored': { name: L.lrCubeLoggingName,    desc: L.lrCubeLoggingDesc },
+  'temp-object-not-destroyed': { name: L.lrTempObjName,        desc: L.lrTempObjDesc },
+  'element-write-before-commit': { name: L.lrElemWriteName,    desc: L.lrElemWriteDesc },
+  'ascii-output-overwrite':    { name: L.lrAsciiOverwriteName, desc: L.lrAsciiOverwriteDesc },
+  'executeprocess-return-ignored': { name: L.lrExecReturnName, desc: L.lrExecReturnDesc },
+  'recursive-process-call':    { name: L.lrRecursiveCallName,  desc: L.lrRecursiveCallDesc },
+  'cellget-in-loop-constant':  { name: L.lrCellGetLoopName,    desc: L.lrCellGetLoopDesc },
+  'invalid-arg-value':         { name: L.lrArgValueName,        desc: L.lrArgValueDesc },
+  'inconsistent-var-casing':   { name: L.lrInconsistentCasingName, desc: L.lrInconsistentCasingDesc },
+  'hierarchy-style-mixed':     { name: L.lrHierarchyStyleName, desc: L.lrHierarchyStyleDesc },
+};
+
+/** Severity labels for the select dropdown. */
+export const SEVERITY_LABELS: Record<LintSeverity, string> = {
+  error: L.lrSevError, warning: L.lrSevWarning, info: L.lrSevInfo, hint: L.lrSevHint,
+};

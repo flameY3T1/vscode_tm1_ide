@@ -1,0 +1,59 @@
+{
+  "title": "Task 6c — Cell-Misc (2 Fn)",
+  "entries": [
+    [
+      "cellincrementn",
+      {
+        "name": "CellIncrementN",
+        "minParams": 3,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "Value",
+            "type": "numeric"
+          },
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Elem1",
+            "type": "string"
+          },
+          {
+            "name": "ElemN",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "cellputproportionalspread",
+      {
+        "name": "CellPutProportionalSpread",
+        "minParams": 3,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "Value",
+            "type": "numeric"
+          },
+          {
+            "name": "CubeName",
+            "type": "string"
+          },
+          {
+            "name": "Elem1",
+            "type": "string"
+          },
+          {
+            "name": "ElemN",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

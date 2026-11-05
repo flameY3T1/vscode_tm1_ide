@@ -1,0 +1,239 @@
+{
+  "title": "Undocumented v11 functions, removed in TM1 12",
+  "entries": [
+    [
+      "enablepersonalworkspace",
+      {
+        "name": "EnablePersonalWorkspace",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Arg1",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "deleteallinfocuberestrictions",
+      {
+        "name": "DeleteAllInfoCubeRestrictions",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "cubesetsapvariablesclause",
+      {
+        "name": "CubeSetSAPVariablesClause",
+        "minParams": 2,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "Arg1",
+            "type": "string"
+          },
+          {
+            "name": "Arg2",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "datasourceaddsaphierarchy",
+      {
+        "name": "DataSourceAddSAPHierarchy",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "Arg1",
+            "type": "string"
+          },
+          {
+            "name": "Arg2",
+            "type": "string"
+          },
+          {
+            "name": "Arg3",
+            "type": "string"
+          },
+          {
+            "name": "Arg4",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "datasourcedeleteallsaphierarchies",
+      {
+        "name": "DataSourceDeleteAllSAPHierarchies",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "sapodsinsert",
+      {
+        "name": "SAPODSInsert",
+        "minParams": 2,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "Arg1",
+            "type": "string"
+          },
+          {
+            "name": "Arg2",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "setcharacteristicattributes",
+      {
+        "name": "SetCharacteristicAttributes",
+        "minParams": 1,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "Arg1",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "setcharacteristichierarchies",
+      {
+        "name": "SetCharacteristicHierarchies",
+        "minParams": 0,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "Arg1",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "setinfocubecharacteristics",
+      {
+        "name": "SetInfoCubeCharacteristics",
+        "minParams": 1,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "Arg1",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "setinfocubekeyfigures",
+      {
+        "name": "SetInfoCubeKeyFigures",
+        "minParams": 1,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "Arg1",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "setroleauthorizationcolumns",
+      {
+        "name": "SetRoleAuthorizationColumns",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "Arg1",
+            "type": "string"
+          },
+          {
+            "name": "Arg2",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "createmultihierarchytestcubes",
+      {
+        "name": "CreateMultiHierarchyTestCubes",
+        "minParams": 3,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "Arg1",
+            "type": "string"
+          },
+          {
+            "name": "Arg2",
+            "type": "string"
+          },
+          {
+            "name": "Arg3",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "cubesetslicermembers",
+      {
+        "name": "CubeSetSlicerMembers",
+        "minParams": 2,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "Arg1",
+            "type": "string"
+          },
+          {
+            "name": "Arg2",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ]
+  ]
+}

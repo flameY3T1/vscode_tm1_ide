@@ -1,0 +1,67 @@
+{
+  "title": "Task 6f — HTTP (4 Fn)",
+  "entries": [
+    [
+      "executehttprequest",
+      {
+        "name": "ExecuteHttpRequest",
+        "minParams": 2,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "Method",
+            "type": "string"
+          },
+          {
+            "name": "URL",
+            "type": "string"
+          },
+          {
+            "name": "Option",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric",
+        "v12Only": true
+      }
+    ],
+    [
+      "httpresponsegetbody",
+      {
+        "name": "HttpResponseGetBody",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string",
+        "v12Only": true
+      }
+    ],
+    [
+      "httpresponsegetheader",
+      {
+        "name": "HttpResponseGetHeader",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "HeaderName",
+            "type": "string"
+          }
+        ],
+        "returnType": "string",
+        "v12Only": true
+      }
+    ],
+    [
+      "httpresponsegetstatuscode",
+      {
+        "name": "HttpResponseGetStatusCode",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "numeric",
+        "v12Only": true
+      }
+    ]
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Turbo Integrator",
+  "scopeName": "source.ti",
+  "patterns": [
+    {
+      "include": "#section-markers"
+    },
+    {
+      "include": "#pro-header"
+    },
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#control-flow"
+    },
+    {
+      "include": "#builtin-functions"
+    },
+    {
+      "include": "#operators"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#identifiers"
+    }
+  ],
+  "repository": {
+    "section-markers": {
+      "patterns": [
+        {
+          "name": "entity.name.section.ti",
+          "match": "^57[2345],\\d*\\s*$"
+        },
+        {
+          "name": "comment.block.documentation.ti",
+          "match": "^#\\*{4}(Begin|End):.*$"
+        },
+        {
+          "name": "keyword.other.region.ti",
+          "match": "^#(Region|EndRegion)\\b.*$"
+        }
+      ]
+    },
+    "pro-header": {
+      "name": "comment.line.pro-header.ti",
+      "match": "^(?!57[2345],)\\d+,.*$"
+    },
+    "comments": {
+      "name": "comment.line.number-sign.ti",
+      "match": "#.*$"
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.single.ti",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            {
+              "name": "constant.character.escape.ti",
+              "match": "''"
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.double.ti",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.ti",
+              "match": "\"\""
+            }
+          ]
+        }
+      ]
+    },
+    "numbers": {
+      "name": "constant.numeric.ti",
+      "match": "\\b[0-9]+(\\.[0-9]+)?\\b"
+    },
+    "keywords": {
+      "name": "keyword.control.ti",
+      "match": "(?i)\\b(IF|ELSE|ELSEIF|ENDIF|WHILE|END|FOR|NEXT)\\b"
+    },
+    "control-flow": {
+      "name": "keyword.other.unit.ti",
+      "match": "(?i)\\b(ProcessError|ProcessQuit|ProcessBreak|Break|ExecuteProcess|ItemReject|ItemSkip|StringGlobalVariable|NumericGlobalVariable)\\b"
+    },
+    "builtin-functions": {
+      "patterns": [
+        {
+          "name": "support.function.cell.ti",
+          "match": "(?i)\\b(CellGetN|CellGetS|CellPutN|CellPutS|CellIsUpdateable|CellGetString|CellPutString)\\b"
+        },
+        {
+          "name": "support.function.dimension.ti",
+          "match": "(?i)\\b(DimensionCreate|DimensionDestroy|DimensionExists|DimensionDeleteAllElements|DimensionElementInsert|DimensionElementDelete|DimensionElementComponentAdd|DimensionElementComponentDelete|DimensionSortOrder|ElementCount|ElementIndex|ElementName|ElementLevel|ElementComponent|ElementComponentCount|ElementWeight|ElementType|ElementParent|ElementParentCount|HierarchyCreate|HierarchyExists|HierarchyElementInsert|HierarchyElementDelete|SubsetCreate|SubsetCreateByMDX|SubsetDelete|SubsetExists|SubsetGetSize|SubsetElementAdd|SubsetElementDelete|SubsetGetElementName|DIMSIZ|DIMNM|DIMIX|DTYPE|DNLEV|DNXT|ELPAR|ELPARN|ELCOMP|ELCOMPN|ELWEIGHT|ELLEV|ELISANC|ELISPAR|ELISATTR)\\b"
+        },
+        {
+          "name": "support.function.cube.ti",
+          "match": "(?i)\\b(CubeCreate|CubeExists|CubeDestroy|CubeClearData|CubeSetLogChanges|CubeGetLogChanges|ViewCreate|ViewCreateByMDX|ViewExists|ViewColumnDimensionSet|ViewRowDimensionSet|ViewTitleDimensionSet|ViewTitleElementSet|ViewSubsetAssign|ViewConstruct|ViewExtractSkipRuleValuesSet|ViewExtractSkipZeroesSet|RuleLoadFromFile)\\b"
+        },
+        {
+          "name": "support.function.string.ti",
+          "match": "(?i)\\b(STR|TRIM|LONG|SCAN|SUBST|UPPER|LOWER|CHAR|CODE|FILL|CAPIT|DELET|INSRT|NUMBR|INT|ROUND|ABS|MOD|MAX|MIN|POWER|EXP|LOG|LOG10|SQRT|SIN|COS|TAN|NOW|TODAY|DATE|TIME|DAYNO|MONTH|YEAR|DAY|HOUR|MINUTE|SECOND|TIMST|ISUNDEFINED|ISNUMERIC|ISVALID|NumberToString|StringToNumber|Expand|DimensionName)\\b"
+        },
+        {
+          "name": "support.function.attribute.ti",
+          "match": "(?i)\\b(ATTRS|ATTRN|ATTRE|AttributeExists|ElementAttrN|ElementAttrS|ElementAttrInsert|ElementAttrDelete)\\b"
+        },
+        {
+          "name": "support.function.system.ti",
+          "match": "(?i)\\b(GetProcessName|GetProcessErrorFileDirectory|TM1User|SecurityRefresh|SaveDataAll|BatchUpdateFinish|BatchUpdateStart|LogOutput|TextOutput|ASCIIOutput|ASCIIDelete|FileExists|ODBCOutput|ODBCClose|ODBCOpen|ServerShutdown|ThreadSleep|ProcessReturnCode|NValue|SValue|AddClient|DeleteClient|RemoveClientFromGroup|AddGroup|DeleteGroup|AssignClientPassword|RAND)\\b"
+        }
+      ]
+    },
+    "operators": {
+      "name": "keyword.operator.ti",
+      "match": "(<>|<=|>=|<|>|=|\\+|-|\\*|\\/|@|&|\\||!)"
+    },
+    "identifiers": {
+      "name": "variable.other.readwrite.ti",
+      "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+    }
+  }
+}

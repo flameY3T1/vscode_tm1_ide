@@ -1,0 +1,44 @@
+{
+  "title": "Task 6d — Chore-Control (3 Fn)",
+  "entries": [
+    [
+      "choreerror",
+      {
+        "name": "ChoreError",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "Severity",
+            "type": "string"
+          },
+          {
+            "name": "ErrorMessage",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "chorequit",
+      {
+        "name": "ChoreQuit",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void"
+      }
+    ],
+    [
+      "chorerollback",
+      {
+        "name": "ChoreRollback",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void"
+      }
+    ]
+  ]
+}

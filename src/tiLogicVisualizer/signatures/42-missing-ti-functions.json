@@ -1,0 +1,779 @@
+{
+  "title": "Missing classic + v12 TI functions (sandbox, security overlay, process-attr, view/subset, jobs)",
+  "entries": [
+    [
+      "odbcopenex",
+      {
+        "name": "ODBCOpenEx",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "Source",
+            "type": "string"
+          },
+          {
+            "name": "ClientName",
+            "type": "string"
+          },
+          {
+            "name": "Password",
+            "type": "string"
+          },
+          {
+            "name": "UseUnicodeODBC",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "setoutputescapedoublequote",
+      {
+        "name": "SetOutputEscapeDoubleQuote",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "FileName",
+            "type": "string"
+          },
+          {
+            "name": "Flag",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "processexists",
+      {
+        "name": "ProcessExists",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "ProcessName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "processrollback",
+      {
+        "name": "ProcessRollback",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void"
+      }
+    ],
+    [
+      "subsetexpandaboveset",
+      {
+        "name": "SubsetExpandAboveSet",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          },
+          {
+            "name": "ExpandAboveFlag",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "subsetformatstyleset",
+      {
+        "name": "SubsetFormatStyleSet",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimName",
+            "type": "string"
+          },
+          {
+            "name": "SubsetName",
+            "type": "string"
+          },
+          {
+            "name": "FormatName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "deprecatedInV12": true
+      }
+    ],
+    [
+      "viewcolumnsuppresszeroesset",
+      {
+        "name": "ViewColumnSuppressZeroesSet",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "Cube",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          },
+          {
+            "name": "Flag",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "viewrowsuppresszeroesset",
+      {
+        "name": "ViewRowSuppressZeroesSet",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "Cube",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          },
+          {
+            "name": "Flag",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "viewextractfilterbytitlesset",
+      {
+        "name": "ViewExtractFilterByTitlesSet",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "Cube",
+            "type": "string"
+          },
+          {
+            "name": "ViewName",
+            "type": "string"
+          },
+          {
+            "name": "FilterByTitles",
+            "type": "numeric"
+          },
+          {
+            "name": "Temporary",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "elementsecurityget",
+      {
+        "name": "ElementSecurityGet",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "DimName",
+            "type": "string"
+          },
+          {
+            "name": "ElName",
+            "type": "string"
+          },
+          {
+            "name": "Group",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "securityoverlaycreateglobaldefault",
+      {
+        "name": "SecurityOverlayCreateGlobalDefault",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "Cube",
+            "type": "string"
+          },
+          {
+            "name": "DimensionMap",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "securityoverlaydestroyglobaldefault",
+      {
+        "name": "SecurityOverlayDestroyGlobalDefault",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Cube",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "securityoverlaygloballockcell",
+      {
+        "name": "SecurityOverlayGlobalLockCell",
+        "minParams": 3,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "Lock",
+            "type": "numeric"
+          },
+          {
+            "name": "Cube",
+            "type": "string"
+          },
+          {
+            "name": "Element1",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "securityoverlaygloballocknode",
+      {
+        "name": "SecurityOverlayGlobalLockNode",
+        "minParams": 3,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "Lock",
+            "type": "numeric"
+          },
+          {
+            "name": "Cube",
+            "type": "string"
+          },
+          {
+            "name": "Address",
+            "type": "string"
+          },
+          {
+            "name": "AddressDelimiter",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "setdimensiongroupssecurity",
+      {
+        "name": "SetDimensionGroupsSecurity",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "SecurityLevel",
+            "type": "string"
+          },
+          {
+            "name": "Dimension",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "setelementgroupssecurity",
+      {
+        "name": "SetElementGroupsSecurity",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "SecurityLevel",
+            "type": "string"
+          },
+          {
+            "name": "Dimension",
+            "type": "string"
+          },
+          {
+            "name": "Element",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "sethierarchyelementgroupssecurity",
+      {
+        "name": "SetHierarchyElementGroupsSecurity",
+        "minParams": 4,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "SecurityLevel",
+            "type": "string"
+          },
+          {
+            "name": "Dimension",
+            "type": "string"
+          },
+          {
+            "name": "Hierarchy",
+            "type": "string"
+          },
+          {
+            "name": "Element",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "sethierarchygroupssecurity",
+      {
+        "name": "SetHierarchyGroupsSecurity",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "SecurityLevel",
+            "type": "string"
+          },
+          {
+            "name": "Dimension",
+            "type": "string"
+          },
+          {
+            "name": "Hierarchy",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "serveractivesandboxget",
+      {
+        "name": "ServerActiveSandboxGet",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "string"
+      }
+    ],
+    [
+      "serversandboxclone",
+      {
+        "name": "ServerSandboxClone",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "SandboxName",
+            "type": "string"
+          },
+          {
+            "name": "NewSandboxName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "serversandboxcreate",
+      {
+        "name": "ServerSandboxCreate",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "SandboxName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "serversandboxdiscardallchanges",
+      {
+        "name": "ServerSandboxDiscardAllChanges",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "SandboxName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "serversandboxget",
+      {
+        "name": "ServerSandboxGet",
+        "minParams": 1,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "Index",
+            "type": "numeric"
+          },
+          {
+            "name": "Username",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "serversandboxlistcountget",
+      {
+        "name": "ServerSandboxListCountGet",
+        "minParams": 0,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "Username",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "serversandboxmerge",
+      {
+        "name": "ServerSandboxMerge",
+        "minParams": 2,
+        "maxParams": 4,
+        "params": [
+          {
+            "name": "Source",
+            "type": "string"
+          },
+          {
+            "name": "Target",
+            "type": "string"
+          },
+          {
+            "name": "ConflictResolution",
+            "type": "numeric"
+          },
+          {
+            "name": "WaitForLocks",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "serversandboxesdelete",
+      {
+        "name": "ServerSandboxesDelete",
+        "minParams": 1,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "Predicates",
+            "type": "string"
+          },
+          {
+            "name": "PredicateDelimiter",
+            "type": "string"
+          },
+          {
+            "name": "PredicateListDelimiter",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "cuberuleget",
+      {
+        "name": "CubeRuleGet",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "RuleName",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "cuberuleset",
+      {
+        "name": "CubeRuleSet",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "RuleName",
+            "type": "string"
+          },
+          {
+            "name": "RuleString",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "ruleloadfromfileex",
+      {
+        "name": "RuleLoadFromFileEx",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "Cube",
+            "type": "string"
+          },
+          {
+            "name": "TextFile",
+            "type": "string"
+          },
+          {
+            "name": "CharacterSet",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "processattrdelete",
+      {
+        "name": "ProcessAttrDelete",
+        "minParams": 1,
+        "maxParams": 1,
+        "params": [
+          {
+            "name": "AttrName",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "processattrinsert",
+      {
+        "name": "ProcessAttrInsert",
+        "minParams": 3,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "PrevAttrName",
+            "type": "string"
+          },
+          {
+            "name": "NewAttrName",
+            "type": "string"
+          },
+          {
+            "name": "AttrType",
+            "type": "string"
+          }
+        ],
+        "returnType": "void"
+      }
+    ],
+    [
+      "processattrn",
+      {
+        "name": "ProcessAttrN",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "ProcessName",
+            "type": "string"
+          },
+          {
+            "name": "AttrName",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "processattrnl",
+      {
+        "name": "ProcessAttrNL",
+        "minParams": 2,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "ProcessName",
+            "type": "string"
+          },
+          {
+            "name": "AttrName",
+            "type": "string"
+          },
+          {
+            "name": "LangLocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "processattrs",
+      {
+        "name": "ProcessAttrS",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "ProcessName",
+            "type": "string"
+          },
+          {
+            "name": "AttrName",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "processattrsl",
+      {
+        "name": "ProcessAttrSL",
+        "minParams": 2,
+        "maxParams": 3,
+        "params": [
+          {
+            "name": "ProcessName",
+            "type": "string"
+          },
+          {
+            "name": "AttrName",
+            "type": "string"
+          },
+          {
+            "name": "LangLocaleCode",
+            "type": "string"
+          }
+        ],
+        "returnType": "string"
+      }
+    ],
+    [
+      "codew",
+      {
+        "name": "CODEW",
+        "minParams": 2,
+        "maxParams": 2,
+        "params": [
+          {
+            "name": "String",
+            "type": "string"
+          },
+          {
+            "name": "Location",
+            "type": "numeric"
+          }
+        ],
+        "returnType": "numeric"
+      }
+    ],
+    [
+      "waitforalljobs",
+      {
+        "name": "WaitForAllJobs",
+        "minParams": 1,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "JobId",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "v12Only": true
+      }
+    ],
+    [
+      "waitforanyjobs",
+      {
+        "name": "WaitForAnyJobs",
+        "minParams": 1,
+        "maxParams": "__INFINITY__",
+        "params": [
+          {
+            "name": "JobId",
+            "type": "string"
+          }
+        ],
+        "returnType": "void",
+        "v12Only": true
+      }
+    ],
+    [
+      "waitforinternaljobs",
+      {
+        "name": "WaitForInternalJobs",
+        "minParams": 0,
+        "maxParams": 0,
+        "params": [],
+        "returnType": "void",
+        "v12Only": true
+      }
+    ]
+  ]
+}
