@@ -63,3 +63,11 @@ describe('validateTm1Format reasons', () => {
     expect(formatTm1(-1234567.375, '#,##0.00;(#,##0.00)', { dec: '.', grp: ',' })).toBe('(1,234,567.38)');
   });
 });
+
+describe('date pattern check', () => {
+  it('rejects a long y-run quickly (no catastrophic backtracking)', () => {
+    const t0 = Date.now();
+    validateTm1Format('y'.repeat(80) + '!');
+    expect(Date.now() - t0).toBeLessThan(500);
+  });
+});

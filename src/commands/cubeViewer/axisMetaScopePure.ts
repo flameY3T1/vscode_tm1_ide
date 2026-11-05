@@ -26,10 +26,15 @@ export interface ScopedParentMaps {
 }
 
 /** All parents of `n`, either branch — `all` wins, `first` is the fallback. */
+/** Own keys only: element names like "constructor" or "toString" otherwise hit Object.prototype. */
+function ownGet<T>(o: Record<string, T>, k: string): T | undefined {
+  return Object.prototype.hasOwnProperty.call(o, k) ? o[k] : undefined;
+}
+
 function parentsOf(n: string, full: FullParentMaps): string[] {
-  const a = full.all[n];
+  const a = ownGet(full.all, n);
   if (a && a.length > 0) { return a; }
-  const p = full.first[n];
+  const p = ownGet(full.first, n);
   return p === undefined ? [] : [p];
 }
 
@@ -48,16 +53,16 @@ export function scopeParentMaps(
     }
   }
 
-  const first: Record<string, string> = {};
-  const all: Record<string, string[]> = {};
+  const first = Object.create(null) as Record<string, string>;
+  const all = Object.create(null) as Record<string, string[]>;
   for (const n of closure) {
-    const f = full.first[n];
+    const f = ownGet(full.first, n);
     if (f !== undefined) { first[n] = f; }
-    const a = full.all[n];
+    const a = ownGet(full.all, n);
     if (a && a.length > 1) { all[n] = a; }
   }
 
-  const hasChildren: Record<string, true> = {};
+  const hasChildren = Object.create(null) as Record<string, true>;
   for (const n of known) { if (parentSet.has(n)) { hasChildren[n] = true; } }
 
   // `flat` (added later, counter-measurement 2026-08-11): the active filter list
@@ -70,7 +75,7 @@ export function scopeParentMaps(
   if (flat) {
     for (const n of flat) {
       if (!n || closure.has(n)) { continue; }
-      const f = full.first[n];
+      const f = ownGet(full.first, n);
       if (f !== undefined) { first[n] = f; }
       if (parentSet.has(n)) { hasChildren[n] = true; }
     }

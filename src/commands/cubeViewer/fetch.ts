@@ -528,9 +528,10 @@ export async function _fetchDimParents(dimName: string, config: Tm1Config): Prom
   );
   if (!isOk(res)) { throw new Tm1HttpError(`edges of ${dimName}: HTTP ${res.statusCode}`, res.statusCode); }
   const rows = parseBodySafe<{ value?: Array<{ ParentName: string; ComponentName: string }> }>(res, {}).value ?? [];
-  const first: Record<string, string> = {};
-  const all: Record<string, string[]> = {};
-  const seen: Record<string, Set<string>> = {};
+  // Null prototype: element names like "constructor" or "__proto__" are keys here.
+  const first = Object.create(null) as Record<string, string>;
+  const all = Object.create(null) as Record<string, string[]>;
+  const seen = Object.create(null) as Record<string, Set<string>>;
   for (const e of rows) {
     const p = e.ParentName;
     const c = e.ComponentName;

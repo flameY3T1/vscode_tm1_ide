@@ -17,7 +17,8 @@ const DE: Separators = { dec: ',', grp: '.' };
  *  a time/date pattern and render empty. `$` is the server's currency symbol. */
 const ALLOWED_UNQUOTED = new Set(['0', '#', '.', ',', '%', ' ', '-', '+', '(', ')', '$', 'E', 'e']);
 const DATE_PARTS = /yyyy|yy|mm|dd/g;
-const DATE_ONLY = /^(?:yyyy|yy|mm|dd|[./\- ])+$/;
+// No separate `yyyy`: it is `yy` twice, and the overlap made the match backtrack exponentially (ReDoS).
+const DATE_ONLY = /^(?:yy|mm|dd|[./\- ])+$/;
 
 export type FormatCheck = { ok: true } | { ok: false; reason: FormatProblem; at?: string };
 export type FormatProblem =

@@ -46,6 +46,8 @@ export function planReparent(
  * `deleted`. No-op if the element is absent. Pure (no DOM).
  */
 export function deleteElementFromDraft(data: DraftLike, name: string): void {
+  // Own keys only: an element named "__proto__" would otherwise write onto Object.prototype.
+  if (!Object.prototype.hasOwnProperty.call(data.elements, name)) { return; }
   const el = data.elements[name];
   if (!el) { return; }
   if (el.marked === 'new') {
@@ -78,6 +80,7 @@ export function settlePersistedNew(
 ): void {
   if (!hierSnap) { return; }
   for (const { name } of hierSnap.elements) {
+    if (!Object.prototype.hasOwnProperty.call(data.elements, name)) { continue; }
     const el = data.elements[name];
     if (el && el.marked === 'new') { el.marked = 'changed'; }
   }

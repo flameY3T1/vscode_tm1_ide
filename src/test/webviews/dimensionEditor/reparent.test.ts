@@ -158,3 +158,12 @@ describe('reindexChildren', () => {
     expect(d.edges.find(e => e.child === 'A')!.order).toBe(0); // untouched (deleted)
   });
 });
+
+describe('prototype pollution guard', () => {
+  it('an element named __proto__ does not write onto Object.prototype', () => {
+    const d = { elements: {} as Record<string, { name: string; marked?: string }>, edges: [] };
+    deleteElementFromDraft(d, '__proto__');
+    settlePersistedNew(d, { elements: [{ name: '__proto__' }], attrDefs: [] });
+    expect(({} as { marked?: string }).marked).toBeUndefined();
+  });
+});

@@ -280,7 +280,7 @@ export function evaluateCheck(check: Exclude<Check, { kind: 'reconcile' }>, tabl
 const MD_ROWS_MAX = 200;
 
 function mdCell(s: string): string {
-  return s.replace(/\|/g, '\\|').replace(/\r?\n/g, ' ');
+  return s.replace(/[\\|]/g, '\\$&').replace(/\r?\n/g, ' ');
 }
 
 /** Cellset as a Markdown table for the report, capped at `MD_ROWS_MAX` rows. */

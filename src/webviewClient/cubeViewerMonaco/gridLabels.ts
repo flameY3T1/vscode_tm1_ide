@@ -89,7 +89,8 @@ export function makeToggleHtml(ctx: GridCtx, _structRowIdx: number[], _structCol
   function _toggleHtml(axis: 'row' | 'col', di: number, elem: string, idx: number): string {
     const dim = axis === 'row' ? rowAxisDims[di] : colAxisDims[di];
     const has = axis === 'row' ? rowHasChildren[di] : colHasChildren[di];
-    if (!has || !has[elem]) { return ''; }
+    // Own keys only: a leaf named "constructor" would otherwise get a triangle.
+    if (!has || !Object.prototype.hasOwnProperty.call(has, elem)) { return ''; }
     // ONE rule for all selection kinds: collapsed ⇔ no direct child stands
     // under this occurrence. Previously there were three answers (visible
     // children for `localFocus`, filter list for `kind:'elements'`, marker

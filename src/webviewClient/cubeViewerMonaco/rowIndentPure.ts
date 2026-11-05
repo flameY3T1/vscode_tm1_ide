@@ -45,9 +45,10 @@ export function collectAncestors(
   let frontier: string[] = [];
 
   const up = (n: string): string[] => {
-    const all = allParents ? allParents[n] : undefined;
+    // Own keys only: element names like "constructor" or "toString" hit Object.prototype.
+    const all = allParents && Object.prototype.hasOwnProperty.call(allParents, n) ? allParents[n] : undefined;
     if (all && all.length > 0) { return all; }
-    const p = parents[n];
+    const p = Object.prototype.hasOwnProperty.call(parents, n) ? parents[n] : undefined;
     return p === undefined ? [] : [p];
   };
 

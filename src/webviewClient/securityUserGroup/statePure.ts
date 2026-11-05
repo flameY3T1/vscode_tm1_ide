@@ -65,7 +65,8 @@ export function setAlias(store: Store, alias: string, values: Record<string, str
  */
 export function displayName(store: Store, name: string): string {
   if (!store.alias) { return name; }
-  const v = store.aliasValues[name];
+  // Own keys only: a user named "constructor" would otherwise read Object.prototype.
+  const v = Object.prototype.hasOwnProperty.call(store.aliasValues, name) ? store.aliasValues[name] : undefined;
   return v && v !== '' ? v : name;
 }
 
