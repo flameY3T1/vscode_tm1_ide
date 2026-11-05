@@ -27,6 +27,7 @@ import { buildThead } from './gridHeader';
 import { buildDataRow as buildRowFor, _fmtDisplay, setRenderTitles } from './gridCells';
 import { wireColumnResize } from './gridResize';
 import { wireGridClick } from './gridClick';
+import { stripMatrixNameMapPrototypes } from './parentMergePure';
 
 const L = getL10n();
 
@@ -80,6 +81,7 @@ export function renderGrid(matrix: MatrixData): void {
   _detachVirtScroll();
 
   if (!matrix) return;
+  stripMatrixNameMapPrototypes(matrix);
   const refs = getRefs();
   // Capture the live scroll position BEFORE the table is rebuilt (innerHTML=''
   // resets scrollTop to 0). Restored after the body slice renders so a cellPage

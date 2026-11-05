@@ -45,6 +45,7 @@ import { setNonEmptyAxis } from '../../mdx/nonEmptyAxisPure';
 import { nextReqId, isCurrentResponse } from './reqGuard';
 import { initialMdxAction } from './initialMdxPure';
 import { detectNonEmptyAxes } from '../../mdx/nonEmptyAxisPure';
+import { nameMap } from '../../utils/nameMapPure';
 
 /** The `initData` message as the protocol defines it — the hand copy that sat
  *  here typed `existingViewName` without `null` (review 2026-10-03, D1). */
@@ -729,7 +730,7 @@ export function wireMessageHandler(): void {
         // header multi-selection) so re-selecting a view actually shows the
         // view's saved state instead of carrying over user tinkering.
         state.localFocus = null;
-        state.collapsed = {};
+        state.collapsed = nameMap();
         state.headerSelection = {};
         state.headerSelectionAnchor = null;
         state.pendingDrillAction = null;

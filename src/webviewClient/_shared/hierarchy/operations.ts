@@ -6,11 +6,12 @@ export function children(s: HierarchyStructure, n: string): string[] {
 
 export function descendants(s: HierarchyStructure, n: string): string[] {
   const out: string[] = [];
-  const seen: Record<string, boolean> = { [n]: true };
+  // A Set, not an object: a child named "constructor" read as already seen.
+  const seen = new Set<string>([n]);
   const walk = (m: string): void => {
     for (const c of s.childrenOf[m] || []) {
-      if (seen[c]) { continue; }
-      seen[c] = true;
+      if (seen.has(c)) { continue; }
+      seen.add(c);
       out.push(c);
       walk(c);
     }
@@ -39,12 +40,12 @@ export function parents(s: HierarchyStructure, n: string): string[] {
 
 export function allParents(s: HierarchyStructure, n: string): string[] {
   const out: string[] = [];
-  const seen: Record<string, boolean> = { [n]: true };
+  const seen = new Set<string>([n]);
   const queue = [...parents(s, n)];
   while (queue.length) {
     const p = queue.shift() as string;
-    if (seen[p]) { continue; }
-    seen[p] = true;
+    if (seen.has(p)) { continue; }
+    seen.add(p);
     out.push(p);
     queue.push(...parents(s, p));
   }

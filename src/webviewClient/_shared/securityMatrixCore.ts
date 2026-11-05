@@ -26,6 +26,7 @@ import type { Group } from '../../security/types/group';
 import { getL10n, fmt } from './l10n';
 import { escapeHtml } from '../htmlUtils';
 import { getVsCodeApi } from './vscodeApi';
+import { nameMap } from '../../utils/nameMapPure';
 
 /** Normalized internal store — type-erased to avoid 3-way generic per matrix. */
 interface InternalStore {
@@ -100,10 +101,11 @@ export interface MatrixUi {
 // ─── Pure store ops (exported for testing) ──────────────────────────────────
 
 export function initInternalStore<TLevel extends string>(init: MatrixInit<TLevel>): InternalStore {
-  const cloned: Record<string, Record<string, string>> = {};
-  for (const r of Object.keys(init.perms)) { cloned[r] = { ...init.perms[r] }; }
-  const clone2: Record<string, Record<string, string>> = {};
-  for (const r of Object.keys(cloned)) { clone2[r] = { ...cloned[r] }; }
+  // Rows and groups are TM1 names: no prototype (utils/nameMapPure.ts).
+  const cloned = nameMap<Record<string, string>>();
+  for (const r of Object.keys(init.perms)) { cloned[r] = Object.assign(nameMap<string>(), init.perms[r]); }
+  const clone2 = nameMap<Record<string, string>>();
+  for (const r of Object.keys(cloned)) { clone2[r] = Object.assign(nameMap<string>(), cloned[r]); }
   return {
     rows: [...init.rows],
     groups: init.groups.map(g => g.name),
@@ -125,14 +127,14 @@ export function setFilter(s: InternalStore, filter: string): InternalStore {
 }
 
 export function setCellLevel(s: InternalStore, row: string, group: string, level: string): InternalStore {
-  const curRow = { ...(s.current[row] ?? {}) };
+  const curRow = Object.assign(nameMap<string>(), Object.prototype.hasOwnProperty.call(s.current, row) ? s.current[row] : undefined);
   curRow[group] = level;
-  return { ...s, current: { ...s.current, [row]: curRow } };
+  return { ...s, current: Object.assign(nameMap<Record<string, string>>(), s.current, { [row]: curRow }) };
 }
 
 export function revertAll(s: InternalStore): InternalStore {
-  const reverted: Record<string, Record<string, string>> = {};
-  for (const r of Object.keys(s.original)) { reverted[r] = { ...s.original[r] }; }
+  const reverted = nameMap<Record<string, string>>();
+  for (const r of Object.keys(s.original)) { reverted[r] = Object.assign(nameMap<string>(), s.original[r]); }
   return { ...s, current: reverted };
 }
 
@@ -384,18 +386,18 @@ export function runSecurityMatrix<TLevel extends string>(cfg: MatrixConfig<TLeve
     const saved = cfg.parseSaved(msg);
     if (saved) {
       if (saved.errors.length === 0) {
-        const newOriginal: Record<string, Record<string, string>> = {};
-        for (const r of Object.keys(store.current)) { newOriginal[r] = { ...store.current[r] }; }
+        const newOriginal = nameMap<Record<string, string>>();
+        for (const r of Object.keys(store.current)) { newOriginal[r] = Object.assign(nameMap<string>(), store.current[r]); }
         store = { ...store, original: newOriginal };
         errorByCell.clear();
         showStatus('ok', fmt(L, 'savedChanges', saved.ok.length));
       } else {
-        const newOriginal: Record<string, Record<string, string>> = {};
-        for (const r of Object.keys(store.original)) { newOriginal[r] = { ...store.original[r] }; }
+        const newOriginal = nameMap<Record<string, string>>();
+        for (const r of Object.keys(store.original)) { newOriginal[r] = Object.assign(nameMap<string>(), store.original[r]); }
         for (const o of saved.ok) {
           const cur = store.current[o.row]?.[o.group];
           if (cur !== undefined) {
-            if (!newOriginal[o.row]) { newOriginal[o.row] = {}; }
+            if (!newOriginal[o.row]) { newOriginal[o.row] = nameMap(); }
             newOriginal[o.row][o.group] = cur;
           }
         }

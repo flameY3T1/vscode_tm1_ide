@@ -13,6 +13,7 @@ import { insertChildrenAfterParent, toggleFilterNames, nthOccurrenceIndex, isSub
 import { drillDownMemberSet, drillUpMemberSet } from './mdxParts';
 import { markInlineMdxStale } from './mdxBuild';
 import type { GridCtx } from './gridAxes';
+import { nameMap } from '../../utils/nameMapPure';
 
 // ── Kind queries to the host ────────────────────────────────────────────────
 // Its own counter, NOT `nextReqId`/`state._reqSent`: that one counts the
@@ -142,7 +143,7 @@ function _focusOrCollapseTail(t: ToggleClick, hostKids?: string[], hostDescendan
     // multi-parent elements, `first` all the others (`axisMetaScopePure.ts`).
     // Built from `all` alone, the map stayed empty in the normal case — then
     // focus mode collapsed nothing at all anymore.
-    const focusChildMap: Record<string, string[]> = {};
+    const focusChildMap = nameMap<string[]>();
     const _edge = (c: string, p: string): void => { (focusChildMap[p] ??= []).push(c); };
     if (focusAllParents) {
       for (const c in focusAllParents) {
@@ -187,7 +188,7 @@ function _focusOrCollapseTail(t: ToggleClick, hostKids?: string[], hostDescendan
     return;
   }
 
-  state.collapsed[dimName] = state.collapsed[dimName] || {};
+  state.collapsed[dimName] = state.collapsed[dimName] || nameMap();
   if (state.collapsed[dimName][elemName]) { delete state.collapsed[dimName][elemName]; }
   else { state.collapsed[dimName][elemName] = true; }
   if (state.lastMatrix) { t.rerender(state.lastMatrix); }

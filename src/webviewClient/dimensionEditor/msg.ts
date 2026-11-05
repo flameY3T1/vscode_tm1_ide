@@ -15,6 +15,7 @@ import { handleConfirmDelete } from './detail';
 import { handleSortOrderState, handleSortOrderResult, requestSortOrder } from './sortOrder';
 import { getL10n, fmt } from '../_shared/l10n';
 import { settlePersistedNew } from './reparent';
+import { asNameMap } from '../../utils/nameMapPure';
 
 export {};
 
@@ -26,6 +27,8 @@ export function initMsgHandler(): void {
     if (!msg || !msg.type) return;
     if (msg.type === 'initData') {
       state.data = msg.state;
+      // Element names are keys: no prototype (utils/nameMapPure.ts).
+      if (state.data?.elements) { asNameMap(state.data.elements); }
       renderAll();
     } else if (msg.type === 'rebaseSnapshot') {
       if (!state.data) return;

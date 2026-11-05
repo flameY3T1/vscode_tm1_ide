@@ -11,6 +11,7 @@ import type { DisplayFormats } from '../../cubeViewer/displayFormatPure';
 
 // The wire shapes are defined once, in the protocol; see the note there.
 import type { CellFlag, MatrixData, DimSelection } from './protocol';
+import { nameMap } from '../../utils/nameMapPure';
 export type { CellFlag, MatrixData, DimSelection };
 
 export interface CubeViewerState {
@@ -258,7 +259,7 @@ export const state: CubeViewerState = {
   },
   displayFormats: {},
   loading: false,
-  collapsed: {},
+  collapsed: nameMap(),
   axisBaseNames: {},
   localFocus: null,
   pendingDrillAction: null,

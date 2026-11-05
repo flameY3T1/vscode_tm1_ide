@@ -1,6 +1,7 @@
 import type { HierarchyStructure } from '../_shared/hierarchy/types';
 import { buildAxisInfo } from './contextMenuPure';
 import type { MatrixData } from './state';
+import { nameMap } from '../../utils/nameMapPure';
 
 export function buildCubeStructure(
   matrix: MatrixData | null | undefined,
@@ -30,7 +31,7 @@ export function buildCubeStructure(
     return null;
   }
 
-  const meta: Record<string, { name: string; type: string; level: number }> = {};
+  const meta = nameMap<{ name: string; type: string; level: number }>();
   for (let i = 0; i < tuples.length; i++) {
     const elemName = tuples[i][dimIndex];
     const level = levels[i]?.[dimIndex] ?? 0;

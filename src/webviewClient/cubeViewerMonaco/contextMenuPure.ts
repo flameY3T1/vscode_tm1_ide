@@ -5,7 +5,7 @@
  * Inputs are explicit; outputs are plain values / Sets the caller applies.
  */
 
-export {};
+import { nameMap, asNameMap } from '../../utils/nameMapPure';
 
 export interface AxisInfo {
   parents: Record<string, string>;
@@ -46,24 +46,26 @@ export function buildAxisInfo(
   if (!matrix) { return null; }
   const rowDims = matrix.rowDims ?? fallbackRowDims;
   const colDims = matrix.colDims ?? fallbackColDims;
+  // Keys are element names: no prototype (utils/nameMapPure.ts), also for maps
+  // that did not pass through renderGrid.
   let parents: Record<string, string> | null = null;
-  let allParents: Record<string, string[]> = {};
-  let hasChildren: Record<string, true> = {};
+  let allParents: Record<string, string[]> = nameMap();
+  let hasChildren: Record<string, true> = nameMap();
   let di = rowDims.indexOf(dim);
   if (di >= 0) {
-    parents = (matrix.rowParents ?? [])[di] ?? {};
-    allParents = (matrix.rowAllParents ?? [])[di] ?? {};
-    hasChildren = (matrix.rowHasChildren ?? [])[di] ?? {};
+    parents = asNameMap((matrix.rowParents ?? [])[di] ?? nameMap());
+    allParents = asNameMap((matrix.rowAllParents ?? [])[di] ?? nameMap());
+    hasChildren = asNameMap((matrix.rowHasChildren ?? [])[di] ?? nameMap());
   } else {
     di = colDims.indexOf(dim);
     if (di >= 0) {
-      parents = (matrix.colParents ?? [])[di] ?? {};
-      allParents = (matrix.colAllParents ?? [])[di] ?? {};
-      hasChildren = (matrix.colHasChildren ?? [])[di] ?? {};
+      parents = asNameMap((matrix.colParents ?? [])[di] ?? nameMap());
+      allParents = asNameMap((matrix.colAllParents ?? [])[di] ?? nameMap());
+      hasChildren = asNameMap((matrix.colHasChildren ?? [])[di] ?? nameMap());
     }
   }
   if (!parents) { return null; }
-  const children: Record<string, string[]> = {};
+  const children = nameMap<string[]>();
   for (const c in parents) {
     if (Object.prototype.hasOwnProperty.call(parents, c)) {
       const p = parents[c];

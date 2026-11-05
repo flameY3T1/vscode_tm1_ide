@@ -13,6 +13,7 @@ import { state, vscode } from './state';
 import { askConfirm, askInput, showError, showInfo } from './modals';
 import { renderAll } from './render';
 import { getL10n, fmt } from '../_shared/l10n';
+import { asNameMap } from '../../utils/nameMapPure';
 
 const L = getL10n();
 
@@ -65,5 +66,6 @@ export async function handleSortOrderResult(msg: Extract<HostToWebview, { type: 
   // Edited while the sort ran: never replace that draft without asking.
   if (state.data?.dirty && !(await askConfirm({ message: L.discardConfirm, yes: L.discardYes, danger: true }))) { return; }
   state.data = msg.state;
+  if (state.data?.elements) { asNameMap(state.data.elements); }
   renderAll();
 }

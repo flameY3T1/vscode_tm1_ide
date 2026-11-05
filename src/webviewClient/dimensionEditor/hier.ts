@@ -6,6 +6,7 @@
 
 import { state } from './state';
 import { renderAll } from './render';
+import { asNameMap } from '../../utils/nameMapPure';
 
 export {};
 
@@ -16,7 +17,7 @@ export function switchToHierLocal(newHier: string, preserveDirty: boolean): void
     ? state.data.snapshot.perHier[newHier]
     : { elements: [], edges: [], attrDefs: [] };
   state.data.hierName = newHier;
-  state.data.elements = Object.fromEntries((content.elements || []).map((e) => [e.name, Object.assign({}, e)]));
+  state.data.elements = asNameMap(Object.fromEntries((content.elements || []).map((e) => [e.name, Object.assign({}, e)])));
   state.data.edges = (content.edges || []).map((e) => Object.assign({}, e));
   state.data.attrDefs = (content.attrDefs || []).map((a) => Object.assign({}, a));
   if (!preserveDirty) state.data.dirty = false;
