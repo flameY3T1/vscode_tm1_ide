@@ -13,6 +13,7 @@ import { getL10n, fmt } from '../_shared/l10n';
 import { tryGetVsCodeApi } from '../_shared/vscodeApi';
 import { attachTitleCombo, closeTitleCombo } from '../_shared/filterCombo';
 import type { HostToWebview, WebviewToHost } from './protocol';
+import { nameMap } from '../../utils/nameMapPure';
 import {
   applyParamInput,
   buildSaveTasks,
@@ -39,7 +40,7 @@ const vscode = tryGetVsCodeApi<WebviewToHost>();
 let isNew = false;
 let originalName = '';
 let processList: string[] = [];
-const processParamsCache: ParamsCache = {};
+const processParamsCache: ParamsCache = nameMap();
 let tasks: TaskRow[] = [];
 
 function $(id: string): HTMLElement {

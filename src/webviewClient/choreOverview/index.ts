@@ -6,6 +6,7 @@ import type { ChoreOverviewBootstrap, ChoreOverviewState, HostToWebview, Webview
 import { compareChoreRows, overlappingIntervals, plannedStarts, type ChoreOverviewRow } from '../../chore/choreTablePure';
 import { escapeHtml as esc } from '../htmlUtils';
 import { getVsCodeApi, type VsCodeApi } from '../_shared/vscodeApi';
+import { nameMap } from '../../utils/nameMapPure';
 
 type VsApi = VsCodeApi<WebviewToHost, ChoreOverviewState>;
 const vscode = getVsCodeApi<WebviewToHost, ChoreOverviewState>();
@@ -103,7 +104,7 @@ function renderCalendar(): void {
   const nowLine = nowMs >= from && nowMs < to ? '<div class="now" style="left:' + pos(nowMs) + '%"></div>' : '';
 
   let html = '<div class="cal-row head"><div></div><div class="track">' + ticks.join('') + nowLine + '</div></div>';
-  const byName: Record<string, Bar[]> = {};
+  const byName = nameMap<Bar[]>();
   for (const b of bars) (byName[b.name] = byName[b.name] || []).push(b);
   for (const r of rows) {
     const own = byName[r.name] || [];

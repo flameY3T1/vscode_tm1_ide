@@ -101,7 +101,8 @@ function _splitArgs(text: string): string[] {
  */
 export function dimsOfSetExpr(setExpr: string): string[] {
   const out: string[] = [];
-  const seen: Record<string, boolean> = {};
+  // A Set: a name like "constructor" read as already seen on a plain object.
+  const seen = new Set<string>();
   let inStr = false;
   for (let i = 0; i < setExpr.length; i++) {
     const c = setExpr[i];
@@ -115,7 +116,7 @@ export function dimsOfSetExpr(setExpr: string): string[] {
     const isChainHead = j < 0 || setExpr[j] !== '.';
     if (isChainHead) {
       const name = setExpr.substring(i + 1, end).replace(/\]\]/g, ']');
-      if (!seen[name]) { seen[name] = true; out.push(name); }
+      if (!seen.has(name)) { seen.add(name); out.push(name); }
     }
     i = end;
   }

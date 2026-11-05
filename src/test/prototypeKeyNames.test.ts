@@ -152,3 +152,28 @@ describe('security matrix with rows named like Object.prototype members', () => 
     expect(isDirty(revertAll(s))).toBe(false);
   });
 });
+
+import { withDisplayFormat, sanitizeDisplayFormats, resolveDisplayFormat } from '../cubeViewer/displayFormatPure';
+import { dimsOfSetExpr } from '../mdx/axisFactorsPure';
+
+describe('display formats and MDX factors with names that shadow Object.prototype', () => {
+  it('a restored "__proto__" dimension stays a key and pollutes nothing', () => {
+    const f = sanitizeDisplayFormats(JSON.parse('{"__proto__":{"x":"0.0"},"D":{"constructor":"#,##0"}}'));
+    expect(({} as Record<string, unknown>).x).toBeUndefined();
+    expect(f.__proto__.x).toBe('0.0');
+    expect(f.D.constructor).toBe('#,##0');
+  });
+
+  it('an element without a format resolves to none, not to Object', () => {
+    const f = withDisplayFormat(sanitizeDisplayFormats({}), 'D', 'a', '0.00');
+    const ctx = { colDims: [], colTuple: [], rowDims: ['D'], rowTuple: ['toString'], titles: {} };
+    expect(resolveDisplayFormat(f, ctx)).toBeUndefined();
+    expect(withDisplayFormat(f, '__proto__', 'constructor', '0').__proto__.constructor).toBe('0');
+  });
+});
+
+describe('MDX set expression with dimensions named like Object.prototype members', () => {
+  it('dimsOfSetExpr lists every dimension', () => {
+    expect(dimsOfSetExpr('{[constructor].[a]} * {[toString].[b]} * {[D].[c]}')).toEqual(['constructor', 'toString', 'D']);
+  });
+});

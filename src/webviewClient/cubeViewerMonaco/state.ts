@@ -257,7 +257,7 @@ export const state: CubeViewerState = {
     decimals: 2,
     reformat: false,
   },
-  displayFormats: {},
+  displayFormats: nameMap(),
   loading: false,
   collapsed: nameMap(),
   axisBaseNames: {},

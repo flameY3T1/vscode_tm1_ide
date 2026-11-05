@@ -3,6 +3,7 @@ import type { TraceKind, TracePanelIn } from './protocol';
 import { renderRuleTree, renderFeeders, renderUnfed, renderError, renderLoading, setAllExpanded, deliverChildren } from './render';
 import { getL10n, fmt } from '../_shared/l10n';
 import { vscode } from './vscodeApi';
+import { nameMap } from '../../utils/nameMapPure';
 
 const L = getL10n();
 
@@ -14,7 +15,7 @@ const zeroWrap = () => document.getElementById('trace-zero-wrap') as HTMLElement
 
 let lastMsg: Exclude<TracePanelIn, { type: 'children' | 'childrenError' }> | null = null;
 /** Dimensions per cube seen so far — shared with the tree for formula values. */
-const cubeDims: Record<string, string[]> = {};
+const cubeDims = nameMap<string[]>();
 let activeKind: TraceKind = 'rule';
 
 function setBusy(b: boolean): void {

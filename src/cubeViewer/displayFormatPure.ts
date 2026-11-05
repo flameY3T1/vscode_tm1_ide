@@ -8,6 +8,8 @@
  * dimension wins. So a display format sits where a server format would.
  */
 
+import { nameMap } from '../utils/nameMapPure';
+
 /** `formats[dimension][element] = format string` */
 export type DisplayFormats = Record<string, Record<string, string>>;
 
@@ -45,21 +47,23 @@ export function hasDisplayFormats(f: DisplayFormats): boolean {
 
 /** Set or clear (`format` empty) the format of one element; returns a new map. */
 export function withDisplayFormat(f: DisplayFormats, dim: string, element: string, format: string): DisplayFormats {
-  const forDim = { ...(f[dim] ?? {}) };
+  // No prototype at either level (utils/nameMapPure.ts): a spread would bring it back.
+  const forDim = Object.assign(nameMap<string>(), Object.prototype.hasOwnProperty.call(f, dim) ? f[dim] : undefined);
   if (format) { forDim[element] = format; } else { delete forDim[element]; }
-  const out = { ...f, [dim]: forDim };
+  const out = Object.assign(nameMap<Record<string, string>>(), f, { [dim]: forDim });
   if (!Object.keys(forDim).length) { delete out[dim]; }
   return out;
 }
 
 /** Keep only well-formed entries from a restored state. */
 export function sanitizeDisplayFormats(raw: unknown): DisplayFormats {
-  const out: DisplayFormats = {};
+  // No prototype: out["__proto__"] would be Object.prototype and the write global.
+  const out: DisplayFormats = nameMap();
   if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) { return out; }
   for (const [dim, m] of Object.entries(raw as Record<string, unknown>)) {
     if (typeof m !== 'object' || m === null || Array.isArray(m)) { continue; }
     for (const [el, fmt] of Object.entries(m as Record<string, unknown>)) {
-      if (typeof fmt === 'string' && fmt) { (out[dim] ??= {})[el] = fmt; }
+      if (typeof fmt === 'string' && fmt) { (out[dim] ??= nameMap())[el] = fmt; }
     }
   }
   return out;

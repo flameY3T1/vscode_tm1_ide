@@ -102,7 +102,7 @@ function applyOpenedView(v: OpenedView): boolean {
   // Save wrongly takes the MDX branch ("MDX empty").
   state.isMdxView = v.isMdx;
   const opened = v.isMdx && v.mdx ? unwrapDisplayFormats(v.mdx) : null;
-  state.displayFormats = opened ? opened.formats : {};
+  state.displayFormats = opened ? sanitizeDisplayFormats(opened.formats) : nameMap();
   state.originalMdx = opened ? opened.mdx : v.mdx;
   syncResetButton();
   setInlineMdx(opened ? opened.mdx : null);
@@ -221,7 +221,7 @@ function _onInitData(msg: InitData): void {
     const restored = unwrapDisplayFormats(msg.initialMdx!);
     const mdx = restored.mdx;
     if (hasDisplayFormats(restored.formats)) {
-      state.displayFormats = { ...state.displayFormats, ...restored.formats };
+      state.displayFormats = sanitizeDisplayFormats({ ...state.displayFormats, ...restored.formats });
       syncResetButton();
     }
     setInlineMdx(mdx);
@@ -931,7 +931,7 @@ export function wireButtons(): void {
     setReformat(true);
   });
   document.getElementById('btn-dec-reset')?.addEventListener('click', () => {
-    state.displayFormats = {};
+    state.displayFormats = nameMap();
     setReformat(false);
   });
 
