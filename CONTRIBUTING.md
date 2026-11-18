@@ -71,7 +71,7 @@ Dependabot ignores these (`.github/dependabot.yml`); they were checked and rejec
 ## Packaging
 
 ```bash
-npx vsce package --no-dependencies   # → vscode-tm1-ti-<version>.vsix
+npx vsce package --no-dependencies   # → vscode-tm1-ide-<version>.vsix
 ```
 
 ## Change workflow

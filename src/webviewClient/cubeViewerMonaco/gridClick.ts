@@ -13,6 +13,7 @@ import { insertChildrenAfterParent, toggleFilterNames, nthOccurrenceIndex, isSub
 import { drillDownMemberSet, drillUpMemberSet } from './mdxParts';
 import { markInlineMdxStale } from './mdxBuild';
 import type { GridCtx } from './gridAxes';
+import { buildChildMap } from './contextMenuPure';
 import { nameMap } from '../../utils/nameMapPure';
 
 // ── Kind queries to the host ────────────────────────────────────────────────
@@ -139,27 +140,8 @@ function _focusOrCollapseTail(t: ToggleClick, hostKids?: string[], hostDescendan
     const focusParents = onRowAxis ? ctx.rowParents[mapDi] : ctx.colParents[mapDi];
     if (!focusAllParents && !focusParents) { return; }
     // Reverse index ONLY for clearing the descendants out of the visible
-    // set, and from BOTH maps: since the trimming `all` only carries
-    // multi-parent elements, `first` all the others (`axisMetaScopePure.ts`).
-    // Built from `all` alone, the map stayed empty in the normal case — then
-    // focus mode collapsed nothing at all anymore.
-    const focusChildMap = nameMap<string[]>();
-    const _edge = (c: string, p: string): void => { (focusChildMap[p] ??= []).push(c); };
-    if (focusAllParents) {
-      for (const c in focusAllParents) {
-        if (Object.prototype.hasOwnProperty.call(focusAllParents, c)) {
-          for (const p of focusAllParents[c]) { _edge(c, p); }
-        }
-      }
-    }
-    if (focusParents) {
-      for (const c in focusParents) {
-        if (Object.prototype.hasOwnProperty.call(focusParents, c)
-            && !(focusAllParents?.[c]?.length)) {
-          _edge(c, focusParents[c]);
-        }
-      }
-    }
+    // set, and from BOTH maps (`buildChildMap`).
+    const focusChildMap = buildChildMap(focusParents, focusAllParents);
     // The host tells the direct children (`fetchAxisChildren`) — the trimmed
     // map only knows what is loaded and would overlook a child that is not
     // yet shown. The reverse index is only a fallback for the path without a
@@ -277,7 +259,7 @@ function _toggleInFilter(t: ToggleClick, selNames: string[]): void {
     }
     state.localFocus = { dim: dimName, visible: new Set(cur.names) };
     state.localFocus.visible.add(elemName);
-    state.pendingDrillAction = { dim: dimName, elem: elemName, kind: 'toggle' };
+    state.pendingDrillAction = { dim: dimName, elem: elemName };
     holdScroll();
     vscode.postMessage({ type: 'clearDimFilter', dimName });
   });

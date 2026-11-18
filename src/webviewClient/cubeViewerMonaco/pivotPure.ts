@@ -116,11 +116,12 @@ export function removeKey(axes: Axes, key: string): Axes {
   return { rowDims: drop(axes.rowDims), colDims: drop(axes.colDims), titleDims: drop(axes.titleDims) };
 }
 
-/** Insert `added` right after `key` on the same row/column axis. */
+/** Insert `added` right after `key`, in whichever zone holds it. A title
+ *  added this way has no element yet: it stays out of the slicer until one is picked. */
 export function addKeyAfter(axes: Axes, key: string, added: string): Axes {
   const ins = (arr: string[]) => {
     const i = arr.indexOf(key);
     return i < 0 ? arr : [...arr.slice(0, i + 1), added, ...arr.slice(i + 1)];
   };
-  return { rowDims: ins(axes.rowDims), colDims: ins(axes.colDims), titleDims: axes.titleDims };
+  return { rowDims: ins(axes.rowDims), colDims: ins(axes.colDims), titleDims: ins(axes.titleDims) };
 }

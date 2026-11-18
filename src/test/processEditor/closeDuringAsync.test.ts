@@ -56,9 +56,9 @@ describe('process editor — closing the tab during an await', () => {
     vi.mocked(deployProcess).mockImplementationOnce(async () => { panel.dispose(); });
 
     const ok = await handleMonacoSave(
-      panel, KEY, 'MyProcess', 'http://srv',
-      { prolog: 'x', metadata: '', data: '', epilog: '' },
-      undefined, { Type: 'None' } as never, undefined, CONFIG, true,
+      _sessions.get(KEY)!,
+      { sections: { prolog: 'x', metadata: '', data: '', epilog: '' }, dataSource: { Type: 'None' } as never },
+      true,
     );
     expect(ok).toBe(true);
     expect(vscode.window.showErrorMessage).not.toHaveBeenCalled();

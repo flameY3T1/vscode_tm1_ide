@@ -24,6 +24,7 @@ import { parseJsonSafe, parseBodySafe, odataErrorMessage } from './parseRest';
 import type { ODataValueEnvelope } from './parseRest';
 import type { ODataError } from './odataTypes';
 import { encodeODataKey } from '../utils/odataKey';
+import { nameMap } from '../utils/nameMapPure';
 import { buildNameFilters } from './elementQuery';
 import { fetchAllPages } from './odataPaging';
 import type { ChainProjection } from '../utils/chainProjection';
@@ -316,7 +317,9 @@ export async function fetchAliasValues(
   config: Tm1Config, dimName: string, hierName: string, alias: string,
 ): Promise<Record<string, string>> {
   const all = await fetchAttributeValues(config, dimName, hierName, alias);
-  return Object.fromEntries(Object.entries(all).filter(([name, v]) => v !== name));
+  const out = nameMap<string>();
+  for (const [name, v] of Object.entries(all)) { if (v !== name) { out[name] = v; } }
+  return out;
 }
 
 interface AttrValueRow {
@@ -336,7 +339,8 @@ export async function fetchAttributeValues(
   config: Tm1Config, dimName: string, hierName: string, attr: string,
 ): Promise<Record<string, string>> {
   const base = `Dimensions('${enc(dimName)}')/Hierarchies('${enc(hierName)}')`;
-  const out: Record<string, string> = {};
+  // No prototype: keys are element names (utils/nameMapPure.ts).
+  const out = nameMap<string>();
   await fetchAllPages<AttrValueRow>(`${base}/Elements?$select=Name${rowAttrSelect([attr])}`, config, {
     label: `fetchAttributeValues(${attr})`,
     // Alias labels are best-effort; a stalled read must not hold up the user

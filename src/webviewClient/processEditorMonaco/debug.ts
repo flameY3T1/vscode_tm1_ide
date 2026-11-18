@@ -1,5 +1,5 @@
 import type * as monacoType from 'monaco-editor';
-import type { HostToWebview, WebviewToHost } from './protocol';
+import type { EditorSnapshot, HostToWebview, WebviewToHost } from './protocol';
 import { normalizeSection, type SectionKey } from './debugPure';
 import { resetDebugVarsDiff } from './debugVarsDiff';
 import { getL10n } from '../_shared/l10n';
@@ -91,7 +91,7 @@ export function lookupDebugValue(ident: string): string | null {
 export function requestDebugStart(
   parameters: Array<{ Name: string; Type?: string; Value: string | number; Prompt?: string }>,
   breakpoints: Array<{ section: SectionKey; line: number }>,
-  extras?: { sections?: Record<string, string>; dataSource?: unknown; variables?: unknown[] },
+  snapshot?: EditorSnapshot,
 ): void {
   if (!state.bridge) { return; }
   state.mode = 'running';
@@ -99,9 +99,7 @@ export function requestDebugStart(
     type: 'debugStart',
     parameters,
     breakpoints,
-    sections: extras?.sections,
-    dataSource: extras?.dataSource,
-    variables: extras?.variables,
+    snapshot,
   });
   state.bridge.onStateChanged();
 }

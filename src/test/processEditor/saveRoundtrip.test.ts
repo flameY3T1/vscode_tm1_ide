@@ -31,7 +31,7 @@ import { extractProcessData } from '../../commands/processEditor/processEditorUt
 import { apiRequest } from '../../tm1Rest/client';
 import { _sessions } from '../../commands/processEditor/state';
 import { testSession } from '../helpers/processEditorSession';
-import type { Tm1Config, DataSource } from '../../tm1Rest/transport/types';
+import type { Tm1Config } from '../../tm1Rest/transport/types';
 
 const FIXTURE = JSON.parse(readFileSync(join(__dirname, '../fixtures/processRoundtrip.json'), 'utf8')) as Record<string, unknown>;
 const NAME = String(FIXTURE.Name);
@@ -70,12 +70,11 @@ async function openAndSaveUnchanged(): Promise<Record<string, unknown>> {
   session.dirty = true;
 
   // The webview hands back what it was given.
-  const ok = await handleMonacoSave(
-    panel, key, NAME, 'srv',
-    { prolog: opened.prolog, metadata: opened.metadata, data: opened.data, epilog: opened.epilog },
-    opened.parameters, opened.dataSource as DataSource, opened.variables,
-    CONFIG, false, 0, opened.hasSecurity,
-  );
+  const ok = await handleMonacoSave(session, {
+    sections: { prolog: opened.prolog, metadata: opened.metadata, data: opened.data, epilog: opened.epilog },
+    parameters: opened.parameters as never, dataSource: opened.dataSource as never, variables: opened.variables as never,
+    hasSecurity: opened.hasSecurity,
+  });
   expect(ok).toBe(true);
   expect(patches).toHaveLength(1);
   return patches[0];
@@ -119,12 +118,11 @@ describe('process save round trip: the compile revert restores what was opened',
     session.dirty = true;
 
     // An edit in every part the editor writes, so the revert has to undo each.
-    const ok = await handleMonacoSave(
-      panel, key, NAME, 'srv',
-      { prolog: 'x', metadata: 'x', data: 'x', epilog: 'x' },
-      [], { Type: 'None' } as DataSource, [],
-      CONFIG, false, 0, !opened.hasSecurity,
-    );
+    const ok = await handleMonacoSave(session, {
+      sections: { prolog: 'x', metadata: 'x', data: 'x', epilog: 'x' },
+      parameters: [], dataSource: { Type: 'None' }, variables: [],
+      hasSecurity: !opened.hasSecurity,
+    });
     expect(ok).toBe(false);
     expect(patches).toHaveLength(2);
     expect(patches[1][field]).toEqual(FIXTURE[field]);

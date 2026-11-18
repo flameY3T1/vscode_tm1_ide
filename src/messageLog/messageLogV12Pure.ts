@@ -46,6 +46,12 @@ export interface RunLogFile {
 export interface V12LogEntry extends RawEntry {
   Logger?: string;
   Name?: string;
+  /** The line's `id`: the thread number INSIDE its run. A process and what it
+   *  starts via `ExecuteProcess` share one, a `RunProcess` child and each chore
+   *  step get the next (measured on 12.5.9, 2026-11-15). The numbers repeat from
+   *  run to run, so this is for display only — never `ThreadID`, which the
+   *  analysis pairs lines by across the whole log. */
+  RunThread?: number;
 }
 
 /**
@@ -103,12 +109,25 @@ export function v12Level(level: string | undefined): string {
 }
 
 /**
+ * The v11 logger a run-log file stands for.
+ *
+ * A v12 line has five fields (`id, level, timestamp, name, message`) and no
+ * logger; `GET /Loggers` lists 65 configurable names with no rows behind them
+ * (measured on 12.5.9, 2026-11-15). The file kind is the only distinction there
+ * is, and it maps onto the two loggers v11 writes the same runs under.
+ */
+export function runLogLogger(kind?: RunLogFile['kind']): string {
+  return kind === 'chore' ? 'TM1.Chore' : 'TM1.Process';
+}
+
+/**
  * Parse one `ErrorLogFiles('…')/Content` body (JSONL) into panel entries.
  *
- * `Logger` carries the process the LINE belongs to, not a logger name: in a v12
- * run log that is the useful column — a parent run and the children it launched
- * are in one file and are told apart only by this field. `Name` repeats it for
- * `analyze()`, whose v12 end lines carry no name in their text.
+ * `Logger` is `runLogLogger` of the file, so the panel's source filter means the
+ * same on both versions. `Name` carries the process the LINE belongs to — a
+ * parent run and the children it launched are in one file and are told apart
+ * only by this field; `analyze()` needs it, because v12 end lines carry no name
+ * in their text.
  *
  * For a `ChoreLog_*` file the chore is stamped on as well. It has to come from
  * here, because the FILE NAME is the only place it appears: the lines inside a
@@ -125,11 +144,12 @@ export function v12Level(level: string | undefined): string {
  * cost the whole run.
  */
 export function parseRunLogContent(text: string, file?: RunLogFile): V12LogEntry[] {
+  const logger = runLogLogger(file?.kind);
   const out: V12LogEntry[] = [];
   for (const raw of text.split('\n')) {
     const line = raw.trim();
     if (!line) { continue; }
-    let obj: { level?: string; timestamp?: string; name?: string; message?: string };
+    let obj: { id?: number; level?: string; timestamp?: string; name?: string; message?: string };
     try {
       obj = JSON.parse(line);
     } catch {
@@ -141,8 +161,9 @@ export function parseRunLogContent(text: string, file?: RunLogFile): V12LogEntry
       TimeStamp: typeof obj.timestamp === 'string' ? obj.timestamp : (file?.startedAt ?? ''),
       Level: v12Level(obj.level),
       Message: typeof obj.message === 'string' ? obj.message : '',
-      Logger: name,
+      Logger: logger,
       Name: name,
+      ...(typeof obj.id === 'number' ? { RunThread: obj.id } : {}),
       ...(file?.kind === 'chore' ? { Chore: file.object, ChoreRun: file.filename } : {}),
       ...(file?.kind === 'process' ? { RunFile: file.filename } : {}),
     });

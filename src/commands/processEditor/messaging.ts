@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { apiRequest, executeProcess } from '../../tm1Client';
 import { notifyExecuteResult } from './executeNotify';
-import type { ProcessParameter, ProcessVariable, DataSource, Tm1Config } from '../../tm1Rest/transport/types';
+import type { ProcessParameter, ProcessVariable, Tm1Config } from '../../tm1Rest/transport/types';
 import { getCubeViewNames, getCubeDimensionNames } from '../../tm1Rest/cubeApi';
 import type { ProtocolProcessParameter, ProtocolProcessVariable } from '../../webviewClient/processEditorMonaco/protocol';
 import type { TiVarType } from '../../references/variableEnv';
@@ -11,6 +11,7 @@ import { runCancellableProcess, isCancelRejection } from '../../runState/runCanc
 import { buildResolverView, lookupIdentifierInfo } from '../../references/resolverView';
 import type { WebviewToHost } from '../../webviewClient/processEditorMonaco/protocol';
 import { askParamsInPanel, answerParamAsk } from './processParams';
+import { refuseDebugStart } from './debugSession';
 import { getPanelTitle } from './processEditorUtils';
 import { lintAllSections } from './processEditorLint';
 import { postV12Mode } from './lifecycle';
@@ -202,34 +203,20 @@ const processEditorTable: DispatchTable<WebviewToHost, ProcessEditorCtx> = {
 
   save: async (rawMsg, ctx) => {
     const msg = rawMsg as Extract<WebviewToHost, { type: 'save' | 'saveAs' | 'execute' }>;
-    const { panel, panelKey, processName, serverKey, config } = ctx;
-    await handleMonacoSave(
-      panel, panelKey, processName, serverKey,
-      msg.sections ?? {}, msg.parameters as ProcessParameter[], msg.dataSource as DataSource, msg.variables as ProcessVariable[],
-      config, false, Number(msg.errorCount ?? 0), msg.hasSecurity,
-    );
+    await handleMonacoSave(ctx.session, msg);
   },
 
   saveAs: async (rawMsg, ctx) => {
     const msg = rawMsg as Extract<WebviewToHost, { type: 'save' | 'saveAs' | 'execute' }>;
-    const { processName, config, reopenAfterSave } = ctx;
-    await handleMonacoSaveAs(
-      processName, msg.sections ?? {}, msg.parameters as ProcessParameter[], msg.dataSource as DataSource, msg.variables as ProcessVariable[],
-      config, Number(msg.errorCount ?? 0), reopenAfterSave, msg.hasSecurity,
-    );
+    await handleMonacoSaveAs(ctx.session, msg, ctx.reopenAfterSave);
   },
 
   execute: async (rawMsg, ctx) => {
     const msg = rawMsg as Extract<WebviewToHost, { type: 'save' | 'saveAs' | 'execute' }>;
-    const { panel, panelKey, processName, serverKey, config } = ctx;
+    const { panel, processName, config } = ctx;
     try {
       // Auto-save first so server runs the latest editor state.
-      const saveOk = await handleMonacoSave(
-        panel, panelKey, processName, serverKey,
-        msg.sections ?? {}, msg.parameters as ProcessParameter[], msg.dataSource as DataSource, msg.variables as ProcessVariable[], config,
-        true,
-        Number(msg.errorCount ?? 0), msg.hasSecurity,
-      );
+      const saveOk = await handleMonacoSave(ctx.session, msg, true);
       if (!saveOk) { return; }
       const storedExec = ctx.session.code;
       const rawParams = (msg.parameters ?? storedExec?.parameters ?? []) as ProcessParameter[];
@@ -397,29 +384,19 @@ const processEditorTable: DispatchTable<WebviewToHost, ProcessEditorCtx> = {
   },
 
   debugStart: async (msg, ctx) => {
-    const { panel, panelKey, processName, serverKey, config } = ctx;
+    const { panel, panelKey, processName, config } = ctx;
     // Auto-save first so the debug runs the latest editor state.
-    if (msg.sections) {
-      const saveOk = await handleMonacoSave(
-        panel, panelKey, processName, serverKey,
-        msg.sections, msg.parameters as ProcessParameter[], msg.dataSource as DataSource, msg.variables as ProcessVariable[], config,
-        true,
-        Number(msg.errorCount ?? 0),
-      );
-      if (!saveOk) { return; }
+    if (msg.snapshot && !(await handleMonacoSave(ctx.session, msg.snapshot, true))) {
+      refuseDebugStart(panel);
+      return;
     }
     const rawParams = (Array.isArray(msg.parameters) ? msg.parameters : []) as ProcessParameter[];
-    let debugParams: Array<{ Name: string; Value: string | number }>;
-    if (rawParams.length > 0) {
-      const formResult = await askParamsInPanel(panel, processName, rawParams, vscode.l10n.t('Debug'), config?.serverUrl ?? '');
-      if (formResult === undefined) {
-        // Reset webview debug mode — optimistically set before user cancelled
-        postTo<HostToWebview>(panel.webview, { type: 'debugSessionEnded', status: '' });
-        return;
-      }
-      debugParams = formResult;
-    } else {
-      debugParams = [];
+    const debugParams = rawParams.length > 0
+      ? await askParamsInPanel(panel, processName, rawParams, vscode.l10n.t('Debug'), config?.serverUrl ?? '')
+      : [];
+    if (debugParams === undefined) {
+      refuseDebugStart(panel);
+      return;
     }
     const bpsRaw = Array.isArray(msg.breakpoints) ? msg.breakpoints : [];
     const bps = bpsRaw

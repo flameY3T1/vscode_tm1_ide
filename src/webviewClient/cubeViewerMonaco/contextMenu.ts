@@ -22,21 +22,22 @@ import { attrCubeDimension } from './elementFormatPure';
 const L = getL10n();
 import { sendSpread, sendSpreadBulk, sendTrace } from './actions';
 import { renderGrid } from './grid';
-import { currentDimElements, _expressionFields, rebuildZones } from './axis';
+import { canAddHierarchy, currentDimElements, offerAddHierarchy, _expressionFields, rebuildZones } from './axis';
 import type { SpreadMethod } from './pureBridge';
 import {
+  axisElementNames,
+  axisOf,
   buildAxisInfo,
   collectParentsUnion,
   eligibleCCells,
-  collectAncestorsBfs,
-  collectDescendantsDfs,
+  collectAncestorsRootFirst,
   collectDirectChildren,
   keepOnlyNames,
+  shownAxisNames,
+  insertAboveFirstTarget,
   type AxisInfo,
 } from './contextMenuPure';
 import { isSubsequenceOf } from './gridPure';
-import { children, expandAllSet, parents, allParents } from '../_shared/hierarchy/operations';
-import { buildCubeStructure } from './cubeHierStructure';
 import { syncAliasIntoMdx } from './aliasMdxSyncPure';
 import { applyMdxToPopupEditor } from './mdxView';
 import { writeClipboard } from '../_shared/clipboardWrite';
@@ -54,6 +55,7 @@ interface CtxDom {
   copyMdx: HTMLElement;
   sepCell: HTMLElement;
   openBrw: HTMLElement;
+  addHier: HTMLElement;
   alias: HTMLElement;
   aliasSub: HTMLElement;
   clearFilt: HTMLElement;
@@ -110,6 +112,7 @@ function _initDom(): CtxDom {
     copyMdx:        _required<HTMLElement>('ctx-copy-mdx'),
     sepCell:        _required<HTMLElement>('ctx-sep-cell'),
     openBrw:        _required<HTMLElement>('ctx-open-browser'),
+    addHier:        _required<HTMLElement>('ctx-add-hierarchy'),
     alias:          _required<HTMLElement>('ctx-alias'),
     aliasSub:       _required<HTMLElement>('ctx-alias-sub'),
     clearFilt:      _required<HTMLElement>('ctx-clear-filter'),
@@ -159,42 +162,8 @@ function _showCtxAt(e: MouseEvent): void {
   d.menu.style.top  = `${y}px`;
 }
 
-/**
- * If `dim` currently has a server-side element filter, promote that filter to
- * a client-side localFocus, queue the user's drill action, and tell the
- * extension to clear the server filter (which triggers a re-fetch with all
- * elements). After the new matrix arrives, `applyPendingDrillAction()` replays
- * the drill against the full parents/children map.
- *
- * Returns true if promotion happened (caller should bail out and let the
- * replay handle the drill).
- */
-function _promoteIfFiltered(
-  dim: string,
-  elems: string[],
-  kind: 'toggle' | 'showParents' | 'expandAll' | 'keepOnly',
-): boolean {
-  const sel = state.dimSelections[dim];
-  if (!sel || sel.kind !== 'elements') return false;
-  if (elems.length === 0) return false;
-  // Seed localFocus from prior selection so the post-refresh view stays narrow.
-  state.localFocus = { dim, visible: new Set(sel.names) };
-  // Make sure the drilled elements themselves are in the visible set even if
-  // the user drills on a parent that wasn't part of the original mark set
-  // (rare but possible after Komplett-ausklappen / Behalten chains).
-  elems.forEach((el) => state.localFocus!.visible.add(el));
-  state.pendingDrillAction = { dim, elem: elems[0], kind, elems: elems.slice() };
-  vscode.postMessage({ type: 'clearDimFilter', dimName: dim });
-  return true;
-}
-
-/** Replay the queued drill action with the full matrix from a fresh fetch.
- *
- * Prefers shared hierarchy/operations (buildCubeStructure) for set computation
- * so the replay uses the same level-aware logic as the live click handlers.
- * Falls back to contextMenuPure collect* helpers when buildCubeStructure returns
- * null (e.g. matrix missing tuples/levels).
- */
+/** Replay the queued toggle (`gridClick.ts#_toggleInFilter`) with the full
+ *  matrix from a fresh fetch: the direct children become visible. */
 export function applyPendingDrillAction(): void {
   const action = state.pendingDrillAction;
   if (!action) return;
@@ -202,43 +171,10 @@ export function applyPendingDrillAction(): void {
   const info = _getAxisInfo(action.dim);
   if (!info) return;
 
-  const targets = action.elems && action.elems.length ? action.elems : [action.elem];
   const focus = state.localFocus && state.localFocus.dim === action.dim
     ? state.localFocus
-    : (state.localFocus = { dim: action.dim, visible: new Set(targets) });
-
-  // Build shared hierarchy structure. Null when matrix lacks level/tuple data —
-  // each branch falls back to the contextMenuPure collect* equivalent.
-  const hier = buildCubeStructure(state.lastMatrix, action.dim, state.rowDims, state.colDims);
-
-  if (action.kind === 'showParents') {
-    // Direct parents — matches live showParents handler (parents, not all ancestors).
-    const parList: string[] = hier
-      ? Array.from(new Set(targets.flatMap((t) => parents(hier, t))))
-      : collectParentsUnion(targets, info);
-    parList.forEach((p) => focus.visible.add(p));
-  } else if (action.kind === 'showAllParents') {
-    // All ancestors via BFS — matches live showAllParents handler.
-    const ancestors: string[] = hier
-      ? Array.from(new Set(targets.flatMap((t) => allParents(hier, t))))
-      : [...collectAncestorsBfs(targets, info)];
-    ancestors.forEach((p) => focus.visible.add(p));
-  } else if (action.kind === 'expandAll') {
-    // Target + all descendants (DFS). expandAllSet = [t, ...descendants].
-    const expanded: string[] = hier
-      ? Array.from(new Set(targets.flatMap((t) => expandAllSet(hier, t))))
-      : [...collectDescendantsDfs(targets, info)];
-    expanded.forEach((n) => focus.visible.add(n));
-  } else if (action.kind === 'toggle') {
-    // Direct children only — matches live toggle/children drill handler.
-    const kids: string[] = hier
-      ? Array.from(new Set(targets.flatMap((t) => children(hier, t))))
-      : [...collectDirectChildren(targets, info)];
-    kids.forEach((c) => focus.visible.add(c));
-  } else if (action.kind === 'keepOnly') {
-    focus.visible.clear();
-    targets.forEach((tgt) => focus.visible.add(tgt));
-  }
+    : (state.localFocus = { dim: action.dim, visible: new Set([action.elem]) });
+  collectDirectChildren([action.elem], info).forEach((c) => focus.visible.add(c));
   if (state.lastMatrix) renderGrid(state.lastMatrix);
 }
 
@@ -325,6 +261,7 @@ function _openCtxMenu(e: MouseEvent, dimName: string, elemName: string | null): 
   d.copyMdx.style.display        = isCell ? '' : 'none';
   document.getElementById('ctx-format')?.style.setProperty('display', isCell ? '' : 'none');
   d.sepCell.style.display        = isCell ? '' : 'none';
+  d.addHier.style.display        = !isCell && canAddHierarchy(dimName) ? '' : 'none';
 
   // Update labels with multi-count badge
   const suffix = multiN > 1 ? ` (${multiN})` : '';
@@ -550,9 +487,9 @@ export function wireContextMenu(): void {
     // only" would have reversed the axis. The current selection is the more
     // precise source here than the visible names, because it preserves
     // multiple occurrences.
-    const sel = state.dimSelections[_ctxDim];
-    const axisOrder = sel?.kind === 'elements' ? sel.names : currentDimElements(_ctxDim);
-    _postDrillFilter(_ctxDim, keepOnlyNames(axisOrder, _ctxElems));
+    const dim = _ctxDim;
+    const axisOrder = shownAxisNames(state.dimSelections[dim], () => currentDimElements(dim));
+    _postDrillFilter(dim, keepOnlyNames(axisOrder, _ctxElems));
   });
 
   document.getElementById('ctx-format')?.addEventListener('click', () => {
@@ -577,6 +514,13 @@ export function wireContextMenu(): void {
       ..._expressionFields(_ctxDim),
       alias: state.dimAliases[_ctxDim] || '',
     });
+  });
+
+  d.addHier.addEventListener('click', () => {
+    if (!_ctxDim) return;
+    const at = d.menu.getBoundingClientRect();
+    _hideCtx();
+    offerAddHierarchy(_ctxDim, at.left, at.top);
   });
 
   // Alias submenu: root click keeps menu open (hover reveals submenu); a
@@ -624,10 +568,7 @@ export function wireContextMenu(): void {
     // If click landed inside the submenu, defer to its own handler.
     const target = ev.target as HTMLElement | null;
     if (target && target.closest('.ctx-submenu')) return;
-    const hier = buildCubeStructure(state.lastMatrix, _ctxDim, state.rowDims, state.colDims);
-    const union = hier
-      ? Array.from(new Set(_ctxElems.flatMap((e) => parents(hier, e))))
-      : _collectParentsUnion(_ctxElems, info);
+    const union = _collectParentsUnion(_ctxElems, info);
     // Multi-parent: keep menu open and reveal submenu (also via hover).
     if (union.length > 1) {
       ev.stopPropagation();
@@ -659,30 +600,11 @@ export function wireContextMenu(): void {
     const dim = _ctxDim;
     const targets = _ctxElems.slice();
 
-    // Walk EVERY ancestor across ALL parent paths (multi-parent BFS), not just the first-parent chain.
-    const baseline = _onAxisAxisElems(dim);
-    const hier = buildCubeStructure(state.lastMatrix, dim, state.rowDims, state.colDims);
-    let ancestors: string[];
-    if (hier) {
-      ancestors = Array.from(new Set(targets.flatMap((e) => allParents(hier, e))));
-    } else {
-      // Fallback: original BFS over contextMenuPure AxisInfo
-      const seenA = new Set<string>();
-      const accum: string[] = [];
-      const queue = targets.slice();
-      while (queue.length) {
-        const n = queue.shift()!;
-        const list = info.allParents[n] && info.allParents[n].length ? info.allParents[n] : (info.parents[n] ? [info.parents[n]] : []);
-        for (const p of list) {
-          if (!p || seenA.has(p)) continue;
-          seenA.add(p); accum.push(p); queue.push(p);
-        }
-      }
-      ancestors = accum;
-    }
+    // Walk EVERY ancestor across ALL parent paths, not just the first-parent chain.
+    const ancestors = collectAncestorsRootFirst(targets, info);
     if (ancestors.length === 0) return;
-    const names = Array.from(new Set([...baseline, ...targets, ...ancestors]));
-    _postDrillFilter(dim, names);
+    // Above the targets like "Show parent", root first.
+    _applyParentInsert(dim, targets, ancestors);
   });
 
   d.expandAll.addEventListener('click', () => {
@@ -700,37 +622,18 @@ export function wireContextMenu(): void {
 
   // ── New PAfE-style drill actions: Children / Descendants / Leaves /
   // Element + N-Elemente / Copy name. All use server-side setDimFilterElements
-  // (with current matrix elements as baseline) so the refetch loads exactly
+  // (with the shown axis names as baseline) so the refetch loads exactly
   // the requested set — no reliance on the client-side matrix already
   // containing the target rows/cols.
   function _onAxisAxisElems(dim: string): string[] {
-    const m = state.lastMatrix;
-    if (!m) return [];
-    const rowDims = m.rowDims ?? state.rowDims;
-    const colDims = m.colDims ?? state.colDims;
-    const ri = rowDims.indexOf(dim);
-    if (ri >= 0) {
-      // Per-dim members — NEVER use joined `rowElements` (executeView joins
-      // multi-dim tuples with ' / ' which TM1 rejects as element name).
-      const tuples = m.rowTuples;
-      if (tuples && tuples.length) {
-        const set = new Set<string>();
-        tuples.forEach((t) => { if (t[ri]) set.add(t[ri]); });
-        return Array.from(set);
-      }
-      return m.rowElements.slice();
-    }
-    const ci = colDims.indexOf(dim);
-    if (ci >= 0) {
-      const tuples = m.colTuples;
-      if (tuples && tuples.length) {
-        const set = new Set<string>();
-        tuples.forEach((t) => { if (t[ci]) set.add(t[ci]); });
-        return Array.from(set);
-      }
-      return m.colElements.slice();
-    }
-    return [];
+    return shownAxisNames(state.dimSelections[dim], () => {
+      const m = state.lastMatrix;
+      if (!m) return [];
+      const side = axisOf(m, dim, state.rowDims, state.colDims);
+      if (!side) return [];
+      const names = side.tuples?.length ? axisElementNames(side) : null;
+      return names ?? (side.elements ?? []).slice();
+    });
   }
   function _postDrillFilter(dim: string, names: string[]): void {
     // Clear stale localFocus on this dim — server filter is the visibility
@@ -760,13 +663,7 @@ export function wireContextMenu(): void {
 
   // Insert chosen parent(s) directly above the first target in the current axis order.
   function _applyParentInsert(dim: string, targets: string[], parents: string[]): void {
-    const baseline = _onAxisAxisElems(dim);
-    const targetSet = new Set(targets);
-    const insertAt = baseline.findIndex((e) => targetSet.has(e));
-    const before = insertAt >= 0 ? baseline.slice(0, insertAt) : [];
-    const after  = insertAt >= 0 ? baseline.slice(insertAt) : baseline;
-    const names = Array.from(new Set([...before, ...parents, ...after]));
-    _postDrillFilter(dim, names);
+    _postDrillFilter(dim, insertAboveFirstTarget(_onAxisAxisElems(dim), targets, parents));
   }
 
   // "All N descendants": every level-0 (leaf) descendant. Resolved server-side

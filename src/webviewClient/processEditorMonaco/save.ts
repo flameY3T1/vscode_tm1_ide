@@ -11,13 +11,13 @@ import { getDataSource } from './dataSource';
 import { getVariables } from './variables';
 import { getErrorCount } from './linter';
 import { flushFileSync } from './fileMode';
+import type { EditorSnapshot } from './protocol';
 
 export {};
 
-export function buildSavePayload(type: 'save' | 'execute' | 'saveAs') {
+export function editorSnapshot(): EditorSnapshot {
   flushFileSync();
   return {
-    type,
     sections: currentSections(),
     parameters: getParameters(),
     dataSource: getDataSource(),
@@ -25,6 +25,10 @@ export function buildSavePayload(type: 'save' | 'execute' | 'saveAs') {
     hasSecurity: getSecurity(),
     errorCount: getErrorCount(),
   };
+}
+
+export function buildSavePayload(type: 'save' | 'execute' | 'saveAs') {
+  return { type, ...editorSnapshot() };
 }
 
 export function showSaveBanner(kind: 'error' | 'success', text: string, autoHideMs?: number): void {

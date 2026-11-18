@@ -5,6 +5,8 @@ import {
   mapLogEntry,
   linkifyErrorLogFilenames,
   buildLevelFilter,
+  buildLoggerFilter,
+  walkLoggers,
 } from '../../messageLog/messageLogPure';
 import { formatLogTimestamp } from '../../utils/logTimestamp';
 
@@ -182,5 +184,49 @@ describe('formatLogTimestamp', () => {
   it('stays self-contained so it survives .toString() injection into the webview', () => {
     const src = formatLogTimestamp.toString();
     expect(src).not.toMatch(/\b(LEVEL_CLASS|levelClassFor|require|import)\b/);
+  });
+});
+
+describe('buildLoggerFilter', () => {
+  it('sends no filter when nothing is excluded', () => {
+    expect(buildLoggerFilter([])).toBeUndefined();
+  });
+
+  it('chains the excluded loggers with ne, doubling apostrophes and keeping the empty name', () => {
+    expect(buildLoggerFilter(['TM1.Process', "a'b", '']))
+      .toBe("(Logger ne 'TM1.Process' and Logger ne 'a''b' and Logger ne '')");
+  });
+});
+
+describe('walkLoggers', () => {
+  const log = [
+    { Logger: 'TM1.Process', TimeStamp: '3' },
+    { Logger: 'TM1.Chore', TimeStamp: '2' },
+    { Logger: 'TM1.Process', TimeStamp: '1' },
+    { TimeStamp: '0' },
+  ];
+  const newestOutside = async (excluded: readonly string[]) => log.find((r) => !excluded.includes(r.Logger ?? ''));
+
+  it('finds every logger once, newest first, with one request per logger plus one', async () => {
+    const found: unknown[] = [];
+    let requests = 0;
+    const complete = await walkLoggers(async (x) => { requests++; return await newestOutside(x); }, (l) => found.push(l));
+    expect(complete).toBe(true);
+    expect(found).toEqual([
+      { name: 'TM1.Process', last: '3' }, { name: 'TM1.Chore', last: '2' }, { name: '', last: '0' },
+    ]);
+    expect(requests).toBe(4);
+  });
+
+  it('stops at the cap and says the list is incomplete', async () => {
+    const found: unknown[] = [];
+    expect(await walkLoggers(newestOutside, (l) => found.push(l), 2)).toBe(false);
+    expect(found).toHaveLength(2);
+  });
+
+  it('stops instead of looping when the server ignores the exclusion', async () => {
+    const found: unknown[] = [];
+    expect(await walkLoggers(async () => log[0], (l) => found.push(l))).toBe(false);
+    expect(found).toHaveLength(1);
   });
 });

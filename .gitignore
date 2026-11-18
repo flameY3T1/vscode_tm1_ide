@@ -7,8 +7,6 @@ node_modules
 out/
 coverage/
 *.vsix
-vitest.config.js
-vitest.config.js.map
 .vscode-test/
 
 # Windows ADS junk

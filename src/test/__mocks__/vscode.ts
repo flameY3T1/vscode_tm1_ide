@@ -189,6 +189,7 @@ export enum ProgressLocation { SourceControl = 1, Window = 10, Notification = 15
 
 /** Scope argument of WorkspaceConfiguration#update — same numbering as the real API. */
 export enum ConfigurationTarget { Global = 1, Workspace = 2, WorkspaceFolder = 3 }
+export enum ExtensionMode { Production = 1, Development = 2, Test = 3 }
 
 export const env = {
   language: 'en',

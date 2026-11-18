@@ -54,6 +54,16 @@ export function endSessionAllPanels(
 }
 
 /**
+ * A `debugStart` that never became a session (save refused, parameter form
+ * cancelled, file not pushed). The webview switched to debug mode when it sent
+ * the request, so it keeps the run button locked against a double start; this
+ * hands it back to edit mode.
+ */
+export function refuseDebugStart(panel: vscode.WebviewPanel): void {
+  postTo<HostToWebview>(panel.webview, { type: 'debugSessionEnded', status: '' });
+}
+
+/**
  * Tears down the debug session owned by `panelKey` (panel closed, server
  * switched, editor disposed).
  *

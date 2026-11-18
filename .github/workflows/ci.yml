@@ -2,7 +2,11 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    # `dev` is the daily branch of the private development repository. The public
+    # `main` only receives one commit per release, and the tag that starts
+    # release.yml follows right behind it, so on `main` alone these gates would
+    # first run next to the publish.
+    branches: [main, dev]
   pull_request:
     branches: [main]
 

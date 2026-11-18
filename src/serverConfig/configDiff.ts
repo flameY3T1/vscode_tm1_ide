@@ -1,6 +1,7 @@
 // src/serverConfig/configDiff.ts
 import * as vscode from 'vscode';
 import type { ParamType } from './paramSchema';
+import { splitList } from './configAlias';
 
 export interface DiffEntry {
   name: string;
@@ -40,6 +41,8 @@ export function coerceType(raw: unknown, def: { type: ParamType; enumValues?: st
       // `{"IntegratedSecurityMode": 2}` is accepted with `200`.
       return def.enumValues.every(v => /^\d+$/.test(v)) ? Number(s) : s;
     }
+    case 'list':
+      return Array.isArray(raw) ? raw : splitList(raw);
     case 'string':
     default:
       return String(raw);

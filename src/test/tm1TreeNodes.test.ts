@@ -348,4 +348,17 @@ describe('cube load state in the contextValue', () => {
     expect(cv(false)).toBe('cube.unloaded');
     expect(cv(undefined)).toBe('cube');
   });
+
+  it('refreshContextValue follows a changed state, also back to unknown', async () => {
+    const { Tm1TreeNode } = await import('../providers/tm1TreeNodes');
+    // A control cube, so a suffix in the middle has to survive the rebuild.
+    const node = new Tm1TreeNode('cube', '}Clients', 1 as never, { cubeName: '}Clients', serverId: 's', loaded: true });
+    expect(node.contextValue).toBe('cube-control.loaded');
+    node.meta.loaded = false;
+    node.refreshContextValue();
+    expect(node.contextValue).toBe('cube-control.unloaded');
+    node.meta.loaded = undefined;
+    node.refreshContextValue();
+    expect(node.contextValue).toBe('cube-control');
+  });
 });

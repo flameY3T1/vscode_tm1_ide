@@ -165,18 +165,16 @@ export const CUBE_VIEWER_CSS = `
       opacity: 0.55; padding: 0 2px; border-radius: 2px;
     }
     .chip-add:hover { opacity: 1; background: rgba(127,127,127,0.18); }
-    /* A chip never gets wider than its zone: name and hierarchy picker both
-       give way, and the buttons wrap to a second line. A picker that kept
-       its width (long alternative hierarchy name, narrow row headers)
+    /* A chip never gets wider than its zone: name and hierarchy name both
+       give way, and the buttons wrap to a second line. A hierarchy name that
+       kept its width (long alternative hierarchy name, narrow row headers)
        spilled over the swap button into the columns zone. */
     .dim-chip { max-width: 100%; min-width: 0; flex-wrap: wrap; }
     .chip-label { display: inline-flex; align-items: center; gap: 4px; min-width: 0; }
     .chip-name { min-width: 2.5em; overflow: hidden; text-overflow: ellipsis; }
     .chip-hier {
-      font: inherit; font-size: 11px; padding: 0 2px; flex: 0 1 auto; min-width: 3em;
-      text-transform: none; letter-spacing: normal; font-weight: 400;
-      color: inherit; background: transparent;
-      border: 1px solid rgba(127,127,127,0.35); border-radius: 2px;
+      flex: 0 1 auto; min-width: 3em; overflow: hidden; text-overflow: ellipsis;
+      text-transform: none; letter-spacing: normal; font-weight: 400; opacity: 0.75;
     }
     .chip-filter {
       font-size: 9px; line-height: 1; cursor: pointer;
@@ -405,13 +403,15 @@ export const CUBE_VIEWER_CSS = `
     }
 
     /* ── Context menu ── */
-    #ctx-menu, #ctx-spread-menu {
+    #ctx-menu, #ctx-spread-menu, .chip-hier-menu {
       display: none; position: fixed; z-index: 2000;
       background: var(--vscode-menu-background, var(--vscode-editor-background));
       border: 1px solid var(--vscode-menu-border, var(--cv-grid-line-strong));
       border-radius: 4px; box-shadow: 0 4px 14px rgba(0,0,0,0.35);
       min-width: 200px; padding: 4px 0;
     }
+    /* Free hierarchies offered by the + of an axis chip (axis.ts). */
+    .chip-hier-menu { display: block; min-width: 0; }
     .ctx-item {
       padding: 6px 14px; cursor: pointer;
       font-size: var(--vscode-font-size);

@@ -92,7 +92,7 @@ function rerender(): void {
         `<td class="var-ignore-cell"><input type="checkbox" data-idx="${i}" data-field="Ignored"` +
         `${ignored ? ' checked' : ''} title="${escapeAttr(L.varContentsHint)}"></td>`,
       );
-      parts.push(`<td><input type="number" data-idx="${i}" data-field="Position" value="${v.Position}"></td>`);
+      parts.push(`<td><input type="number" data-idx="${i}" data-field="Position" value="${Number(v.Position) || 0}"></td>`);
       parts.push(`<td><button class="params-remove" data-idx="${i}" title="${L.varRemove}">✕</button></td>`);
       parts.push('</tr>');
     }

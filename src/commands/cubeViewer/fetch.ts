@@ -2,7 +2,8 @@ import * as vscode from 'vscode';
 import { apiRequest, assertOk } from '../../tm1Client';
 import type { Tm1Config } from '../../tm1Rest/transport/types';
 import { getCubeViews, getCubeDimensionNames, MDXVIEW_ODATA_TYPE } from '../../tm1Rest/cubeApi';
-import { listElementNames, listEdges } from '../../tm1Rest/dimensionApi';
+import { listElementNames } from '../../tm1Rest/dimensionApi';
+import { getDimStructure, type DimStructure } from './dimStructCache';
 import { parseBodySafe, errorBodyDetail } from '../../tm1Rest/parseRest';
 import { withSandbox } from '../../tm1Rest/sandboxTracker';
 import { enc } from './state';
@@ -10,7 +11,7 @@ import { detectNonEmptyAxes } from '../../mdx/nonEmptyAxisPure';
 import { detectDimensionProperties } from '../../mdx/dimensionPropertiesPure';
 import { hierKey, hierODataPath, memberMdxRef, splitHierKey } from '../../utils/hierKeyPure';
 import { logBestEffort } from '../../providers/bestEffortLog';
-import { isOk, Tm1HttpError } from '../../tm1Rest/httpError';
+import { isOk } from '../../tm1Rest/httpError';
 import { METADATA_CAP_MS } from '../../tm1Rest/timeouts';
 
 /** A view axis/title `Hierarchy` expanded with its `Dimension`. */
@@ -142,34 +143,30 @@ export async function _fetchDimElements(dimName: string, config: Tm1Config): Pro
 export async function _fetchDimElementsTree(
   dimName: string, config: Tm1Config,
 ): Promise<{ name: string; depth: number }[]> {
-  const { dim, hier } = splitHierKey(dimName);
-  const [allNames, edgeRows] = await Promise.all([
-    listElementNames(config, dim, hier, { timeoutMs: 15000 }),
-    listEdges(config, dim, hier, 15000),
-  ]);
-  if (allNames.length === 0) { return []; }
-  const edges: { p: string; c: string }[] = edgeRows.map(x => ({ p: x.ParentName, c: x.ComponentName }));
-
-  const childrenOf: Record<string, string[]> = {};
-  const parentOf: Record<string, string> = {};
-  const isChild: Record<string, boolean> = {};
-  for (const e of edges) {
-    (childrenOf[e.p] ??= []).push(e.c);
-    if (!parentOf[e.c]) { parentOf[e.c] = e.p; }
-    isChild[e.c] = true;
+  // The structure cache, not a read of its own: same tables, ETag-validated,
+  // and the axis metadata of the open view has usually filled it already.
+  let struct: DimStructure;
+  try {
+    struct = await getDimStructure(dimName, config);
+  } catch (err) {
+    // The client waits for `elementsData`; an empty list is the answer it handles.
+    logBestEffort('cubeViewer', `element tree of "${dimName}"`, err);
+    return [];
   }
+  // `levels` is filled from the Elements read, so its key order is the hierarchy's.
+  const allNames = [...struct.levels.keys()];
+  const { first } = struct.parents;
+  const { children } = struct.index;
 
-  const known = new Set(allNames);
   const out: { name: string; depth: number }[] = [];
   const visited = new Set<string>();
   const dfs = (name: string, depth: number) => {
-    if (visited.has(name) || !known.has(name)) { return; }
+    if (visited.has(name) || !struct.levels.has(name)) { return; }
     visited.add(name);
     out.push({ name, depth });
-    const kids = childrenOf[name];
-    if (kids) { for (const k of kids) { dfs(k, depth + 1); } }
+    for (const k of children.get(name) ?? []) { dfs(k, depth + 1); }
   };
-  for (const n of allNames) { if (!isChild[n]) { dfs(n, 0); } }
+  for (const n of allNames) { if (!first[n]) { dfs(n, 0); } }
   // Orphans (cycles / detached)
   for (const n of allNames) { if (!visited.has(n)) { out.push({ name: n, depth: 0 }); visited.add(n); } }
   return out;
@@ -500,48 +497,3 @@ export async function _fetchViewAxisSubsets(
   return { subsets: out, oversized };
 }
 
-export async function _fetchDimLevels(dimName: string, config: Tm1Config): Promise<Map<string, number>> {
-  const res = await apiRequest(
-    'GET', `${hierODataPath(dimName)}/Elements?$select=Name,Level`,
-    undefined, 15000, config, withSandbox(config),
-  );
-  // Throw, not an empty map: `getDimStructure` would cache the empty result
-  // under the valid ETag and the dimension would stay flat until it changes.
-  if (!isOk(res)) { throw new Tm1HttpError(`levels of ${dimName}: HTTP ${res.statusCode}`, res.statusCode); }
-  const rows = parseBodySafe<{ value?: Array<{ Name: string; Level?: number }> }>(res, {}).value ?? [];
-  const result = new Map<string, number>();
-  for (const e of rows) {
-    result.set(e.Name, e.Level ?? 0);
-  }
-  return result;
-}
-
-export interface DimParentMaps {
-  first: Record<string, string>;
-  all: Record<string, string[]>;
-}
-
-export async function _fetchDimParents(dimName: string, config: Tm1Config): Promise<DimParentMaps> {
-  const res = await apiRequest(
-    'GET', `${hierODataPath(dimName)}/Edges?$select=ParentName,ComponentName`,
-    undefined, 15000, config, withSandbox(config),
-  );
-  if (!isOk(res)) { throw new Tm1HttpError(`edges of ${dimName}: HTTP ${res.statusCode}`, res.statusCode); }
-  const rows = parseBodySafe<{ value?: Array<{ ParentName: string; ComponentName: string }> }>(res, {}).value ?? [];
-  // Null prototype: element names like "constructor" or "__proto__" are keys here.
-  const first = Object.create(null) as Record<string, string>;
-  const all = Object.create(null) as Record<string, string[]>;
-  const seen = Object.create(null) as Record<string, Set<string>>;
-  for (const e of rows) {
-    const p = e.ParentName;
-    const c = e.ComponentName;
-    if (!c || !p) { continue; }
-    if (!first[c]) { first[c] = p; }
-    const set = seen[c] ?? (seen[c] = new Set());
-    if (!set.has(p)) {
-      set.add(p);
-      (all[c] ?? (all[c] = [])).push(p);
-    }
-  }
-  return { first, all };
-}

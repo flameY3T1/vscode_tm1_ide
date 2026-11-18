@@ -28,7 +28,7 @@ import type { ActivationContext } from './context';
  * Registers process-domain commands:
  *   deployProcess / executeProcess / deployAndExecute / debugProcess
  *   newProcess / deployProcessToServer / deployMultipleProcessesToServer / exportSelectedProcesses
- *   executeProcessFromTree / deployProcessFromTree / debugProcessFromTree
+ *   executeProcessFromTree
  *   deleteProcess / openProcessEditor
  *   + DebugAdapter registration
  */
@@ -147,13 +147,6 @@ export function registerProcessCommands(ctx: ActivationContext): void {
         vscode.window.showErrorMessage(vscode.l10n.t('TM1 Execute error: {0}', errMsg(err)));
       }
     }),
-    vscode.commands.registerCommand('tm1.deployProcessFromTree', (node: Tm1TreeNode) => {
-      const name = node?.meta?.processName as string;
-      if (!name) { return; }
-      vscode.window.showInformationMessage(
-        vscode.l10n.t('TM1: To deploy "{0}", open the .pro file in the editor and use the deploy command.', name),
-      );
-    }),
     vscode.commands.registerCommand('tm1.deleteProcess', (
       node: Tm1TreeNode | undefined,
       selection: Tm1TreeNode[] | undefined,
@@ -169,35 +162,6 @@ export function registerProcessCommands(ctx: ActivationContext): void {
         void recentProvider.remove({ kind: 'process', serverId, name });
       },
     )),
-    vscode.commands.registerCommand('tm1.debugProcessFromTree', async (node: Tm1TreeNode) => {
-      const name = node?.meta?.processName as string;
-      if (!name) { return; }
-      const serverId = node?.meta?.serverId as string | undefined;
-      const cfg = getServerConfig(serverId as string);
-      if (!cfg) { return; }
-      let parameters: Array<{ Name: string; Value: string | number }> = [];
-      try {
-        const apiParams = (await getProcessParameters(cfg, name)) as Array<{ Name: string; Type: string; Value: string; Prompt: string }>;
-        if (apiParams.length > 0) {
-          const result = await showServerParameterForm(name, apiParams, vscode.l10n.t('Debug'), cfg.serverUrl);
-          if (result === undefined) { return; }
-          parameters = result;
-        }
-      } catch (err) {
-        vscode.window.showErrorMessage(vscode.l10n.t('TM1 Debug error: {0}', errMsg(err)));
-        return;
-      }
-      vscode.debug.startDebugging(undefined, {
-        type: TM1_DEBUG_TYPE,
-        request: 'launch',
-        name: `TM1 Debug: ${name}`,
-        processName: name,
-        parameters,
-        // The cfg above was resolved from this id — hand the id along so the
-        // adapter debugs the same profile instead of the last active one.
-        serverId,
-      });
-    }),
     vscode.commands.registerCommand('tm1.runProcessCoverage', (node: Tm1TreeNode) => {
       const name = node?.meta?.processName as string;
       const cfg = getServerConfig(node?.meta?.serverId as string);

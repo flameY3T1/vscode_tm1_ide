@@ -4,7 +4,7 @@
 // Post-compile sanity check for the publishable bundle (audit N1).
 // Fails `vscode:prepublish` if the extension entry is missing/empty or
 // unexpectedly large — the usual symptom of a dependency leaking into the
-// esbuild bundle. The bundled entry is ~1.1 MB; 4 MB is a generous ceiling.
+// esbuild bundle. The bundled entry is ~2.1 MB (2026-11-15); 4 MB is the ceiling.
 const fs = require('node:fs');
 const path = require('node:path');
 

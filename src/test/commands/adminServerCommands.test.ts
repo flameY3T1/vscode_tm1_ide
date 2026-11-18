@@ -4,6 +4,7 @@ vi.mock('vscode', async () => await import('../__mocks__/vscode'));
 
 import * as vscode from 'vscode';
 import { registerAdminServerCommands } from '../../activation/registerAdminServerCommands';
+import { removeAdminServerWithChildren } from '../../commands/serverManager/adminRemove';
 import { initServerManager, saveServers, getAllServers, pwKey } from '../../serverState/state';
 import { saveAdminServer, getAdminServer, listAdminServers } from '../../serverState/adminServers';
 import * as adminApi from '../../tm1Rest/adminServerApi';
@@ -186,10 +187,10 @@ describe('tm1.adminServer.detach', () => {
   });
 });
 
-describe('tm1.adminServer.remove', () => {
+describe('removeAdminServerWithChildren (delete button of the edit view)', () => {
   it('keeps the discovered profiles as standalone servers when asked to', async () => {
     vi.spyOn(vscode.window, 'showWarningMessage').mockResolvedValue('Keep servers' as never);
-    await vscode.commands.executeCommand('tm1.adminServer.remove', node('a1'));
+    await removeAdminServerWithChildren(ctx as never, 'a1');
     expect(listAdminServers()).toEqual([]);
     const s = getAllServers(ctx)[0];
     expect(s.parentAdminId).toBeUndefined();
@@ -198,7 +199,7 @@ describe('tm1.adminServer.remove', () => {
 
   it('deletes the discovered profiles when asked to', async () => {
     vi.spyOn(vscode.window, 'showWarningMessage').mockResolvedValue('Delete servers too' as never);
-    await vscode.commands.executeCommand('tm1.adminServer.remove', node('a1'));
+    await removeAdminServerWithChildren(ctx as never, 'a1');
     expect(listAdminServers()).toEqual([]);
     expect(getAllServers(ctx)).toEqual([]);
   });
@@ -208,14 +209,14 @@ describe('tm1.adminServer.remove', () => {
     // cleans up the workbenches/attribute columns (finding 3). The key is
     // NO LONGER built by hand here (finding 5).
     vi.spyOn(vscode.window, 'showWarningMessage').mockResolvedValue('Delete servers too' as never);
-    await vscode.commands.executeCommand('tm1.adminServer.remove', node('a1'));
+    await removeAdminServerWithChildren(ctx as never, 'a1');
     expect(secretDelete).toHaveBeenCalledWith(pwKey('disc:a1:SALES'));
     expect(getAllServers(ctx).find(s => s.id === 'disc:a1:SALES')).toBeUndefined();
   });
 
   it('does nothing when the confirmation is dismissed', async () => {
     vi.spyOn(vscode.window, 'showWarningMessage').mockResolvedValue(undefined as never);
-    await vscode.commands.executeCommand('tm1.adminServer.remove', node('a1'));
+    await removeAdminServerWithChildren(ctx as never, 'a1');
     expect(listAdminServers()).toHaveLength(1);
     expect(getAllServers(ctx)).toHaveLength(1);
   });
@@ -223,7 +224,7 @@ describe('tm1.adminServer.remove', () => {
   it('spares a child that sits in a folder when deleting servers too, and only clears its parentAdminId', async () => {
     await saveServers(ctx, [discovered(), discoveredInFolder()]);
     vi.spyOn(vscode.window, 'showWarningMessage').mockResolvedValue('Delete servers too' as never);
-    await vscode.commands.executeCommand('tm1.adminServer.remove', node('a1'));
+    await removeAdminServerWithChildren(ctx as never, 'a1');
     // Folderless child ran through the real deletion pipeline (secret gone too).
     expect(secretDelete).toHaveBeenCalledWith(pwKey('disc:a1:SALES'));
     expect(getAllServers(ctx).find(s => s.id === 'disc:a1:SALES')).toBeUndefined();
@@ -237,7 +238,7 @@ describe('tm1.adminServer.remove', () => {
   it('offers only one action — not a delete that deletes nothing — when every child sits in a folder', async () => {
     await saveServers(ctx, [discoveredInFolder()]);
     const warn = vi.spyOn(vscode.window, 'showWarningMessage').mockResolvedValue('Keep servers' as never);
-    await vscode.commands.executeCommand('tm1.adminServer.remove', node('a1'));
+    await removeAdminServerWithChildren(ctx as never, 'a1');
     const buttons = warn.mock.calls[0].slice(2);
     expect(buttons).toEqual(['Keep servers']);
     const kept = getAllServers(ctx).find(s => s.id === 'disc:a1:MUC');
@@ -248,7 +249,7 @@ describe('tm1.adminServer.remove', () => {
   it('offers only one action when the admin server has no children at all', async () => {
     await saveServers(ctx, []);
     const warn = vi.spyOn(vscode.window, 'showWarningMessage').mockResolvedValue('Keep servers' as never);
-    await vscode.commands.executeCommand('tm1.adminServer.remove', node('a1'));
+    await removeAdminServerWithChildren(ctx as never, 'a1');
     const buttons = warn.mock.calls[0].slice(2);
     expect(buttons).toEqual(['Keep servers']);
   });

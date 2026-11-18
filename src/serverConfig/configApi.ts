@@ -3,10 +3,12 @@ import { apiRequest } from '../tm1Rest/client';
 import type { Tm1Config } from '../tm1Rest/transport/types';
 import { classify } from './configClassifier';
 import { coerceType } from './configDiff';
-import { lookupSchema, type ParamDef } from './paramSchema';
+import { lookupLeafInfo, lookupSchema, type ParamDef } from './paramSchema';
 import { resolveWriteAlias, isIsoDuration, secondsToIsoDuration } from './configAlias';
 import { errMsg } from '../utils/errMsg';
 import { isOk } from '../tm1Rest/httpError';
+import { parseBodySafe } from '../tm1Rest/parseRest';
+import { encodeODataKey } from '../utils/odataKey';
 
 export interface ConfigSnapshot {
   values: Map<string, unknown>;
@@ -155,7 +157,7 @@ export async function fetchAll(cfg: Tm1Config): Promise<ConfigSnapshot> {
   };
 }
 
-export interface SaveError { target: 'static' | 'validation'; statusCode?: number; param?: string; message: string; }
+export interface SaveError { target: 'static' | 'validation' | 'ignored'; statusCode?: number; param?: string; message: string; }
 export interface SaveResult { errors: SaveError[]; restartNeeded: string[]; }
 export interface SaveHint {
   staticKeys?: Set<string>;
@@ -283,6 +285,80 @@ function resolvePatchPath(name: string, hint: SaveHint): string | undefined {
   return STATIC_PATCH_PATH_OVERRIDES[name] ?? name;
 }
 
+/**
+ * StartupChores names that are no chore on this server. The server stores any text and
+ * only complains at its next start (`Failed to find Startup Chore: "x" - unable to
+ * execute`, seen 2026-11-16 with the name of a process). Best effort: an unreadable chore
+ * list does not block the save.
+ */
+async function unknownStartupChores(cfg: Tm1Config, names: string[]): Promise<SaveError[]> {
+  if (names.length === 0) { return []; }
+  const res = await apiRequest('GET', 'Chores?$select=Name', undefined, undefined, cfg).catch(() => undefined);
+  if (!res || !isOk(res)) { return []; }
+  // TM1 names ignore case and spaces.
+  const norm = (s: string): string => s.replace(/\s/g, '').toLowerCase();
+  const chores = new Set((parseBodySafe<{ value?: Array<{ Name: string }> }>(res, {}).value ?? []).map(c => norm(c.Name)));
+  return Promise.all(names.filter(n => !chores.has(norm(n))).map(async (name): Promise<SaveError> => {
+    const proc = await apiRequest('GET', `Processes('${encodeODataKey(name)}')?$select=Name`, undefined, undefined, cfg).catch(() => undefined);
+    return { target: 'validation', param: 'StartupChores', message: proc && isOk(proc)
+      ? vscode.l10n.t('No chore named "{0}" on this server. A process of that name exists, but StartupChores takes chores only.', name)
+      : vscode.l10n.t('No chore named "{0}" on this server.', name) };
+  }));
+}
+
+/**
+ * Leaves a server lists in its config tree but silently drops on PATCH. The tree gives no
+ * general sign for this: a null in ActiveConfiguration also stands for a plain unset
+ * string (25 such leaves on 11.8, 10 on v12, read 2026-11-16), so the names are measured,
+ * one by one. The null in ActiveConfiguration is still required, which keeps the entry
+ * off a server where the param is alive — 11.8 reports DisableSandboxing as false there.
+ *
+ * All nine measured on v12, 2026-11-16: PATCH StaticConfiguration with a value of the
+ * right type answers 200 and StaticConfiguration still reports null. A value that never
+ * reaches StaticConfiguration has nothing a restart could activate. Controls in the same
+ * run: EnableSandboxDimension and LegacyTransactionLog (a duration, null in
+ * ActiveConfiguration as well) are stored at once.
+ *
+ * StartupChores is the one leaf the null does not tell apart: v12 drops it (an array, 200,
+ * still null), 11.8 stores it (`["name"]`, 200, read back, same day) and reports null in
+ * ActiveConfiguration all the same. Hence the second condition: the tree has no Access
+ * group, which is what sets the v12 tree apart from 11.8 (64 leaves against 158).
+ */
+const SILENTLY_DROPPED = new Set([
+  'Administration.DisableSandboxing',
+  'Administration.StartupChores',
+  'Modelling.MDXSelectCalculatedMemberInputs',
+  'Modelling.UserDefinedCalculations',
+  'Modelling.Startup.LoadPrivateSubsetsOnStartup',
+  'Performance.Memory.DisableMemoryCache',
+  'Performance.Memory.CacheFriendlyMalloc',
+  'Performance.Memory.MaximumViewSizeMB',
+  'Performance.Memory.LockPagesInMemory',
+]);
+
+export function droppedSilently(snap: ConfigSnapshot, path: string): boolean {
+  return SILENTLY_DROPPED.has(path) && snap.activeKeys.size > 0 && !snap.activeKeys.has(path)
+    && ![...snap.paths].some((p) => p.startsWith('Access.'));
+}
+
+/**
+ * Leaves the server answered 200 for but did not store. Measured on v12, 2026-11-16:
+ * `PATCH StaticConfiguration {"Administration":{"DisableSandboxing":true}}` → 200, and both
+ * StaticConfiguration and ActiveConfiguration still report null, while the neighbouring
+ * `EnableSandboxDimension` in the same request shape is stored at once. The server gives no
+ * other sign, so the only test is to read back: a leaf the server has, whose value is what
+ * it was before and not what was sent.
+ */
+async function ignoredByServer(cfg: Tm1Config, entries: Array<[string, unknown]>, before: ReadonlyMap<string, unknown>): Promise<SaveError[]> {
+  // Best effort: the write went through, a failed read-back must not turn it into an error.
+  const after = await fetchAll(cfg).catch(() => undefined);
+  if (!after) { return []; }
+  const same = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b);
+  return entries
+    .filter(([path, val]) => after.paths.has(path) && same(after.values.get(path), before.get(path)) && !same(before.get(path), val))
+    .map(([path]) => ({ target: 'ignored' as const, param: path, message: vscode.l10n.t('The server answered OK but did not store "{0}". This server does not accept a change to this parameter.', path) }));
+}
+
 // TM1 11.x rejects PATCH on /ActiveConfiguration ("HTTP 400 code 278: PATCH not allowed
 // on this resource"). Only /StaticConfiguration accepts PATCH (matches tm1py's
 // ConfigurationService.update_static — no update_active counterpart). The server re-reads
@@ -320,7 +396,9 @@ export async function save(cfg: Tm1Config, edits: Map<string, unknown>, hint: Sa
 
     let val: unknown;
     try {
-      val = coerceType(raw, def);
+      // A leaf without a schema entry still has a measured type in the leaf table; without
+      // it the form's text went out as it was, and a list or a number arrived as a string.
+      val = coerceType(raw, def ?? lookupLeafInfo(name));
     } catch (e) {
       errors.push({ target: 'validation', param: name, message: errMsg(e) });
       continue;
@@ -344,11 +422,17 @@ export async function save(cfg: Tm1Config, edits: Map<string, unknown>, hint: Sa
       val = secondsToIsoDuration(secs);
     }
 
+    if (patchPath.endsWith('StartupChores') && Array.isArray(val)) {
+      const unknown = await unknownStartupChores(cfg, val.map(String));
+      if (unknown.length > 0) { errors.push(...unknown); continue; }
+    }
+
     entries.push([patchPath, val]);
     if (!def || def.requiresRestart || cls.requiresRestart) { restartNeeded.push(name); }
   }
 
   if (entries.length > 0) {
+    const errorsBefore = errors.length;
     const body = unflatten(entries);
     const res = await apiRequest('PATCH', 'StaticConfiguration', JSON.stringify(body), undefined, cfg);
     if (res.statusCode === 400 && /Invalid\s+\w+\s+property/i.test(res.body)) {
@@ -367,6 +451,9 @@ export async function save(cfg: Tm1Config, edits: Map<string, unknown>, hint: Sa
       }
     } else if (!isOk(res)) {
       errors.push({ target: 'static', statusCode: res.statusCode, message: res.body });
+    }
+    if (errors.length === errorsBefore && hint.values) {
+      errors.push(...await ignoredByServer(cfg, entries, hint.values));
     }
   }
 

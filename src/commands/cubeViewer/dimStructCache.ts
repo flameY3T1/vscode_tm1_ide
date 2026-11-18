@@ -4,8 +4,7 @@ import type { Tm1Config } from '../../tm1Rest/transport/types';
 import { parseBodySafe } from '../../tm1Rest/parseRest';
 import { withSandbox } from '../../tm1Rest/sandboxTracker';
 import { hierODataPath } from '../../utils/hierKeyPure';
-import { _fetchDimLevels, _fetchDimParents, type DimParentMaps } from './fetch';
-import { isOk } from '../../tm1Rest/httpError';
+import { isOk, Tm1HttpError } from '../../tm1Rest/httpError';
 import { runWithoutAbortSignal } from '../../tm1Rest/transport/abortScope';
 import { registerServerDisposer } from '../../serverState/serverDisposeRegistry';
 
@@ -46,6 +45,62 @@ import { registerServerDisposer } from '../../serverState/serverDisposeRegistry'
 export interface DimStructure {
   levels: Map<string, number>;
   parents: DimParentMaps;
+  /** Reverse of `parents`, built from the same edge rows. */
+  index: DimChildIndex;
+}
+
+export async function _fetchDimLevels(dimName: string, config: Tm1Config): Promise<Map<string, number>> {
+  const res = await apiRequest(
+    'GET', `${hierODataPath(dimName)}/Elements?$select=Name,Level`,
+    undefined, 15000, config, withSandbox(config),
+  );
+  // Throw, not an empty map: `getDimStructure` would cache the empty result
+  // under the valid ETag and the dimension would stay flat until it changes.
+  if (!isOk(res)) { throw new Tm1HttpError(`levels of ${dimName}: HTTP ${res.statusCode}`, res.statusCode); }
+  const rows = parseBodySafe<{ value?: Array<{ Name: string; Level?: number }> }>(res, {}).value ?? [];
+  const result = new Map<string, number>();
+  for (const e of rows) {
+    result.set(e.Name, e.Level ?? 0);
+  }
+  return result;
+}
+
+export interface DimParentMaps {
+  first: Record<string, string>;
+  all: Record<string, string[]>;
+}
+
+export async function _fetchDimParents(
+  dimName: string, config: Tm1Config,
+): Promise<DimParentMaps & { index: DimChildIndex }> {
+  const res = await apiRequest(
+    'GET', `${hierODataPath(dimName)}/Edges?$select=ParentName,ComponentName`,
+    undefined, 15000, config, withSandbox(config),
+  );
+  if (!isOk(res)) { throw new Tm1HttpError(`edges of ${dimName}: HTTP ${res.statusCode}`, res.statusCode); }
+  const rows = parseBodySafe<{ value?: Array<{ ParentName: string; ComponentName: string }> }>(res, {}).value ?? [];
+  // Null prototype: element names like "constructor" or "__proto__" are keys here.
+  const first = Object.create(null) as Record<string, string>;
+  const all = Object.create(null) as Record<string, string[]>;
+  const seen = Object.create(null) as Record<string, Set<string>>;
+  // Built from the rows, not from `all`: object key order puts integer-like
+  // names ("2024") first and places a multi-parent child where it first
+  // appeared anywhere, so a parent's children would not keep edge order.
+  const children = new Map<string, string[]>();
+  for (const e of rows) {
+    const p = e.ParentName;
+    const c = e.ComponentName;
+    if (!c || !p) { continue; }
+    if (!first[c]) { first[c] = p; }
+    const set = seen[c] ?? (seen[c] = new Set());
+    if (!set.has(p)) {
+      set.add(p);
+      (all[c] ?? (all[c] = [])).push(p);
+      const list = children.get(p);
+      if (list) { list.push(c); } else { children.set(p, [c]); }
+    }
+  }
+  return { first, all, index: { children, parentSet: new Set(children.keys()) } };
 }
 
 interface CacheEntry {
@@ -159,11 +214,11 @@ export async function getDimStructure(dimName: string, config: Tm1Config): Promi
       return hit.struct;
     }
 
-    const [levels, parents] = await Promise.all([
+    const [levels, { first, all, index }] = await Promise.all([
       _fetchDimLevels(dimName, config),
       _fetchDimParents(dimName, config),
     ]);
-    const struct: DimStructure = { levels, parents };
+    const struct: DimStructure = { levels, parents: { first, all }, index };
     if (gen !== _gen) { return struct; }
     // Without a stamp the entry stays out: a cache whose validity nobody can
     // confirm is just a bet at the next click.
@@ -187,11 +242,11 @@ export async function getDimStructure(dimName: string, config: Tm1Config): Promi
  */
 export function invalidateDimStructure(serverUrl?: string, dimName?: string): void {
   _gen++;
-  if (serverUrl === undefined) { _cache.clear(); _childIndex.clear(); _inFlight.clear(); return; }
+  if (serverUrl === undefined) { _cache.clear(); _inFlight.clear(); return; }
   const prefix = `${serverUrl}|`;
   // `|` cannot occur in a TM1 object name, so the suffix is unambiguous.
   const suffix = dimName === undefined ? '' : `|${dimName}`;
-  for (const m of [_cache, _childIndex, _inFlight] as Map<string, unknown>[]) {
+  for (const m of [_cache, _inFlight] as Map<string, unknown>[]) {
     for (const k of [...m.keys()]) {
       if (k.startsWith(prefix) && k.endsWith(suffix)) { m.delete(k); }
     }
@@ -208,42 +263,15 @@ registerServerDisposer('dimStructure', (url) => invalidateDimStructure(url));
  * complete parent map (`grid.ts`, 160k-211k entries) on EVERY row header it
  * rendered. The host has the map anyway, can flip it once, and attaches the
  * result to the same cache entry — the ETag that validates the structure
- * thereby also validates the index.
+ * thereby also validates the index. Children keep edge order (`_fetchDimParents`).
  */
 export interface DimChildIndex {
   children: Map<string, string[]>;
   parentSet: Set<string>;
 }
 
-const _childIndex = new Map<string, { etagStruct: DimStructure; index: DimChildIndex }>();
-
-export async function getDimChildIndex(dimName: string, config: Tm1Config): Promise<DimChildIndex> {
-  const gen = _gen;
-  const struct = await getDimStructure(dimName, config);
-  const key = cacheKey(config, dimName);
-  const hit = _childIndex.get(key);
-  // Identity comparison, not content comparison: `getDimStructure` returns
-  // exactly the same object when the stamp is unchanged. A new object means
-  // "the structure has changed", and then the index is obsolete.
-  if (hit && hit.etagStruct === struct) { return hit.index; }
-
-  const children = new Map<string, string[]>();
-  const parentSet = new Set<string>();
-  for (const c of Object.keys(struct.parents.all)) {
-    for (const p of struct.parents.all[c]) {
-      parentSet.add(p);
-      const list = children.get(p);
-      if (list) { list.push(c); } else { children.set(p, [c]); }
-    }
-  }
-  const index: DimChildIndex = { children, parentSet };
-  if (gen === _gen) { _childIndex.set(key, { etagStruct: struct, index }); }
-  return index;
-}
-
 /** Test-intern. */
 export function _clearDimStructCacheForTest(): void {
   _cache.clear();
   _inFlight.clear();
-  _childIndex.clear();
 }

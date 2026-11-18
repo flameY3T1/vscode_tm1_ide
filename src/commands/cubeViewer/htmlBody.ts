@@ -78,6 +78,7 @@ export function getCubeViewerBody(webview: vscode.Webview, extensionUri: vscode.
     <div class="ctx-item" id="ctx-copy-name">${t.copyName}</div>
     <div class="ctx-item" id="ctx-copy-mdx">${t.copyMdx}</div>
     <div class="ctx-item" id="ctx-open-browser">${t.openDimension}</div>
+    <div class="ctx-item" id="ctx-add-hierarchy">${t.addHierarchy}</div>
     <div class="ctx-sep"></div>
     <div class="ctx-item" id="ctx-format">${t.fmtMenu}</div>
     <div class="ctx-item ctx-has-submenu ctx-multi" id="ctx-alias"><span class="ctx-label" id="ctx-alias-label">${t.aliasMenu}</span><span class="ctx-submenu-arrow">▶</span><div class="ctx-submenu" id="ctx-alias-sub"></div></div>

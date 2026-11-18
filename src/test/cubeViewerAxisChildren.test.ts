@@ -4,7 +4,7 @@ vi.mock('../tm1Client', () => ({ apiRequest: vi.fn(), assertOk: vi.fn() }));
 vi.mock('../tm1Rest/client', async () => await import('../tm1Client'));
 
 import { apiRequest } from '../tm1Client';
-import { getDimChildIndex, _clearDimStructCacheForTest } from '../commands/cubeViewer/dimStructCache';
+import { getDimStructure, _clearDimStructCacheForTest } from '../commands/cubeViewer/dimStructCache';
 import { dispatch } from '../webviews/dispatchTablePure';
 import { cubeViewerTable } from '../commands/cubeViewer/messaging';
 import type { Tm1Config } from '../tm1Rest/transport/types';
@@ -15,7 +15,7 @@ function reply(body: unknown) {
   return { statusCode: 200, body: JSON.stringify(body) };
 }
 
-describe('getDimChildIndex', () => {
+describe('child index of the dimension structure', () => {
   beforeEach(() => {
     _clearDimStructCacheForTest();
     vi.mocked(apiRequest).mockReset();
@@ -36,10 +36,29 @@ describe('getDimChildIndex', () => {
       ] });
     });
 
-    const idx = await getDimChildIndex('D', cfg);
+    const idx = (await getDimStructure('D', cfg)).index;
     expect(idx.children.get('p')).toEqual(['k1', 'k2']);
     expect(idx.children.get('q')).toEqual(['k1']);
     expect([...idx.parentSet].sort()).toEqual(['p', 'q']);
+  });
+
+  it('keeps edge order: integer-like names and multi-parent children do not move', async () => {
+    vi.mocked(apiRequest).mockImplementation(async (_m: string, path: string) => {
+      if (path.includes('Hierarchies(') && path.includes('$select=Name')) {
+        return reply({ '@odata.etag': 'W/"1"', Name: 'D' });
+      }
+      if (path.includes('/Elements?')) { return reply({ value: [] }); }
+      return reply({ value: [
+        { ParentName: 'q', ComponentName: 'shared' },
+        { ParentName: 'p', ComponentName: 'x' },
+        { ParentName: 'p', ComponentName: '2024' },
+        { ParentName: 'p', ComponentName: 'shared' },
+      ] });
+    });
+
+    const idx = (await getDimStructure('D', cfg)).index;
+    // Built from Object.keys(all) this was ['2024', 'shared', 'x'].
+    expect(idx.children.get('p')).toEqual(['x', '2024', 'shared']);
   });
 
   it('builds the index only once per cache entry', async () => {
@@ -51,8 +70,8 @@ describe('getDimChildIndex', () => {
       return reply({ value: [{ ParentName: 'p', ComponentName: 'k' }] });
     });
 
-    const a = await getDimChildIndex('D', cfg);
-    const b = await getDimChildIndex('D', cfg);
+    const a = (await getDimStructure('D', cfg)).index;
+    const b = (await getDimStructure('D', cfg)).index;
     expect(b).toBe(a);
   });
 });

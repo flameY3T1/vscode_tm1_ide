@@ -15,13 +15,14 @@ import { assertOk } from '../tm1Rest/transport/http';
 import type { Tm1Config } from '../tm1Rest/transport/types';
 import { parseBody } from '../tm1Rest/parseRest';
 import { encodeODataKey } from '../utils/odataKey';
-import { levelToggleFor } from './messageLogPure';
+import { levelToggleFor, type KnownLogger } from './messageLogPure';
 import {
   parseRunLogFilename,
   parseRunLogContent,
   sortRunLogsNewestFirst,
   sortEntriesByTime,
   isRunLogComplete,
+  runLogLogger,
   type RunLogFile,
   type V12LogEntry,
 } from './messageLogV12Pure';
@@ -105,6 +106,20 @@ export async function listRunLogFiles(config: Tm1Config, timeoutMs?: number): Pr
   return sortRunLogsNewestFirst(files);
 }
 
+/**
+ * The sources that have run logs, each with its newest run — the v12 answer to
+ * `walkLoggers`. One listing is enough: the source is the file kind.
+ */
+export async function listRunLogLoggers(config: Tm1Config, timeoutMs?: number): Promise<KnownLogger[]> {
+  const newest = new Map<string, string>();
+  // The list is newest first: the first file of a kind is its newest run.
+  for (const f of await listRunLogFiles(config, timeoutMs)) {
+    const name = runLogLogger(f.kind);
+    if (!newest.has(name)) { newest.set(name, f.startedAt); }
+  }
+  return [...newest].map(([name, last]) => ({ name, last }));
+}
+
 /** Read one run-log file. A file that vanished between listing and reading yields no entries. */
 async function readRunLog(file: RunLogFile, config: Tm1Config, timeoutMs?: number): Promise<V12LogEntry[]> {
   const key = `${config.serverUrl}::${file.filename}`;
@@ -158,6 +173,9 @@ export async function fetchV12RunLogEntries(
     top: number;
     ascending?: boolean;
     levels?: Record<string, boolean>;
+    /** Sources to leave out, as `runLogLogger` names them. Skipped BEFORE reading:
+     *  the source is the file kind, so the depth counts wanted rows for free. */
+    excludedLoggers?: readonly string[];
     timeoutMs?: number;
     maxFiles?: number;
     /** Skip runs of `}` processes/chores BEFORE reading: the file name carries
@@ -170,9 +188,11 @@ export async function fetchV12RunLogEntries(
 ): Promise<V12FetchResult> {
   const listed = await listRunLogFiles(config, opts.timeoutMs);
   const chore = opts.chore?.toLowerCase();
-  const files = chore !== undefined
+  const excluded = new Set(opts.excludedLoggers);
+  const files = (chore !== undefined
     ? listed.filter(f => f.kind === 'chore' && f.object.toLowerCase() === chore)
-    : opts.hideControl ? listed.filter(f => !f.object.startsWith('}')) : listed;
+    : opts.hideControl ? listed.filter(f => !f.object.startsWith('}')) : listed
+  ).filter(f => !excluded.has(runLogLogger(f.kind)));
   const cap = Math.min(files.length, Math.max(1, opts.maxFiles ?? MAX_RUN_LOG_FILES));
   const wanted = (e: V12LogEntry): boolean =>
     !opts.levels || opts.levels[levelToggleFor(e.Level)] !== false;

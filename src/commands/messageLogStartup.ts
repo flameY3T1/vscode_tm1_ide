@@ -10,6 +10,7 @@ import { COLUMN_RESIZE_CSS, columnResizeScript } from '../webviews/columnResize'
 import { savedColumnWidths, rememberColumnWidths } from '../webviews/columnWidthStore';
 import { WebviewPanelHost } from '../webviews/webviewPanelHost';
 import { errMsg } from '../utils/errMsg';
+import { escapeHtml } from '../utils/escapeHtml';
 import { formatTreeError } from '../providers/tm1TreeDataProviderPure';
 import { messageLogLanguageHint } from './messageLogLanguageHint';
 import type { HostToWebview, MlsBootstrap, WebviewToHost } from '../webviewClient/messageLogStartup/protocol';
@@ -121,7 +122,7 @@ function getHtml(webview: vscode.Webview, extensionUri: vscode.Uri, serverLabel:
 
   const body = `
   <div class="toolbar">
-    <span class="title">${vscode.l10n.t('Server Startup Analysis')}${serverLabel ? ` · ${serverLabel}` : ''}</span>
+    <span class="title">${vscode.l10n.t('Server Startup Analysis')}${serverLabel ? ` · ${escapeHtml(serverLabel)}` : ''}</span>
     <span class="spacer"></span>
     <span id="status"></span>
     <button id="reload" class="primary">${vscode.l10n.t('Reload')}</button>

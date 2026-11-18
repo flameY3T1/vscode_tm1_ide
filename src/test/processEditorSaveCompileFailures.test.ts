@@ -82,12 +82,7 @@ beforeEach(() => {
 });
 
 function save(): Promise<boolean> {
-  return handleMonacoSave(
-    panel, PANEL_KEY, 'Sales', SERVER_KEY,
-    NEW,
-    undefined, undefined, undefined,
-    CONFIG,
-  );
+  return handleMonacoSave(_sessions.get(PANEL_KEY)!, { sections: NEW });
 }
 
 const COMPILE_ERRORS = [{ Procedure: 'Prolog' as const, LineNumber: 7, Message: 'syntax' }];
@@ -115,8 +110,7 @@ describe('handleMonacoSave — compile errors, revert succeeded', () => {
   });
 
   it('re-deploys the previous HasSecurityAccess flag, not the new one', async () => {
-    await handleMonacoSave(panel, PANEL_KEY, 'Sales', SERVER_KEY, NEW,
-      undefined, undefined, undefined, CONFIG, false, 0, true);
+    await handleMonacoSave(_sessions.get(PANEL_KEY)!, { sections: NEW, hasSecurity: true });
     expect(mockDeploy.mock.calls[0][6]).toBe(true);
     expect(mockDeploy.mock.calls[1][6]).toBe(false);
   });
@@ -125,8 +119,7 @@ describe('handleMonacoSave — compile errors, revert succeeded', () => {
     const stored = { Type: 'ASCII', dataSourceNameForServer: 'old.csv' };
     vi.mocked(apiRequest).mockResolvedValue({ statusCode: 200, body: JSON.stringify({ DataSource: stored }) } as never);
     const fresh = { Type: 'ASCII', dataSourceNameForServer: 'new.csv' } as never;
-    await handleMonacoSave(panel, PANEL_KEY, 'Sales', SERVER_KEY, NEW,
-      undefined, fresh, undefined, CONFIG);
+    await handleMonacoSave(_sessions.get(PANEL_KEY)!, { sections: NEW, dataSource: fresh });
     expect(mockDeploy.mock.calls[0][2]).toEqual(fresh);
     expect(mockDeploy.mock.calls[1][2]).toEqual(stored);
   });

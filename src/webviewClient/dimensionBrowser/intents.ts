@@ -212,6 +212,21 @@ function baseShowsDescendants(base: Base): boolean {
 }
 
 /**
+ * Does taking a `collapse` layer off bring back ALL children of the row?
+ *
+ * Only over a full server base (`tree`, `set`) with nothing that leaves
+ * elements out. Taking the layer off restores the set beneath it, and over a
+ * selection that is only the selected part of the children (click test by
+ * flameY3T1, 2026-11-13: keep one year, show its consolidation, collapse,
+ * expand - only the kept year came back). A foreign list (`mdx`, `explicit`)
+ * may lack children the same way.
+ */
+function uncollapseShowsAllChildren(v: ViewState): boolean {
+  return (v.base.kind === 'tree' || v.base.kind === 'set')
+    && !v.intents.some((i) => i.kind === 'filter' || i.kind === 'keep' || i.kind === 'remove');
+}
+
+/**
  * Toggle the triangle of a row - the DIRECTION comes from the server.
  *
  * `open` is the expansion state that the answer reports for this occurrence
@@ -235,6 +250,8 @@ export function toggleDrill(v: ViewState, member: string, open: boolean): ViewSt
       // action that leaves an `expand` layer over an already open base
       // (click test by flameY3T1, 2026-08-26: "then the tree is rigid").
       const state = { base: v.base, intents: withoutExpand };
+      // A `collapse` beneath (re-expanded over a narrowed set, below) already closes the row.
+      if (isCollapsed(state, member)) { return state; }
       return baseShowsDescendants(v.base)
         ? pushIntent(state, { kind: 'collapse', member })
         : state;
@@ -242,7 +259,10 @@ export function toggleDrill(v: ViewState, member: string, open: boolean): ViewSt
     return pushIntent(v, { kind: 'collapse', member });
   }
   if (isCollapsed(v, member)) {
-    return { base: v.base, intents: v.intents.filter((i) => !(i.kind === 'collapse' && i.member === member)) };
+    // Otherwise drill on top of the collapse: DRILLDOWNMEMBER(DRILLUPMEMBER(x)).
+    return uncollapseShowsAllChildren(v)
+      ? { base: v.base, intents: v.intents.filter((i) => !(i.kind === 'collapse' && i.member === member)) }
+      : pushIntent(v, { kind: 'expand', member });
   }
   return pushIntent(v, { kind: 'expand', member });
 }

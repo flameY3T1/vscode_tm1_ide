@@ -84,7 +84,7 @@ const klauseln: Klausel[] = Object.entries(pkg.contributes.menus)
  * `tm1.server.moveToFolder` is dropped because `detach` already brings the
  * folder choice for discovered servers along with it. When both stood side by side,
  * a server could be moved into a folder and still be left under the admin server
- * — exactly this mixed state forced the special case in `tm1.adminServer.remove`
+ * — exactly this mixed state forced the special case in `removeAdminServerWithChildren`
  * that exempts children with a folder from deletion.
  *
  * The list is explicitly an enumeration, not a pattern: every further

@@ -18,7 +18,7 @@ updates:
         update-types:
           - minor
           - patch
-      # Actually ships inside the bundle: marked, jszip, http(s)-proxy-agent.
+      # Actually ships inside the bundle: marked, jszip, http(s)-proxy-agent, monaco-editor.
       production-dependencies:
         dependency-type: production
         update-types:
@@ -46,6 +46,8 @@ updates:
       - dependency-name: eslint
         update-types: ["version-update:semver-major"]
       - dependency-name: "@eslint/js"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: typescript-eslint
         update-types: ["version-update:semver-major"]
       # vsce 4 and ovsx 1.2+ need Node >=22; release.yml packages and publishes on Node 20.
       - dependency-name: "@vscode/vsce"

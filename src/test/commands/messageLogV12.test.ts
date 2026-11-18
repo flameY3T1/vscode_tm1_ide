@@ -30,7 +30,7 @@ vi.mock('../../tm1Rest/client', async () => await import('../../tm1Client'));
 vi.mock('../../tm1Rest/transport/http', async () => await import('../../tm1Client'));
 
 import { apiRequest } from '../../tm1Client';
-import { fetchV12RunLogEntries, listRunLogFiles, clearV12RunLogCache } from '../../messageLog/messageLogV12';
+import { fetchV12RunLogEntries, listRunLogFiles, listRunLogLoggers, clearV12RunLogCache } from '../../messageLog/messageLogV12';
 
 const cfg = { serverUrl: 'http://x', version: 'v12' } as never;
 const ok = (body: string) => ({ statusCode: 200, body });
@@ -116,8 +116,9 @@ describe('parseRunLogContent', () => {
       TimeStamp: '2026-08-26T05:17:14.081Z',
       Level: 'Info',
       Message: 'Process "ZZ_VSC_ELTERN" executed by user "Admin".',
-      Logger: 'ZZ_VSC_ELTERN',
+      Logger: 'TM1.Process',
       Name: 'ZZ_VSC_ELTERN',
+      RunThread: 1,
       RunFile: file.filename,
     });
     expect(entries[3].Level).toBe('Error');
@@ -435,6 +436,35 @@ describe('fetchV12RunLogEntries', () => {
     expect(res.filesAvailable).toBe(1);
     expect(mocked.mock.calls.some(([, p]) => String(p).includes('VSCode_Probe'))).toBe(false);
     expect(analyze(res.entries).trees.map(t => t.name)).toEqual(['ZZ_VSC_ELTERN']);
+  });
+
+  it('excludedLoggers skips the files of that source unread, so the depth reaches past them', async () => {
+    mocked.mockImplementation(async (_m: string, path: string) => {
+      if (path.startsWith('ErrorLogFiles?')) {
+        return ok(listBody([
+          'ProcessLog_20260826051714_17877214340005_ZZ_VSC_ELTERN.jsonl',
+          'ChoreLog_20260703190010_1783105210000_ZZ_CH.jsonl',
+        ]));
+      }
+      if (path.includes('ZZ_VSC_ELTERN')) { return ok(PARENT_CHILD_FILE); }
+      return ok('{"level":"info","timestamp":"2026-07-03T19:00:10.000Z","name":"alt","message":"Process execution finished normally."}');
+    });
+    // Without the exclusion the newest file alone covers a depth of 2.
+    const res = await fetchV12RunLogEntries(cfg, { top: 2, excludedLoggers: ['TM1.Process'] });
+    expect(res.entries.map(e => e.Logger)).toEqual(['TM1.Chore']);
+    expect(mocked.mock.calls.some(([, p]) => String(p).includes('ZZ_VSC_ELTERN'))).toBe(false);
+  });
+
+  it('listRunLogLoggers answers each source once, with its newest run', async () => {
+    mocked.mockImplementation(async () => ok(listBody([
+      'ProcessLog_20260703190010_1783105210000_alt.jsonl',
+      'ChoreLog_20260703190010_1783105210000_ZZ_CH.jsonl',
+      'ProcessLog_20260826051714_17877214340005_ZZ_VSC_ELTERN.jsonl',
+    ])));
+    expect(await listRunLogLoggers(cfg)).toEqual([
+      { name: 'TM1.Process', last: parseRunLogFilename('ProcessLog_20260826051714_17877214340005_ZZ_VSC_ELTERN.jsonl')!.startedAt },
+      { name: 'TM1.Chore', last: parseRunLogFilename('ChoreLog_20260703190010_1783105210000_ZZ_CH.jsonl')!.startedAt },
+    ]);
   });
 
   it('lists only run logs and reads them newest first', async () => {

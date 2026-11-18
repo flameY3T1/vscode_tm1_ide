@@ -6,6 +6,7 @@
  */
 
 import { nameMap, asNameMap } from '../../utils/nameMapPure';
+import type { DimSelection } from './protocol';
 
 export interface AxisInfo {
   parents: Record<string, string>;
@@ -28,14 +29,91 @@ export interface MatrixLike {
   colAllParents?: ReadonlyArray<Record<string, string[]>>;
   rowHasChildren?: ReadonlyArray<Record<string, true>>;
   colHasChildren?: ReadonlyArray<Record<string, true>>;
+  rowTuples?: ReadonlyArray<ReadonlyArray<string>>;
+  colTuples?: ReadonlyArray<ReadonlyArray<string>>;
+  rowElements?: ReadonlyArray<string>;
+  colElements?: ReadonlyArray<string>;
 }
 
 export interface CellFlag { c?: number; r?: number; u?: number; s?: number }
 
+/** One dimension's slice of the matrix axis it sits on: the row/col choice made once. */
+export interface AxisSide {
+  /** Position of the dimension in the axis tuples. */
+  index: number;
+  tuples?: ReadonlyArray<ReadonlyArray<string>>;
+  /** Joined axis labels - ' / ' between the dimensions, so no element names. */
+  elements?: ReadonlyArray<string>;
+  parents?: Record<string, string>;
+  allParents?: Record<string, string[]>;
+  hasChildren?: Record<string, true>;
+}
+
+/** The axis side of `dim`; null when the dimension is on neither axis. */
+export function axisOf(
+  matrix: MatrixLike,
+  dim: string,
+  fallbackRowDims: ReadonlyArray<string>,
+  fallbackColDims: ReadonlyArray<string>,
+): AxisSide | null {
+  const ri = (matrix.rowDims ?? fallbackRowDims).indexOf(dim);
+  if (ri >= 0) {
+    return { index: ri, tuples: matrix.rowTuples, elements: matrix.rowElements,
+      parents: matrix.rowParents?.[ri], allParents: matrix.rowAllParents?.[ri], hasChildren: matrix.rowHasChildren?.[ri] };
+  }
+  const ci = (matrix.colDims ?? fallbackColDims).indexOf(dim);
+  if (ci < 0) { return null; }
+  return { index: ci, tuples: matrix.colTuples, elements: matrix.colElements,
+    parents: matrix.colParents?.[ci], allParents: matrix.colAllParents?.[ci], hasChildren: matrix.colHasChildren?.[ci] };
+}
+
+/**
+ * Distinct element names of one axis dimension, in axis order. Read per
+ * dimension from the tuples - never from the joined `elements` (multi-dim
+ * tuples are joined with ' / ', which TM1 rejects as an element name).
+ * Null when the matrix carries no tuples for that axis.
+ */
+export function axisElementNames(side: AxisSide): string[] | null {
+  if (!side.tuples) { return null; }
+  const set = new Set<string>();
+  side.tuples.forEach((t) => { if (t[side.index]) { set.add(t[side.index]); } });
+  return Array.from(set);
+}
+
+/**
+ * Reverse index parent -> children over BOTH parent maps: the multi-parent
+ * list wins, the first-parent map is the fallback. Since the trimming `all`
+ * only carries multi-parent elements and `first` all the others
+ * (`axisMetaScopePure.ts`) - built from `first` alone, a child is missing
+ * under every parent but its first; built from `all` alone, the map stays
+ * empty in the normal case.
+ */
+export function buildChildMap(
+  first: Record<string, string> | undefined,
+  all: Record<string, string[]> | undefined,
+): Record<string, string[]> {
+  const children = nameMap<string[]>();
+  const edge = (c: string, p: string): void => { (children[p] ??= []).push(c); };
+  if (all) {
+    for (const c in all) {
+      if (Object.prototype.hasOwnProperty.call(all, c)) {
+        for (const p of all[c]) { edge(c, p); }
+      }
+    }
+  }
+  if (first) {
+    for (const c in first) {
+      if (Object.prototype.hasOwnProperty.call(first, c) && !(all?.[c]?.length)) {
+        edge(c, first[c]);
+      }
+    }
+  }
+  return children;
+}
+
 /**
  * Build the AxisInfo lookup struct for one dimension by locating it in the
  * matrix's row or col axes. Returns null when the dim is unknown.
- * Children map is derived from the single-parent `parents` map.
  */
 export function buildAxisInfo(
   matrix: MatrixLike | null | undefined,
@@ -43,36 +121,18 @@ export function buildAxisInfo(
   fallbackRowDims: ReadonlyArray<string>,
   fallbackColDims: ReadonlyArray<string>,
 ): AxisInfo | null {
-  if (!matrix) { return null; }
-  const rowDims = matrix.rowDims ?? fallbackRowDims;
-  const colDims = matrix.colDims ?? fallbackColDims;
+  const side = matrix && axisOf(matrix, dim, fallbackRowDims, fallbackColDims);
+  return side ? axisInfoOf(side) : null;
+}
+
+/** The lookup struct for an axis side that is already located. */
+export function axisInfoOf(side: AxisSide): AxisInfo {
   // Keys are element names: no prototype (utils/nameMapPure.ts), also for maps
   // that did not pass through renderGrid.
-  let parents: Record<string, string> | null = null;
-  let allParents: Record<string, string[]> = nameMap();
-  let hasChildren: Record<string, true> = nameMap();
-  let di = rowDims.indexOf(dim);
-  if (di >= 0) {
-    parents = asNameMap((matrix.rowParents ?? [])[di] ?? nameMap());
-    allParents = asNameMap((matrix.rowAllParents ?? [])[di] ?? nameMap());
-    hasChildren = asNameMap((matrix.rowHasChildren ?? [])[di] ?? nameMap());
-  } else {
-    di = colDims.indexOf(dim);
-    if (di >= 0) {
-      parents = asNameMap((matrix.colParents ?? [])[di] ?? nameMap());
-      allParents = asNameMap((matrix.colAllParents ?? [])[di] ?? nameMap());
-      hasChildren = asNameMap((matrix.colHasChildren ?? [])[di] ?? nameMap());
-    }
-  }
-  if (!parents) { return null; }
-  const children = nameMap<string[]>();
-  for (const c in parents) {
-    if (Object.prototype.hasOwnProperty.call(parents, c)) {
-      const p = parents[c];
-      (children[p] ??= []).push(c);
-    }
-  }
-  return { parents, allParents, children, hasChildren };
+  const parents = asNameMap(side.parents ?? nameMap<string>());
+  const allParents = asNameMap(side.allParents ?? nameMap<string[]>());
+  const hasChildren = asNameMap(side.hasChildren ?? nameMap<true>());
+  return { parents, allParents, children: buildChildMap(parents, allParents), hasChildren };
 }
 
 /**
@@ -111,28 +171,32 @@ export function eligibleCCells(
 }
 
 /**
- * BFS over multi-parent ancestor maps. Returns the set of all ancestor names
- * reachable from `targets` (exclusive of targets themselves).
+ * All ancestor names reachable from `targets` over multi-parent ancestor maps
+ * (exclusive of targets themselves), every ancestor before its descendants.
+ * Depth-first, a name is emitted after its own parents: a breadth-first order
+ * reversed put a root below its child as soon as two parent paths differed in
+ * length (review 2026-11-15).
  * Defensive: avoids re-visits; safe on cyclic input.
  */
-export function collectAncestorsBfs(
+export function collectAncestorsRootFirst(
   targets: ReadonlyArray<string>,
   info: AxisInfo,
-): Set<string> {
+): string[] {
   const seen = new Set<string>();
-  const queue = targets.slice();
-  while (queue.length) {
-    const n = queue.shift()!;
+  const out: string[] = [];
+  function walk(n: string): void {
     const list = (info.allParents[n] && info.allParents[n].length)
       ? info.allParents[n]
       : (info.parents[n] ? [info.parents[n]] : []);
     for (const p of list) {
       if (!p || seen.has(p)) { continue; }
       seen.add(p);
-      queue.push(p);
+      walk(p);
+      out.push(p);
     }
   }
-  return seen;
+  targets.forEach(walk);
+  return out;
 }
 
 /**
@@ -188,4 +252,33 @@ export function keepOnlyNames(
 ): string[] {
   const keep = new Set(targets);
   return axisOrder.filter((n) => keep.has(n));
+}
+
+/**
+ * "Show parent(s)": the parents, in the given order, directly above the first
+ * clicked element; the rest of the axis stays. Before the axis when no target
+ * is on it.
+ */
+export function insertAboveFirstTarget(
+  axis: ReadonlyArray<string>,
+  targets: ReadonlyArray<string>,
+  parents: ReadonlyArray<string>,
+): string[] {
+  const targetSet = new Set(targets);
+  const at = Math.max(0, axis.findIndex((e) => targetSet.has(e)));
+  return Array.from(new Set([...axis.slice(0, at), ...parents, ...axis.slice(at)]));
+}
+
+/**
+ * The names on the axis as the user sees them. An element selection wins over
+ * the matrix: "Keep only" and a collapse narrow locally without reloading, so
+ * the matrix still holds the rows they hide (click test by flameY3T1,
+ * 2026-11-13: keep one year, show parent - every year came back). The
+ * selection also keeps multiple occurrences.
+ */
+export function shownAxisNames(
+  selection: DimSelection | undefined,
+  fromMatrix: () => string[],
+): string[] {
+  return selection?.kind === 'elements' ? selection.names.slice() : fromMatrix();
 }

@@ -11,10 +11,11 @@ Run `npm run check`. It runs, in this order:
 
 1. `typecheck` — all four TypeScript projects (root, `webviewClient`, `test`, `test-integration`). `npm test` does **not** typecheck.
 2. `lint` — `eslint src --max-warnings 0`
-3. `lint:promises` — type-checked: floating promises, exhaustive `switch`
-4. `compile` — signatures + esbuild into `out/`
-5. `test` — vitest. Run it **after** `compile`: several guards execute the built bundle and fail on a missing or stale one.
-6. `lint:deps` — dependency-cruiser layer rules and cycles
+3. `lint:dead` — knip: dead files, exports and dependencies
+4. `lint:promises` — type-checked: floating promises, exhaustive `switch`
+5. `compile` — signatures + esbuild into `out/`
+6. `test` — vitest. Run it **after** `compile`: several guards execute the built bundle and fail on a missing or stale one.
+7. `lint:deps` — dependency-cruiser layer rules and cycles
 
 Green gates are not proof the feature works. `tsc -p ./` skips `src/webviewClient/` and `src/test`, and nothing covers UI or user-facing text. Build the VSIX (`npx vsce package --no-dependencies`) and use the feature.
 

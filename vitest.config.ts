@@ -66,14 +66,14 @@ export default defineConfig({
         'src/extension.ts',
       ],
       // Regression gate (ratchet): each value = measured global, floored, minus 1pt of
-      // slack. Measured 2026-07-26: lines 58.91 / funcs 58.62 / stmts 57.22 / branches
-      // 52.14. Trips only on a real drop, not on rounding noise. Ratchet these up again
+      // slack. Measured 2026-11-15: lines 65.36 / funcs 64.58 / stmts 63.74 / branches
+      // 59.50. Trips only on a real drop, not on rounding noise. Ratchet these up again
       // whenever coverage climbs — do NOT set per-file thresholds.
       thresholds: {
-        lines: 57,
-        functions: 57,
-        statements: 56,
-        branches: 51,
+        lines: 64,
+        functions: 63,
+        statements: 62,
+        branches: 58,
       },
     },
   },

@@ -45,7 +45,7 @@ import { setNonEmptyAxis } from '../../mdx/nonEmptyAxisPure';
 import { nextReqId, isCurrentResponse } from './reqGuard';
 import { initialMdxAction } from './initialMdxPure';
 import { detectNonEmptyAxes } from '../../mdx/nonEmptyAxisPure';
-import { nameMap } from '../../utils/nameMapPure';
+import { nameMap, stripPrototypesDeep } from '../../utils/nameMapPure';
 
 /** The `initData` message as the protocol defines it — the hand copy that sat
  *  here typed `existingViewName` without `null` (review 2026-10-03, D1). */
@@ -451,6 +451,11 @@ export function wireMessageHandler(): void {
   window.addEventListener('message', (e: MessageEvent<HostToWebview | null | undefined>) => {
     const msg = e.data;
     if (!msg || !msg.type) return;
+    // Many fields are keyed by TM1 names (utils/nameMapPure.ts). The cell maps
+    // are keyed "row,col" (cellParse.ts) and are most of a big message: walking
+    // them cost ~15 ms at 48k cells, ~60 ms at 192k (measured 2026-11-13).
+    const cells = msg.type === 'cellData' ? msg.matrix : msg.type === 'cellPage' ? msg : undefined;
+    stripPrototypesDeep(msg, cells && new Set([cells.values, cells.rawValues, cells.cellFlags]));
     switch (msg.type) {
       case 'dimSelectionUpdate': {
         if (msg.fromKey) { rekeyHierarchy(msg.fromKey, msg.dimName); }
@@ -744,7 +749,7 @@ export function wireMessageHandler(): void {
       case 'dimAliasValues':
         // A reply for an alias that is no longer active belongs to no request.
         if (msg.alias !== state.dimAliases[msg.dimName]) { break; }
-        state.aliasMaps[msg.dimName] = msg.values ?? {};
+        state.aliasMaps[msg.dimName] = msg.values ?? nameMap();
         // Title selects show alias labels too, and rebuildZones builds them,
         // not renderGrid.
         if (state.titleDims.includes(msg.dimName)) { rebuildZones(); }

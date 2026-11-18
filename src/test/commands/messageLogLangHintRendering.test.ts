@@ -137,6 +137,13 @@ describe('language hint in the startup analysis', () => {
     expect(els.get('error')?.textContent ?? '').toBe('');
   });
 
+  it('escapes the server label in the title', () => {
+    // The label is a profile name and can come from an imported server list.
+    const html = _getStartupHtmlForTest(webviewStub, vscode.Uri.file('/ext'), '<b id=x>srv');
+    expect(html).toContain('&lt;b id=x&gt;srv');
+    expect(html).not.toContain('<b id=x>');
+  });
+
   it('still lets errors and status through', () => {
     const { handler, els } = ladeStartEmpfaenger();
     handler({ data: { error: 'HTTP 403' } });

@@ -96,3 +96,36 @@ describe('server config editor — read-only is not the same as absent', () => {
     expect(rowsOf(html).filter(r => r.unavailable && r.value !== undefined)).toEqual([]);
   });
 });
+
+describe('server config editor — a leaf the server lists but drops on write', () => {
+  const leaf = 'Administration.DisableSandboxing';
+  const withActive = (activeKeys: string[], values: Array<[string, unknown]> = []): ConfigSnapshot =>
+    ({ ...snapshot([leaf, 'Administration.EnableSandboxDimension'], values), activeKeys: new Set(activeKeys) });
+
+  it('marks DisableSandboxing where ActiveConfiguration has no value for it (v12)', () => {
+    const html = renderHtml(withActive(['Administration.EnableSandboxDimension']), 'v12box');
+    expect(row(html, leaf).unavailable).toBe(true);
+    expect(row(html, 'Administration.EnableSandboxDimension').unavailable).toBe(false);
+  });
+
+  it('keeps StartupChores editable on a tree with an Access group (11.8 stores it)', () => {
+    const chores = 'Administration.StartupChores';
+    const tree = (paths: string[]): ConfigSnapshot => ({ ...snapshot(paths), activeKeys: new Set(['Administration.Language']) });
+    expect(row(renderHtml(tree([chores, 'Access.CAPI.Port']), 'v11box'), chores).unavailable).toBe(false);
+    expect(row(renderHtml(tree([chores]), 'v12box'), chores).unavailable).toBe(true);
+  });
+
+  it('keeps it editable where ActiveConfiguration reports a value (11.8)', () => {
+    const html = renderHtml(withActive([leaf], [[leaf, false]]), 'v11box');
+    expect(row(html, leaf).unavailable).toBe(false);
+  });
+});
+
+describe('server config editor — a list leaf', () => {
+  it('shows StartupChores as comma-separated text', () => {
+    const leaf = 'Administration.StartupChores';
+    const html = renderHtml(snapshot([leaf, 'Access.CAPI.Port'], [[leaf, ['a', 'b']]]), 'v11box');
+    expect(row(html, leaf).value).toBe('a, b');
+    expect(row(html, leaf).unavailable).toBe(false);
+  });
+});

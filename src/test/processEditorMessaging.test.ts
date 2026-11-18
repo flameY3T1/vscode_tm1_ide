@@ -567,8 +567,8 @@ describe('handleMessage — processEditor', () => {
       type: 'save', sections: { ...EMPTY_SECTIONS, prolog: 'x' }, parameters: [], dataSource: { Type: 'None' }, variables: [], hasSecurity: false, errorCount: 0,
     }, REOPEN);
     expect(handleMonacoSave).toHaveBeenCalledTimes(1);
-    // 10th positional arg (index 9) = isAutoSave flag → false for explicit save
-    expect((handleMonacoSave as ReturnType<typeof vi.fn>).mock.calls[0][9]).toBe(false);
+    // No third argument = explicit save, not an auto-save.
+    expect((handleMonacoSave as ReturnType<typeof vi.fn>).mock.calls[0][2]).toBeUndefined();
   });
 
   it('saveAs — delegates to handleMonacoSaveAs with reopen callback', async () => {
@@ -577,8 +577,7 @@ describe('handleMessage — processEditor', () => {
       type: 'saveAs', sections: EMPTY_SECTIONS, parameters: [], dataSource: { Type: 'None' }, variables: [], hasSecurity: false, errorCount: 0,
     }, REOPEN);
     expect(handleMonacoSaveAs).toHaveBeenCalledTimes(1);
-    // index 7 = reopenAfterSave (hasSecurity now trails at index 8)
-    expect((handleMonacoSaveAs as ReturnType<typeof vi.fn>).mock.calls[0][7]).toBe(REOPEN);
+    expect((handleMonacoSaveAs as ReturnType<typeof vi.fn>).mock.calls[0][2]).toBe(REOPEN);
   });
 
   it('execute — autosaves first; breaks when save fails', async () => {
@@ -588,7 +587,7 @@ describe('handleMessage — processEditor', () => {
       type: 'execute', sections: EMPTY_SECTIONS, parameters: [], dataSource: { Type: 'None' }, variables: [], hasSecurity: false, errorCount: 0,
     }, REOPEN);
     expect(handleMonacoSave).toHaveBeenCalledTimes(1);
-    expect((handleMonacoSave as ReturnType<typeof vi.fn>).mock.calls[0][9]).toBe(true); // autosave
+    expect((handleMonacoSave as ReturnType<typeof vi.fn>).mock.calls[0][2]).toBe(true); // autosave
     expect(posted(panel).some((m) => m.type === 'setExecuting')).toBe(false); // never reached
   });
 
@@ -635,5 +634,16 @@ describe('handleMessage — processEditor', () => {
     }, REOPEN);
     expect(handleMonacoSave).not.toHaveBeenCalled(); // no sections → no autosave
     expect(handleDebugStart).toHaveBeenCalledWith(KEY, panel, [], [{ section: 'Prolog', line: 3 }]);
+  });
+
+  it('debugStart — the auto-save gets the whole editor snapshot, and a failed save ends debug mode', async () => {
+    (handleMonacoSave as ReturnType<typeof vi.fn>).mockResolvedValue(false);
+    const panel = makePanel();
+    const session = testSession(panel, KEY, 'Proc', 'srv', CONFIG);
+    const snapshot = { sections: { ...EMPTY_SECTIONS, prolog: 'x;' }, parameters: [], dataSource: { Type: 'None' }, variables: [], hasSecurity: true, errorCount: 2 };
+    await handleMessage(session, { type: 'debugStart', parameters: [], breakpoints: [], snapshot }, REOPEN);
+    expect(handleMonacoSave).toHaveBeenCalledWith(session, snapshot, true);
+    expect(handleDebugStart).not.toHaveBeenCalled();
+    expect(posted(panel)).toContainEqual({ type: 'debugSessionEnded', status: '' });
   });
 });

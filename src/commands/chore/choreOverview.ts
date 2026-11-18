@@ -11,6 +11,7 @@ import { rememberColumnWidths } from '../../webviews/columnWidthStore';
 import { buildOverviewRows } from './choreOverviewPure';
 import { formatEpochMinute } from '../../tm1Rest/runStats';
 import { errMsg } from '../../utils/errMsg';
+import { nameMap } from '../../utils/nameMapPure';
 import { postTo } from '../../webviews/typedPost';
 
 /**
@@ -98,7 +99,7 @@ export class ChoreOverviewManager {
       });
       rows.sort((a, b) => a.name.localeCompare(b.name));
       // Runs as [start, end|null] pairs keyed by chore — the calendar draws them.
-      const runs: Record<string, Array<[number, number | null]>> = {};
+      const runs = nameMap<Array<[number, number | null]>>();
       for (const r of run.runs ?? []) { (runs[r.name] ??= []).push([r.startMs, r.endMs ?? null]); }
       postTo<ChoreOverviewToWebview>(panel.webview, { type: 'data', rows, runs, logReach: formatLogReach(run), now: Date.now() });
     } catch (err) {

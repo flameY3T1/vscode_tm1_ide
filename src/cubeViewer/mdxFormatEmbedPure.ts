@@ -22,6 +22,7 @@ import type { DisplayFormats } from './displayFormatPure';
 import { hierKey, hierMdxRef, splitHierKey } from '../utils/hierKeyPure';
 import { escapeMdx as esc } from '../utils/odataKey';
 import { escapeRegex } from '../utils/escapeRegexPure';
+import { nameMap } from '../utils/nameMapPure';
 
 export const FORMAT_SUFFIX = ' (Format)';
 
@@ -173,7 +174,9 @@ export interface UnwrapResult {
  * such members comes back unchanged with no formats.
  */
 export function unwrapDisplayFormats(mdx: string): UnwrapResult {
-  const formats: DisplayFormats = {};
+  // No prototype at either level: the dimension name comes from the MDX text,
+  // and formats["__proto__"] would be Object.prototype (utils/nameMapPure.ts).
+  const formats: DisplayFormats = nameMap();
   const { lead, withBody, rest } = splitWith(mdx);
   if (!withBody) { return { mdx, formats }; }
   const swaps: Array<[string, string]> = [];
@@ -183,7 +186,7 @@ export function unwrapDisplayFormats(mdx: string): UnwrapResult {
     const dim = keyOf(target);
     if (!n.endsWith(FORMAT_SUFFIX) || n.slice(0, -FORMAT_SUFFIX.length) !== el
       || keyOf(name).toLowerCase() !== dim.toLowerCase()) { return all; }
-    (formats[dim] ??= {})[el] = fmt.replace(/''/g, "'");
+    (formats[dim] ??= nameMap())[el] = fmt.replace(/''/g, "'");
     swaps.push([name, target]);
     return '';
   });

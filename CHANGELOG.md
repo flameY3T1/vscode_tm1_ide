@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.0.55] — 2026-11-18
+
+### New
+
+- **Message Log**: the source filter runs on the server and lists every source; CSV export.
+- **Server configuration**: `StartupChores` is editable as a list, checked against the server's chores.
+
+### Changed
+
+- **Cube Viewer**: a chip shows its hierarchy as text; switch it in the Dimension Browser, add further ones with `+` or the right-click menu.
+- **Server configuration**: on TM1 12, parameters the server ignores are no longer offered.
+
+### Fixed
+
+- **Process**: in file mode, Execute and Debug run the edits in the file.
+- **Cube Viewer**: *Show parent(s)* after *Keep only* builds on the shown elements only.
+- Elements and dimensions named like `constructor` or `__proto__` no longer vanish from Cube Viewer, Dimension Editor and Security matrix.
+
 ## [1.0.54] — 2026-11-05
 
 ### New

@@ -229,7 +229,7 @@ export class Tm1TreeDataProvider implements vscode.TreeDataProvider<Tm1TreeNode>
     if (!serverId || !cubeName) { return; }
     this._cubeLoadOverride.set(`${serverId}|${String(cubeName).toLowerCase()}`, { loaded, until: Date.now() + 90_000 });
     node.meta.loaded = loaded;
-    node.contextValue = node.contextValue?.replace(/\.(un)?loaded$/, '') + (loaded ? '.loaded' : '.unloaded');
+    node.refreshContextValue();
     this._endIconOnly(serverId);
     this._onDidChangeTreeData.fire(node);
   }
@@ -242,7 +242,7 @@ export class Tm1TreeDataProvider implements vscode.TreeDataProvider<Tm1TreeNode>
       const loaded = this.cubeLoaded(serverId, String(node.meta.cubeName));
       if (loaded === node.meta.loaded) { continue; }
       node.meta.loaded = loaded;
-      node.contextValue = node.contextValue?.replace(/\.(un)?loaded$/, '') + (loaded === undefined ? '' : loaded ? '.loaded' : '.unloaded');
+      node.refreshContextValue();
       this._onDidChangeTreeData.fire(node);
     }
   }
@@ -626,31 +626,26 @@ export class Tm1TreeDataProvider implements vscode.TreeDataProvider<Tm1TreeNode>
     const sandboxesEnabled = cfg ? await isSandboxEnabled(cfg).catch(() => true) : true;
     const categories = ['Cubes', 'Dimensions', 'Processes', 'Chores', 'Threads'];
     const catNodes = categories.map(key => {
+      const toggle = isControlToggleGroup(key);
       const node = new Tm1TreeNode(
         'category',
         key,
         vscode.TreeItemCollapsibleState.Collapsed,
-        { categoryKey: key, serverId },
+        {
+          categoryKey: key, serverId,
+          // Menu flags for `buildContextValue`. `.grouped` drives the
+          // Configure-vs-Reset verb per node — like the `cube-v12` suffix, a
+          // global context key cannot do it, since servers with and without a
+          // grouping override coexist in one tree. `.ctlShown` drives the
+          // Show-vs-Hide verb PER NODE: the state is per server AND per object
+          // group, so cubes shown on server A must not flip the verb on server
+          // A's dimensions — let alone on server B (flameY3T1, 2026-08-18).
+          bedrock: toggle && key === 'Processes' && isBedrockInstalled(serverId) === true,
+          grouped: toggle && key === 'Processes' && this._isProcessGroupingConfigured(serverId),
+          ctlShown: toggle && !this.isHidingSystemObjects(serverId, key),
+        },
         this._extensionUri,
       );
-      if (isControlToggleGroup(key)) {
-        node.contextValue = key === 'Processes' && isBedrockInstalled(serverId) === true
-          ? 'category-processes-bedrock'
-          : `category-${key.toLowerCase()}`;
-        // `.grouped` drives the Configure-vs-Reset menu verb per node — like the
-        // `cube-v12` suffix, a global context key cannot do it, since servers
-        // with and without a grouping override coexist in one tree.
-        if (key === 'Processes' && this._isProcessGroupingConfigured(serverId)) {
-          node.contextValue = `${node.contextValue}.grouped`;
-        }
-        // `.ctlShown` drives the Show-vs-Hide verb PER NODE. A global context
-        // key cannot: the state is per server AND per object group, so cubes
-        // shown on server A must not flip the verb on server A's dimensions —
-        // let alone on server B (flameY3T1, 2026-08-18).
-        if (!this.isHidingSystemObjects(serverId, key)) {
-          node.contextValue = `${node.contextValue}.ctlShown`;
-        }
-      }
       // Retain the instance VS Code most recently received so refreshCategory
       // can fire the exact node the tree cached (overwrite every call).
       this._categoryNodeCache.set(`${serverId}::${key}`, node);
@@ -1152,12 +1147,10 @@ export class Tm1TreeDataProvider implements vscode.TreeDataProvider<Tm1TreeNode>
       groupName: label,
       children: group.children,
       serverId,
+      // Same `.grouped` verb marker as on the Processes category node.
+      grouped: this._isProcessGroupingConfigured(serverId),
     }, this._extensionUri);
     node.description = String(group.children.length);
-    // Same `.grouped` verb marker as on the Processes category node.
-    if (this._isProcessGroupingConfigured(serverId)) {
-      node.contextValue = `${node.contextValue}.grouped`;
-    }
     return node;
   }
 

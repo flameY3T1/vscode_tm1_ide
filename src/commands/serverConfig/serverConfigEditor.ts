@@ -30,6 +30,7 @@ function formatSaveError(e: SaveError): string {
   if (e.target === 'validation') {
     return `Validierungsfehler${e.param ? ` [${e.param}]` : ''}: ${e.message}`;
   }
+  if (e.target === 'ignored') { return e.message; }
   return `PATCH ${e.target} HTTP ${e.statusCode}: ${e.message}`;
 }
 

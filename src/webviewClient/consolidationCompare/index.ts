@@ -9,6 +9,7 @@ import {
 import type { CompareView, ToClient, ToHost } from '../../consolidationCompare/protocol';
 import { escapeHtml as esc } from '../htmlUtils';
 import { getVsCodeApi } from '../_shared/vscodeApi';
+import { asNameMap } from '../../utils/nameMapPure';
 
 const vscodeApi = getVsCodeApi<ToHost>();
 const L = getL10n();
@@ -958,11 +959,11 @@ window.addEventListener('message', (ev: MessageEvent<ToClient>) => {
     render();
   } else if (m.type === 'scopeValues') {
     if (m.attr !== S.scopeAttr) { return; }
-    S.scopeValues = m.values; S.scopeFor = m.attr;
+    S.scopeValues = asNameMap(m.values); S.scopeFor = m.attr;
     render();
   } else if (m.type === 'aliasValues') {
     if (m.alias !== S.aliasName) { return; }
-    S.alias = m.values;
+    S.alias = asNameMap(m.values);
     render();
   } else if (m.type === 'error') {
     // A failed save comes as saveFailed; an error now is some other read, and

@@ -175,8 +175,6 @@ export function buildCubeViewerL10n(): L10nMap {
     selectElements: vscode.l10n.t('Select elements'),
     moveToTitle: vscode.l10n.t('Move to title'),
     remove: vscode.l10n.t('Remove'),
-    hierarchy: vscode.l10n.t('Hierarchy'),
-    defaultHierarchy: vscode.l10n.t('Default'),
     addHierarchy: vscode.l10n.t('Add another hierarchy of this dimension'),
     selectPlaceholder: vscode.l10n.t('Select…'),
     filterElements: vscode.l10n.t('Filter elements…'),

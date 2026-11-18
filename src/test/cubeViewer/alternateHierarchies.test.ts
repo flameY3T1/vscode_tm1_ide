@@ -114,6 +114,7 @@ describe('pivot with alternate hierarchies', () => {
     expect(replaceKey(axes, 'D', 'D:Alt').rowDims).toEqual(['D:Alt', 'X']);
     expect(addKeyAfter(axes, 'D', 'D:Alt').rowDims).toEqual(['D', 'D:Alt', 'X']);
     expect(addKeyAfter(axes, 'M', 'M:MAlt').colDims).toEqual(['M', 'M:MAlt']);
+    expect(addKeyAfter({ ...axes, titleDims: ['T', 'U'] }, 'T', 'T:TAlt').titleDims).toEqual(['T', 'T:TAlt', 'U']);
   });
   it('one of two hierarchies moves to the titles while the other stays on its axis', () => {
     const { axes } = computeZoneMoveAt('D:Alt', 'titles', null, { rowDims: ['D'], colDims: ['D:Alt', 'M'], titleDims: [] });

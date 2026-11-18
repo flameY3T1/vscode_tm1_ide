@@ -1,5 +1,5 @@
 import type { Tm1Config } from '../../tm1Rest/transport/types';
-import { getDimChildIndex } from './dimStructCache';
+import { getDimStructure } from './dimStructCache';
 import { normName, type ModelKnowledge } from '../../debugUtility/feederTargetMatch';
 
 /**
@@ -11,7 +11,7 @@ import { normName, type ModelKnowledge } from '../../debugUtility/feederTargetMa
  * per question would be the end of the sub-second times that make the whole
  * overfeeding run usable in the first place.
  *
- * `getDimChildIndex` keeps its index via a stamp comparison; a second run on
+ * The structure cache keeps the index via a stamp comparison; a second run on
  * the same cube therefore costs nothing more.
  */
 export async function loadModelKnowledge(
@@ -25,7 +25,7 @@ export async function loadModelKnowledge(
   for (const dim of dimensions) {
     let index;
     try {
-      index = await getDimChildIndex(dim, config);
+      index = (await getDimStructure(dim, config)).index;
     } catch {
       // A dimension that cannot be read makes the match undecidable instead
       // of wrong: its elements stay unknown, and `hitsCell` reports

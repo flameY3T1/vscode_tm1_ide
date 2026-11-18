@@ -522,21 +522,8 @@ export const apiFetch: ApiFetch = async (method, path, body, extraHeaders, confi
   return apiRequest(method, path, bodyStr, undefined, config, extraHeaders);
 };
 
-/** GET .../Edges?$select=ParentName,ComponentName — returns parent/child pairs. */
-export async function listEdges(
-  cfg: Tm1Config, dim: string, hier: string = dim, timeoutMs?: number,
-): Promise<Array<Pick<EdgeRow, 'ParentName' | 'ComponentName'>>> {
-  const res = await apiRequest(
-    'GET', `Dimensions('${encKey(dim)}')/Hierarchies('${encKey(hier)}')/Edges?$select=ParentName,ComponentName`,
-    undefined, timeoutMs, cfg,
-  );
-  if (!isOk(res)) { return []; }
-  const parsed = parseBodySafe<ODataValueEnvelope<Pick<EdgeRow, 'ParentName' | 'ComponentName'>>>(res, {});
-  return parsed.value ?? [];
-}
-
 /**
- * GET .../Edges with weights. Strict on purpose: unlike `listEdges`, a failed
+ * GET .../Edges with weights. Strict on purpose: a failed
  * read throws instead of returning [] — an empty edge list would look like
  * "every element is missing" to the consolidation compare.
  */

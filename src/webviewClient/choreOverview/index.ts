@@ -6,7 +6,7 @@ import type { ChoreOverviewBootstrap, ChoreOverviewState, HostToWebview, Webview
 import { compareChoreRows, overlappingIntervals, plannedStarts, type ChoreOverviewRow } from '../../chore/choreTablePure';
 import { escapeHtml as esc } from '../htmlUtils';
 import { getVsCodeApi, type VsCodeApi } from '../_shared/vscodeApi';
-import { nameMap } from '../../utils/nameMapPure';
+import { nameMap, asNameMap } from '../../utils/nameMapPure';
 
 type VsApi = VsCodeApi<WebviewToHost, ChoreOverviewState>;
 const vscode = getVsCodeApi<WebviewToHost, ChoreOverviewState>();
@@ -235,7 +235,7 @@ window.addEventListener('message', (ev: MessageEvent<HostToWebview>) => {
   }
   if (msg.type === 'data') {
     allRows = Array.isArray(msg.rows) ? msg.rows : [];
-    runsByChore = msg.runs && typeof msg.runs === 'object' ? msg.runs : {};
+    runsByChore = msg.runs && typeof msg.runs === 'object' ? asNameMap(msg.runs) : nameMap();
     if (typeof msg.now === 'number') nowMs = msg.now;
     logReach = typeof msg.logReach === 'string' ? msg.logReach : '';
     // The reach sentence arrives with the rows, after the first renderHeader().

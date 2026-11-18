@@ -28,6 +28,20 @@ export interface ProcessSections {
   epilog: string;
 }
 
+/**
+ * The editor state a save writes. One shape for save, save as, execute and the
+ * auto-save before debug: a hand-copied subset once dropped `hasSecurity` and
+ * `errorCount` from the debug start (2026-11-12).
+ */
+export interface EditorSnapshot {
+  sections: ProcessSections;
+  parameters: ProtocolProcessParameter[];
+  dataSource: ProtocolDataSource;
+  variables: ProtocolProcessVariable[];
+  hasSecurity: boolean;
+  errorCount: number;
+}
+
 /** Postmessage-safe shape of a process parameter. */
 export interface ProtocolProcessParameter {
   Name: string;
@@ -181,15 +195,7 @@ export type WebviewToHost =
   | { type: 'openProcess'; name: string }
   | { type: 'requestPaste' }
   | { type: 'requestCopy'; text: string }
-  | {
-      type: 'save' | 'saveAs' | 'execute';
-      sections: ProcessSections;
-      parameters: ProtocolProcessParameter[];
-      dataSource: ProtocolDataSource;
-      variables: ProtocolProcessVariable[];
-      hasSecurity: boolean;
-      errorCount: number;
-    }
+  | ({ type: 'save' | 'saveAs' | 'execute' } & EditorSnapshot)
   | { type: 'fetchCubes' }
   | { type: 'fetchViews'; cubeName: string }
   | { type: 'fetchDimensions' }
@@ -217,11 +223,8 @@ export type WebviewToHost =
       type: 'debugStart';
       parameters: Array<{ Name: string; Type?: string; Value: string | number; Prompt?: string }>;
       breakpoints: BreakpointRef[];
-      sections?: Record<string, string>;
-      dataSource?: unknown;
-      variables?: unknown[];
-      /** Optional editor error-count snapshot — used by host auto-save before debug. */
-      errorCount?: number;
+      /** Editor state for the auto-save before the run; without it nothing is saved. */
+      snapshot?: EditorSnapshot;
     }
   | {
       type: 'debugCommand';

@@ -1493,7 +1493,7 @@ describe('Tm1TreeDataProvider — cube load state after our own Unload', () => {
     try {
       const provider = new Tm1TreeDataProvider(() => [], () => true, () => TEST_CONFIG);
       const p = provider as unknown as { _cubeLoad: Map<string, Map<string, boolean>> };
-      const node = { meta: { serverId: 's', cubeName: 'Reporting' }, contextValue: 'cube' } as never;
+      const node = { meta: { serverId: 's', cubeName: 'Reporting' }, contextValue: 'cube', refreshContextValue() { /* menu value not under test */ } } as never;
       provider.markCubeLoaded(node, false);
       vi.advanceTimersByTime(91_000);
       expect(provider.cubeLoaded('s', 'Reporting')).toBe(false);

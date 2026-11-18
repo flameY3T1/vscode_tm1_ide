@@ -5,7 +5,8 @@ export type Cluster =
   | 'connection' | 'security' | 'logging' | 'performance'
   | 'storage' | 'locale' | 'ti' | 'replication' | 'http' | 'misc';
 
-export type ParamType = 'string' | 'number' | 'bool' | 'enum';
+/** `list` is a JSON array of names on the wire and comma-separated text in the form. */
+export type ParamType = 'string' | 'number' | 'bool' | 'enum' | 'list';
 
 export interface ParamDef {
   name: string;
@@ -557,13 +558,16 @@ const LEAF_INFO_RAW: Array<[string, Cluster, ParamType, string]> = [
   ['ServicePrincipalName', 'security', 'string', vscode.l10n.t('Service principal name the server registers for Kerberos authentication.')],
 
   // ── Administration ──────────────────────────────────────────────────────
-  ['StartupChores', 'ti', 'string', vscode.l10n.t('Chores the server starts once loading has finished.')],
+  // An array on the wire. Measured on 11.8, 2026-11-16: `["name"]` is stored, the bare
+  // string earns a 400.
+  ['StartupChores', 'ti', 'list', vscode.l10n.t('Chores the server starts once loading has finished. Separate several names with a comma.')],
   ['DownTime', 'misc', 'string', vscode.l10n.t('Point in time at which the server stops accepting client connections.')],
   ['UnicodeUpperLowerCase', 'locale', 'bool', vscode.l10n.t('Change case with Unicode rules instead of the ASCII ones.')],
   ['AllowReadOnlyChoreReschedule', 'ti', 'bool', vscode.l10n.t('Let a chore be rescheduled while the server is in read-only mode.')],
   ['MaskUserNameInServerTools', 'security', 'bool', vscode.l10n.t('Hide user names in the server monitoring tools.')],
   ['PerfMonActive', 'logging', 'bool', vscode.l10n.t('Whether performance monitoring is currently running.')],
-  ['LegacyTransactionLog', 'logging', 'bool', vscode.l10n.t('Write the transaction log in the pre-12 format.')],
+  // Not a switch: v12 answers 400 to `true` and stores `P0DT00H05M00S` (2026-11-16).
+  ['LegacyTransactionLog', 'logging', 'string', vscode.l10n.t('Write the transaction log in the pre-12 format.')],
   ['DefaultNumberFormat', 'locale', 'string', vscode.l10n.t('Number format the server falls back to when a value carries none of its own.')],
   ['PasswordMinimumLength', 'security', 'number', vscode.l10n.t('Shortest password the server accepts for a native TM1 user.')],
   ['ClientPropertiesSyncInterval', 'connection', 'string', vscode.l10n.t('Interval at which client properties are written back to the control cube, as an ISO-8601 duration.')],

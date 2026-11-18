@@ -1,4 +1,5 @@
 /** Pure helpers for message-log webview — no vscode dependencies. */
+import { escapeODataKey } from '../utils/odataKey';
 
 export const LEVEL_CLASS: Readonly<Record<string, string>> = Object.freeze({
   INFO:    'l-info',
@@ -107,6 +108,60 @@ export function buildLevelFilter(enabled: Record<string, boolean>): string | und
   if (wanted.length === 0) { return null; }
   const terms = wanted.flatMap((k) => LEVELS_PER_TOGGLE[k].map((lv) => `Level eq ${LOG_LEVEL_ENUM}'${lv}'`));
   return `(${terms.join(' or ')})`;
+}
+
+/**
+ * Build the `$filter` that leaves the given loggers OUT, so the `$top` window
+ * counts rows of the wanted sources — the same reason `buildLevelFilter` exists.
+ *
+ * An exclusion chain rather than an `eq` list on purpose: a logger nobody has
+ * seen yet stays visible. Measured live on 11.8 (two servers, 2026-11-15):
+ * `Logger ne 'X'` and `Logger eq 'X'` both select, an unknown name answers zero
+ * rows (TM1 does NOT drop this predicate the way it drops an unqualified level
+ * literal), the chain combines with the level filter via `and`, and the empty
+ * name — TM1 writes one such line with level `Unknown` — works as `''`.
+ *
+ * Returns `undefined` for an empty list: send no `$filter` at all.
+ */
+export function buildLoggerFilter(excluded: readonly string[]): string | undefined {
+  if (excluded.length === 0) { return undefined; }
+  return '(' + excluded.map((n) => `Logger ne '${escapeODataKey(n)}'`).join(' and ') + ')';
+}
+
+/** A logger that has rows in the message log, with the timestamp of its newest one. */
+export interface KnownLogger { name: string; last: string }
+
+/** Upper bound of `walkLoggers`; the two live servers hold 10 and 14 loggers with rows. */
+export const LOGGER_WALK_CAP = 60;
+
+/**
+ * Find every logger that has at least one row, newest first.
+ *
+ * `GET /Loggers` is no help: it lists 1196 configurable names on 11.8, of which
+ * 10 to 14 ever wrote a line. So ask for the newest row, then for the newest row
+ * outside the loggers found so far, until nothing is left — one request per
+ * logger plus one. Measured 2026-11-15: 1.3 s in total on a log of 41,060 rows,
+ * 19.5 s on one of 689,169 rows (every step scans, 1.3 to 3.4 s each).
+ *
+ * Answers `true` when the walk reached the end, `false` when it stopped early:
+ * at the cap, or because the server handed back a logger that was excluded
+ * (a server that ignores the predicate would otherwise loop forever).
+ */
+export async function walkLoggers(
+  newestOutside: (excluded: readonly string[]) => Promise<{ Logger?: string; TimeStamp?: string } | undefined>,
+  onFound: (logger: KnownLogger) => void,
+  cap: number = LOGGER_WALK_CAP,
+): Promise<boolean> {
+  const found: string[] = [];
+  while (found.length < cap) {
+    const row = await newestOutside(found);
+    if (!row) { return true; }
+    const name = row.Logger ?? '';
+    if (found.includes(name)) { return false; }
+    found.push(name);
+    onFound({ name, last: row.TimeStamp ?? '' });
+  }
+  return false;
 }
 
 /**

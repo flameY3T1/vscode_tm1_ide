@@ -9,6 +9,7 @@ import { toExportFile, mergeImport } from '../commands/serverManager/serverExcha
 import { confirmDowngradeModal } from '../commands/serverManager/probeConnection';
 import { classifyInsecureSave } from '../commands/serverManager/form';
 import { errMsg } from '../utils/errMsg';
+import { pwKey, type ServerProfile } from '../serverState/state';
 import { registerImpersonationUi } from '../commands/serverManager/impersonationUi';
 import { registerSessionStatus } from '../commands/serverManager/sessionStatus';
 import { openServerConfigEditor } from '../commands/serverConfig/serverConfigEditor';
@@ -27,6 +28,14 @@ export function registerServerCommands(ctx: ActivationContext): void {
 
   registerImpersonationUi(context);
   registerSessionStatus(context, (id, idle) => treeDataProvider.setSessionIdle(id, idle));
+
+  if (context.extensionMode === vscode.ExtensionMode.Test) {
+    // Integration tests only: a profile with its password, without clicking through the form.
+    context.subscriptions.push(vscode.commands.registerCommand('tm1.internal.testAddServer', async (profile: ServerProfile, password: string) => {
+      await saveServers(context, [...getAllServers(context), profile]);
+      await context.secrets.store(pwKey(profile.id), password);
+    }));
+  }
 
   context.subscriptions.push(
     vscode.commands.registerCommand('tm1.selectServer', () => showServerManagerCommand(context)),

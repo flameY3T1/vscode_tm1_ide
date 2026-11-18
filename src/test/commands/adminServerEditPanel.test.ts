@@ -304,7 +304,7 @@ describe('window closes when its entry disappears', () => {
     const panel = lastPanel();
     const disposed = vi.spyOn(panel, 'dispose');
 
-    // Like `tm1.adminServer.remove`: entry gone, `onServerChanged` fired.
+    // Like the delete button: entry gone, `onServerChanged` fired.
     await removeAdminServer('a1');
     await new Promise((r) => setImmediate(r));
 

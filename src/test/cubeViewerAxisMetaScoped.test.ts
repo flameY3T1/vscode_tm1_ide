@@ -2,10 +2,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 vi.mock('../commands/cubeViewer/dimStructCache', () => ({
   getDimStructure: vi.fn(),
-  getDimChildIndex: vi.fn(),
 }));
 
-import { getDimStructure, getDimChildIndex } from '../commands/cubeViewer/dimStructCache';
+import { getDimStructure } from '../commands/cubeViewer/dimStructCache';
 import { _buildAxisMeta } from '../commands/cubeViewer/axisMeta';
 import type { Tm1Config } from '../tm1Rest/transport/types';
 
@@ -18,10 +17,10 @@ beforeEach(() => {
       first: { blatt: 'zwischen', zwischen: 'wurzel', fern: 'wurzel' },
       all: { blatt: ['zwischen'], zwischen: ['wurzel'], fern: ['wurzel'] },
     },
-  });
-  vi.mocked(getDimChildIndex).mockResolvedValue({
-    children: new Map([['zwischen', ['blatt']], ['wurzel', ['zwischen', 'fern']]]),
-    parentSet: new Set(['zwischen', 'wurzel']),
+    index: {
+      children: new Map([['zwischen', ['blatt']], ['wurzel', ['zwischen', 'fern']]]),
+      parentSet: new Set(['zwischen', 'wurzel']),
+    },
   });
 });
 

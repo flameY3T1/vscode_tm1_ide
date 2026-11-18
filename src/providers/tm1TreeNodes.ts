@@ -373,10 +373,101 @@ function isControlNode(type: Tm1NodeType, label: string, meta: Record<string, an
 }
 
 /**
+ * The node's `contextValue`: every menu suffix, built in one place from the
+ * node type, the label and `meta`. The provider sets flags in `meta` and calls
+ * `refreshContextValue()` instead of patching the string (the suffix order is
+ * part of the value, see the `when` clauses in package.json).
+ */
+export function buildContextValue(nodeType: Tm1NodeType, label: string, meta: Record<string, any>): string {
+  let cv = nodeType === 'serverRoot'
+    // `-v12` only on a CONNECTED node: the v12 marker exists to drop v11-only
+    // actions from a live server's menu. A disconnected node carries no suffix
+    // — every menu there anchors on the bare form.
+    ? (meta.connected ? (meta.isV12 ? 'serverRoot-connected-v12' : 'serverRoot-connected') : 'serverRoot-disconnected')
+    : nodeType === 'category' && meta.categoryKey
+      // `-bedrock` and the two verb markers below are set by the provider into
+      // `meta` (tm1TreeDataProvider.ts#_childrenForServerRoot), never patched on afterwards.
+      ? (meta.categoryKey === 'Processes' && meta.bedrock === true
+        ? 'category-processes-bedrock'
+        : `category-${meta.categoryKey.toLowerCase()}`)
+      : nodeType === 'sandbox' && meta.active
+        ? 'sandbox-active'
+        : nodeType;
+  // `-adm`: this server originates from an admin server (`parentAdminId` on
+  // the profile, the provider mixes the flag into `meta` BEFORE construction).
+  // The suffix deliberately sits BEFORE the `.git` suffix further below, so
+  // the forms are `serverRoot-connected-adm` and `serverRoot-connected-adm.git`.
+  // All serverRoot menu conditions in package.json tolerate an optional
+  // `-adm`; guard: src/test/serverRootMenuWhenClauses.test.ts.
+  // `-imp`: on this server, the model is seen through another user's eyes.
+  // The suffix sits BEFORE `-adm`, so the forms are
+  // `serverRoot-connected-imp[-adm][.git]`. It affects exactly two menu
+  // items: "Start impersonation" drops out, "End impersonation" is added.
+  if (nodeType === 'serverRoot' && meta.connected === true
+      && typeof meta.serverId === 'string' && _impersonationResolver(meta.serverId)) {
+    cv = `${cv}-imp`;
+  }
+  if (nodeType === 'serverRoot' && meta.fromAdmin === true) {
+    cv = `${cv}-adm`;
+  }
+  // `-paw`: a gateway entry cannot do everything a TM1 admin server can. TM1
+  // Top talks to the TM1 port directly via the native C-API — that does
+  // not work through a gateway, and the menu item used to also show up
+  // under PAW (reported 2026-09-16). The remaining admin server menus
+  // tolerate the suffix; guard: src/test/adminServerInlineMenu.test.ts.
+  if (nodeType === 'adminServerRoot' && meta.adminKind === 'paw') {
+    cv = `${cv}-paw`;
+  }
+  // `cube-v12` lets menus drop the v11-only cube actions (SaveData — the TI
+  // function does not exist in v12). Every other cube menu matches the
+  // `/^cube(-v12)?(-control)?$/` shape.
+  if (nodeType === 'cube' && typeof meta.serverId === 'string' && _v12Resolver(meta.serverId)) {
+    cv = 'cube-v12';
+  }
+  // Control objects: `dimension-control`, `hierarchy-control`, `cube-control`
+  // or `cube-v12-control`. Must run after the v12 branch so both axes
+  // combine; the delete commands match only the suffix-less form.
+  if (isControlNode(nodeType, label, meta)) {
+    cv = `${cv}-control`;
+  }
+  // `-haspick`: this base cube already has a `}PickList_<Cube>`. Controls
+  // which of the two pick-list entries appears in the context menu (create
+  // OR delete, never both). The information comes from the cube list the
+  // provider fetches anyway — no query per node. Control cubes never get
+  // the suffix: a `}PickList_X` itself has none.
+  if (nodeType === 'cube' && meta.hasPicklistCube === true && !cv.endsWith('-control')) {
+    cv = `${cv}-haspick`;
+  }
+  // `.loaded` / `.unloaded`: Load and Unload are either-or, the menu shows
+  // the one that applies. No suffix = state unknown (performance monitor
+  // off, v12) — then both stay, as before. See `fetchCubeLoadStates`.
+  if (nodeType === 'cube' && typeof meta.loaded === 'boolean') {
+    cv = `${cv}${meta.loaded ? '.loaded' : '.unloaded'}`;
+  }
+  const gitSuffixable =
+    nodeType === 'process' || nodeType === 'cubeRule' ||
+    (nodeType === 'serverRoot' && meta.connected === true);
+  if (gitSuffixable
+      && typeof meta.serverId === 'string'
+      && _gitEnabledResolver(meta.serverId)) {
+    cv = `${cv}.git`;
+  }
+  // `.grouped` drives the Configure-vs-Reset verb of the process grouping,
+  // `.ctlShown` the Show-vs-Hide verb of the control objects, both per node
+  // (tm1TreeDataProvider.ts sets the flags).
+  if ((nodeType === 'category' || nodeType === 'processGroup') && meta.grouped === true) { cv = `${cv}.grouped`; }
+  if (nodeType === 'category' && meta.ctlShown === true) { cv = `${cv}.ctlShown`; }
+  return cv;
+}
+
+/**
  * A tree node in the TM1 Object Explorer.
  * Extends vscode.TreeItem with nodeType, meta data, and contextValue for menu contributions.
  */
 export class Tm1TreeNode extends vscode.TreeItem {
+  /** The label the node was built with, for `refreshContextValue`. */
+  private readonly _labelText: string;
+
   constructor(
     public readonly nodeType: Tm1NodeType,
     label: string,
@@ -386,75 +477,8 @@ export class Tm1TreeNode extends vscode.TreeItem {
   ) {
     super(label, collapsibleState);
     this.id = Tm1TreeNode._buildId(nodeType, meta, label);
-    this.contextValue = nodeType === 'serverRoot'
-      // `-v12` only on a CONNECTED node: the v12 marker exists to drop v11-only
-      // actions from a live server's menu. A disconnected node carries no suffix
-      // — every menu there anchors on the bare form.
-      ? (meta.connected ? (meta.isV12 ? 'serverRoot-connected-v12' : 'serverRoot-connected') : 'serverRoot-disconnected')
-      : nodeType === 'category' && meta.categoryKey
-        ? `category-${meta.categoryKey.toLowerCase()}`
-        : nodeType === 'sandbox' && meta.active
-          ? 'sandbox-active'
-          : nodeType;
-    // `-adm`: this server originates from an admin server (`parentAdminId` on
-    // the profile, the provider mixes the flag into `meta` BEFORE construction).
-    // The suffix deliberately sits BEFORE the `.git` suffix further below, so
-    // the forms are `serverRoot-connected-adm` and `serverRoot-connected-adm.git`.
-    // All serverRoot menu conditions in package.json tolerate an optional
-    // `-adm`; guard: src/test/serverRootMenuWhenClauses.test.ts.
-    // `-imp`: on this server, the model is seen through another user's eyes.
-    // The suffix sits BEFORE `-adm`, so the forms are
-    // `serverRoot-connected-imp[-adm][.git]`. It affects exactly two menu
-    // items: "Start impersonation" drops out, "End impersonation" is added.
-    if (nodeType === 'serverRoot' && meta.connected === true
-        && typeof meta.serverId === 'string' && _impersonationResolver(meta.serverId)) {
-      this.contextValue = `${this.contextValue}-imp`;
-    }
-    if (nodeType === 'serverRoot' && meta.fromAdmin === true) {
-      this.contextValue = `${this.contextValue}-adm`;
-    }
-    // `-paw`: a gateway entry cannot do everything a TM1 admin server can. TM1
-    // Top talks to the TM1 port directly via the native C-API — that does
-    // not work through a gateway, and the menu item used to also show up
-    // under PAW (reported 2026-09-16). The remaining admin server menus
-    // tolerate the suffix; guard: src/test/adminServerInlineMenu.test.ts.
-    if (nodeType === 'adminServerRoot' && meta.adminKind === 'paw') {
-      this.contextValue = `${this.contextValue}-paw`;
-    }
-    // `cube-v12` lets menus drop the v11-only cube actions (SaveData — the TI
-    // function does not exist in v12). Every other cube menu matches the
-    // `/^cube(-v12)?(-control)?$/` shape.
-    if (nodeType === 'cube' && typeof meta.serverId === 'string' && _v12Resolver(meta.serverId)) {
-      this.contextValue = 'cube-v12';
-    }
-    // Control objects: `dimension-control`, `hierarchy-control`, `cube-control`
-    // or `cube-v12-control`. Must run after the v12 branch so both axes
-    // combine; the delete commands match only the suffix-less form.
-    if (isControlNode(nodeType, label, meta)) {
-      this.contextValue = `${this.contextValue}-control`;
-    }
-    // `-haspick`: this base cube already has a `}PickList_<Cube>`. Controls
-    // which of the two pick-list entries appears in the context menu (create
-    // OR delete, never both). The information comes from the cube list the
-    // provider fetches anyway — no query per node. Control cubes never get
-    // the suffix: a `}PickList_X` itself has none.
-    if (nodeType === 'cube' && meta.hasPicklistCube === true && !this.contextValue.endsWith('-control')) {
-      this.contextValue = `${this.contextValue}-haspick`;
-    }
-    // `.loaded` / `.unloaded`: Load and Unload are either-or, the menu shows
-    // the one that applies. No suffix = state unknown (performance monitor
-    // off, v12) — then both stay, as before. See `fetchCubeLoadStates`.
-    if (nodeType === 'cube' && typeof meta.loaded === 'boolean') {
-      this.contextValue = `${this.contextValue}${meta.loaded ? '.loaded' : '.unloaded'}`;
-    }
-    const gitSuffixable =
-      nodeType === 'process' || nodeType === 'cubeRule' ||
-      (nodeType === 'serverRoot' && meta.connected === true);
-    if (gitSuffixable
-        && typeof meta.serverId === 'string'
-        && _gitEnabledResolver(meta.serverId)) {
-      this.contextValue = `${this.contextValue}.git`;
-    }
+    this.contextValue = buildContextValue(nodeType, label, meta);
+    this._labelText = label;
     this.iconPath = extensionUri
       ? getIconForNodeType(nodeType, meta, extensionUri)
       : new vscode.ThemeIcon('circle-outline');
@@ -513,6 +537,11 @@ export class Tm1TreeNode extends vscode.TreeItem {
       const cmd = map[meta.refType as string];
       if (cmd) { this.command = { command: cmd, title: 'Open', arguments: [this] }; }
     }
+  }
+
+  /** After `meta` changed (e.g. `loaded`): build the menu value again instead of patching it. */
+  refreshContextValue(): void {
+    this.contextValue = buildContextValue(this.nodeType, this._labelText, this.meta);
   }
 
   private static _buildId(type: Tm1NodeType, meta: Record<string, any>, label: string): string {

@@ -6,14 +6,12 @@
 
 import * as monaco from 'monaco-editor';
 import { editor, sharedState, vscode, SectionKey } from './state';
-import { switchToSection, currentSections } from './sections';
-import { buildSavePayload } from './save';
+import { switchToSection } from './sections';
+import { buildSavePayload, editorSnapshot } from './save';
 import { formatAllSections } from './format';
 import { requestResolver } from './lint';
 import { markResolverPending } from './resolver';
 import { getParameters } from './parameters';
-import { getDataSource } from './dataSource';
-import { getVariables } from './variables';
 import { getBreakpoints } from './breakpoints';
 import { isDebugging, isDebugPaused, requestDebugStart, sendDebugCommand } from './debug';
 import { initFormatMenu } from './formatMenu';
@@ -65,11 +63,7 @@ export function initToolbar(): void {
   document.getElementById('btn-debug')?.addEventListener('click', () => {
     const statusEl = document.getElementById('debug-status');
     if (statusEl) { statusEl.textContent = L.dbgStarting; statusEl.classList.remove('has-error'); }
-    requestDebugStart(getParameters(), getBreakpoints(), {
-      sections: currentSections(),
-      dataSource: getDataSource(),
-      variables: getVariables(),
-    });
+    requestDebugStart(getParameters(), getBreakpoints(), editorSnapshot());
   });
   document.getElementById('btn-debug-continue')?.addEventListener('click',  () => sendDebugCommand('continue'));
   document.getElementById('btn-debug-step-over')?.addEventListener('click', () => sendDebugCommand('stepOver'));

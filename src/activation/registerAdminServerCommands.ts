@@ -3,7 +3,6 @@ import type { ActivationContext } from './context';
 import {
   getAdminServer, hideDiscovered, unhideDiscovered,
 } from '../serverState/adminServers';
-import { removeAdminServerWithChildren } from '../commands/serverManager/adminRemove';
 import { getAllServers, saveServers, onServerChanged, type ServerProfile } from '../serverState/state';
 import { listServerFolders, createServerFolder, setServerFolder } from '../serverState/profiles';
 import { openEditAdminServerPanel } from '../commands/serverConfig/addServerPanel';
@@ -14,7 +13,7 @@ import { showTm1TopForAdminCommand } from '../commands/tm1Top';
 import type { Tm1TreeNode } from '../providers/tm1TreeNodes';
 
 /**
- * Registers the TM1 Admin Server node commands: refresh, edit, remove,
+ * Registers the TM1 Admin Server node commands: refresh, edit,
  * restore, and "take an instance out of the admin server" (detach).
  *
  * `tm1.adminServer.add` (the add-dialog) is registered separately in Task 7.
@@ -43,13 +42,6 @@ export function registerAdminServerCommands(ac: ActivationContext): void {
       await openEditAdminServerPanel(context, adminId);
     }),
 
-    vscode.commands.registerCommand('tm1.adminServer.remove', async (node: Tm1TreeNode) => {
-      const adminId = node?.meta?.adminId as string | undefined;
-      if (!adminId) { return; }
-      // The confirmation and sparing the children live in `adminRemove.ts`,
-      // because the delete button of the edit view takes the same path.
-      await removeAdminServerWithChildren(context, adminId);
-    }),
     // Second id, same body: the label is static in package.json, and
     // "Edit admin server" read wrong under a PAW gateway (reported
     // 2026-09-16). The menu conditions separate the two kinds; guard:
@@ -64,13 +56,6 @@ export function registerAdminServerCommands(ac: ActivationContext): void {
       // branch in front of it (review 2026-08-28,
       // finding 4).
       await openEditAdminServerPanel(context, adminId);
-    }),
-    vscode.commands.registerCommand('tm1.adminServer.removePaw', async (node: Tm1TreeNode) => {
-      const adminId = node?.meta?.adminId as string | undefined;
-      if (!adminId) { return; }
-      // The confirmation and sparing the children live in `adminRemove.ts`,
-      // because the delete button of the edit view takes the same path.
-      await removeAdminServerWithChildren(context, adminId);
     }),
 
     /**

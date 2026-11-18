@@ -3,15 +3,46 @@ import {
   buildAxisInfo,
   collectParentsUnion,
   eligibleCCells,
-  collectAncestorsBfs,
+  collectAncestorsRootFirst,
   collectDescendantsDfs,
   collectDirectChildren,
   keepOnlyNames,
+  shownAxisNames,
+  insertAboveFirstTarget,
   type AxisInfo,
   type MatrixLike,
 } from '../../../webviewClient/cubeViewerMonaco/contextMenuPure';
-import { buildCubeStructure } from '../../../webviewClient/cubeViewerMonaco/cubeHierStructure';
-import { leaves, children, expandAllSet, allParents, parents } from '../../../webviewClient/_shared/hierarchy/operations';
+
+describe('insertAboveFirstTarget', () => {
+  it('puts the parents directly above the first clicked element', () => {
+    expect(insertAboveFirstTarget(['2023', '2024', '2025'], ['2024'], ['Alle'])).toEqual(['2023', 'Alle', '2024', '2025']);
+  });
+
+  it('several ancestors keep their given order above the element', () => {
+    // Click test 2026-11-13: "Show all parents" appended the C element BELOW.
+    expect(insertAboveFirstTarget(['2024'], ['2024'], ['Total', 'Alle'])).toEqual(['Total', 'Alle', '2024']);
+  });
+
+  it('a target that is not on the axis puts the parents first', () => {
+    expect(insertAboveFirstTarget(['a'], ['x'], ['p'])).toEqual(['p', 'a']);
+  });
+});
+
+describe('shownAxisNames', () => {
+  // Click test 2026-11-13: all years loaded, "Keep only" one (local, no
+  // reload), "Show parent" - every year came back, because the base list was
+  // read from the matrix, which still holds the hidden rows.
+  const matrix = () => ['2023', '2024', '2025'];
+
+  it('an element selection wins over the matrix', () => {
+    expect(shownAxisNames({ kind: 'elements', names: ['2024'] }, matrix)).toEqual(['2024']);
+  });
+
+  it('without an element selection the matrix decides', () => {
+    expect(shownAxisNames(undefined, matrix)).toEqual(['2023', '2024', '2025']);
+    expect(shownAxisNames({ kind: 'all' }, matrix)).toEqual(['2023', '2024', '2025']);
+  });
+});
 
 const dummyAxis = (
   parents: Record<string, string> = {},
@@ -47,6 +78,19 @@ describe('buildAxisInfo', () => {
     expect(info.children.EU.sort()).toEqual(['DE', 'FR']);
     expect(info.children.NA).toEqual(['US']);
     expect(info.allParents.DE).toEqual(['EU']);
+  });
+  // The first-parent map names ONE parent per element. Built from it alone, C was
+  // missing under B - a replayed drill on B then showed no children.
+  it('lists a multi-parent child under every parent, not only the first', () => {
+    const m: MatrixLike = {
+      rowDims: ['D'],
+      rowParents: [{ C: 'A', X: 'A' }],
+      rowAllParents: [{ C: ['A', 'B'] }],
+    };
+    const info = buildAxisInfo(m, 'D', [], [])!;
+    expect(info.children.B).toEqual(['C']);
+    expect(info.children.A.sort()).toEqual(['C', 'X']);
+    expect([...collectDirectChildren(['B'], info)]).toEqual(['C']);
   });
   it('locates dim in col axis when not in row', () => {
     const m: MatrixLike = {
@@ -142,27 +186,40 @@ describe('eligibleCCells', () => {
   });
 });
 
-describe('collectAncestorsBfs', () => {
+describe('collectAncestorsRootFirst', () => {
   it('returns empty for no ancestors', () => {
     const info = dummyAxis({}, {});
-    expect([...collectAncestorsBfs(['leaf'], info)]).toEqual([]);
+    expect([...collectAncestorsRootFirst(['leaf'], info)]).toEqual([]);
   });
   it('walks single-parent chain', () => {
     const info = dummyAxis({ a: 'b', b: 'c' }, {});
-    expect([...collectAncestorsBfs(['a'], info)].sort()).toEqual(['b', 'c']);
+    expect([...collectAncestorsRootFirst(['a'], info)].sort()).toEqual(['b', 'c']);
   });
   it('walks multi-parent ancestors via allParents', () => {
     const info = dummyAxis({}, { a: ['p1', 'p2'], p1: ['gp'], p2: ['gp'] });
-    expect([...collectAncestorsBfs(['a'], info)].sort()).toEqual(['gp', 'p1', 'p2']);
+    expect([...collectAncestorsRootFirst(['a'], info)].sort()).toEqual(['gp', 'p1', 'p2']);
   });
   it('safe on cyclic allParents input', () => {
     const info = dummyAxis({}, { A: ['B'], B: ['A'] });
-    expect([...collectAncestorsBfs(['A'], info)].sort()).toEqual(['A', 'B']);
+    expect([...collectAncestorsRootFirst(['A'], info)].sort()).toEqual(['A', 'B']);
   });
   it('does NOT include targets themselves unless re-reached via cycle', () => {
     const info = dummyAxis({ a: 'b', b: 'c' }, {});
-    const out = collectAncestorsBfs(['a'], info);
-    expect(out.has('a')).toBe(false);
+    const out = collectAncestorsRootFirst(['a'], info);
+    expect(out.includes('a')).toBe(false);
+  });
+  it('puts a root above its child when it is also a direct parent of the target', () => {
+    const edges = { Leaf: ['Root', 'Parent'], Parent: ['Root'] };
+    expect(collectAncestorsRootFirst(['Leaf'], dummyAxis({}, edges))).toEqual(['Root', 'Parent']);
+    expect(collectAncestorsRootFirst(['Leaf'], dummyAxis({}, { ...edges, Leaf: ['Parent', 'Root'] }))).toEqual(['Root', 'Parent']);
+  });
+  it('keeps every ancestor above its descendants over parent paths of different length, for several targets', () => {
+    const info = dummyAxis({}, { Leaf: ['D', 'A'], Leaf2: ['B'], A: ['B'], B: ['R'], D: ['R'] });
+    const out = collectAncestorsRootFirst(['Leaf', 'Leaf2'], info);
+    expect([...out].sort()).toEqual(['A', 'B', 'D', 'R']);
+    expect(out.indexOf('R')).toBeLessThan(out.indexOf('B'));
+    expect(out.indexOf('R')).toBeLessThan(out.indexOf('D'));
+    expect(out.indexOf('B')).toBeLessThan(out.indexOf('A'));
   });
 });
 
@@ -202,141 +259,6 @@ describe('collectDirectChildren', () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// Parity tests: shared operations.ts over buildCubeStructure match expected sets
-// (Task 5 — ensures ctx handler migration produces same results as contextMenuPure)
-// ---------------------------------------------------------------------------
-describe('shared ops parity over buildCubeStructure', () => {
-  // Tree:  P(level 2) → A(level 1) → x(level 0)
-  //                   → B(level 0)
-  // rowParents: { A:'P', x:'A', B:'P' }
-  const m: any = {
-    rowDims: ['D'],
-    rowTuples: [['P'], ['A'], ['x'], ['B']],
-    rowLevels: [[2], [1], [0], [0]],
-    rowParents: [{ A: 'P', x: 'A', B: 'P' }],
-    rowAllParents: [{}],
-  };
-
-  it('buildCubeStructure returns non-null for dim on row axis', () => {
-    expect(buildCubeStructure(m, 'D', ['D'], [])).not.toBeNull();
-  });
-
-  it('buildCubeStructure returns null for unknown dim', () => {
-    expect(buildCubeStructure(m, 'Z', ['D'], [])).toBeNull();
-  });
-
-  it('leaves(hier, P) returns level-0 descendants only (x and B)', () => {
-    const s = buildCubeStructure(m, 'D', ['D'], [])!;
-    expect(leaves(s, 'P').sort()).toEqual(['B', 'x']);
-  });
-
-  it('leaves(hier, A) returns only x (level 0 child)', () => {
-    const s = buildCubeStructure(m, 'D', ['D'], [])!;
-    expect(leaves(s, 'A')).toEqual(['x']);
-  });
-
-  it('children(hier, P) returns direct children only: A and B', () => {
-    const s = buildCubeStructure(m, 'D', ['D'], [])!;
-    expect(children(s, 'P').sort()).toEqual(['A', 'B']);
-  });
-
-  it('children(hier, A) returns only x', () => {
-    const s = buildCubeStructure(m, 'D', ['D'], [])!;
-    expect(children(s, 'A')).toEqual(['x']);
-  });
-
-  it('expandAllSet(hier, P) starts with P, has all descendants, parent before child', () => {
-    const s = buildCubeStructure(m, 'D', ['D'], [])!;
-    const res = expandAllSet(s, 'P');
-    expect(res[0]).toBe('P');
-    expect(res).toContain('A');
-    expect(res).toContain('x');
-    expect(res).toContain('B');
-    // DFS: A before x (A is parent of x)
-    expect(res.indexOf('A')).toBeLessThan(res.indexOf('x'));
-  });
-
-  it('allParents(hier, x) returns ancestors of x: A and P', () => {
-    const s = buildCubeStructure(m, 'D', ['D'], [])!;
-    expect(allParents(s, 'x').sort()).toEqual(['A', 'P']);
-  });
-
-  it('allParents(hier, B) returns P only', () => {
-    const s = buildCubeStructure(m, 'D', ['D'], [])!;
-    expect(allParents(s, 'B')).toEqual(['P']);
-  });
-
-  it('multi-target flatMap leaves dedupes correctly', () => {
-    const s = buildCubeStructure(m, 'D', ['D'], [])!;
-    // Both A and P would yield x as a leaf; dedup should yield unique set
-    const lvs = Array.from(new Set(['A', 'P'].flatMap((t) => leaves(s, t))));
-    expect(lvs.sort()).toEqual(['B', 'x']);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// applyPendingDrillAction replay path — operations parity (Task 7)
-// Verifies that each replay kind uses the correct shared operation via
-// buildCubeStructure so the result is consistent with the live click handlers.
-// Tree: P(lv2) → A(lv1), B(lv0);  A(lv1) → x(lv0)
-// Uses rowAllParents:[{}] (empty, like Task-5 matrix) so parentOf chain is used
-// for ancestor traversal — allParents BFS then reaches P via A.
-// ---------------------------------------------------------------------------
-describe('replay path ops parity over buildCubeStructure (Task 7)', () => {
-  const m: any = {
-    rowDims: ['D'],
-    rowTuples: [['P'], ['A'], ['x'], ['B']],
-    rowLevels: [[2], [1], [0], [0]],
-    rowParents: [{ A: 'P', x: 'A', B: 'P' }],
-    rowAllParents: [{}],
-  };
-
-  it('toggle (children) replay: direct children of P are A and B', () => {
-    const s = buildCubeStructure(m, 'D', ['D'], [])!;
-    const kids = Array.from(new Set(['P'].flatMap((t) => children(s, t))));
-    expect(kids.sort()).toEqual(['A', 'B']);
-  });
-
-  it('toggle (children) replay: children of A is only x', () => {
-    const s = buildCubeStructure(m, 'D', ['D'], [])!;
-    expect(children(s, 'A')).toEqual(['x']);
-  });
-
-  it('expandAll replay: expandAllSet(P) starts with P and includes all descendants', () => {
-    const s = buildCubeStructure(m, 'D', ['D'], [])!;
-    const expanded = Array.from(new Set(['P'].flatMap((t) => expandAllSet(s, t))));
-    expect(expanded[0]).toBe('P');
-    expect(expanded.sort()).toEqual(['A', 'B', 'P', 'x']);
-  });
-
-  it('showParents replay: parents(x) falls back to parentOf → returns A (direct parent)', () => {
-    const s = buildCubeStructure(m, 'D', ['D'], [])!;
-    // allParentsOf is empty → parents() uses parentOf['x'] = 'A'
-    const parList = Array.from(new Set(['x'].flatMap((t) => parents(s, t))));
-    expect(parList).toEqual(['A']);
-  });
-
-  it('showParents replay: parents(B) returns P only', () => {
-    const s = buildCubeStructure(m, 'D', ['D'], [])!;
-    expect(parents(s, 'B')).toEqual(['P']);
-  });
-
-  it('showAllParents replay: allParents(x) BFS returns all ancestors (A and P)', () => {
-    const s = buildCubeStructure(m, 'D', ['D'], [])!;
-    const ancestors = Array.from(new Set(['x'].flatMap((t) => allParents(s, t))));
-    expect(ancestors.sort()).toEqual(['A', 'P']);
-  });
-
-  it('showAllParents replay: allParents(A) returns P only', () => {
-    const s = buildCubeStructure(m, 'D', ['D'], [])!;
-    expect(allParents(s, 'A')).toEqual(['P']);
-  });
-
-  it('buildCubeStructure returns null when matrix is null → fallback path', () => {
-    expect(buildCubeStructure(null, 'D', ['D'], [])).toBeNull();
-  });
-});
 
 /**
  * "Keep only" removes, it does not reorder. But the selection comes from

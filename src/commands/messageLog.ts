@@ -6,8 +6,7 @@ import type { Tm1Config } from '../tm1Rest/transport/types';
 import { pickDeployTarget } from './processEditor/deploy';
 import { getServerConfig, getServerNameByUrl, formatServerLabel } from '../serverState/state';
 import type { Tm1TreeNode } from '../providers/tm1TreeNodes';
-import { mapLogEntry, buildLevelFilter, isStartupAnalysisAvailable } from '../messageLog/messageLogPure';
-import type { RawEntry } from '../messageLog/messageLogAnalysisPure';
+import { mapLogEntry, buildLevelFilter, buildLoggerFilter, walkLoggers, isStartupAnalysisAvailable, type KnownLogger } from '../messageLog/messageLogPure';import type { RawEntry } from '../messageLog/messageLogAnalysisPure';
 import { renderWebviewShell } from '../webviews/webviewShell';
 import { COLUMN_RESIZE_CSS, columnResizeScript } from '../webviews/columnResize';
 import { savedColumnWidths, rememberColumnWidths } from '../webviews/columnWidthStore';
@@ -15,10 +14,11 @@ import { errMsg } from '../utils/errMsg';
 import { formatTreeError } from '../providers/tm1TreeDataProviderPure';
 import { encodeODataKey } from '../utils/odataKey';
 import { parseBody } from '../tm1Rest/parseRest';
-import { fetchV12RunLogEntries, clearV12RunLogCache } from '../messageLog/messageLogV12';
+import { fetchV12RunLogEntries, listRunLogLoggers, clearV12RunLogCache } from '../messageLog/messageLogV12';
 import { isOk } from '../tm1Rest/httpError';
 import { registerServerDisposer } from '../serverState/serverDisposeRegistry';
 import { postTo } from '../webviews/typedPost';
+import { _saveCsvFile } from './cubeViewer/csv';
 import type { HostToWebview as MessageLogToWebview, WebviewToHost } from '../webviewClient/messageLog/protocol';
 
 /** Host → the inline script of the message log; no `entries` = keep the last table. */
@@ -64,17 +64,19 @@ function v12EmptyNotice(): MessageLogEntry[] {
 export async function fetchMessageLogEntries(
   top: number,
   config: Tm1Config,
-  opts: { levelFilter?: string; levels?: Record<string, boolean>; hideControl?: boolean; chore?: string } = {},
+  opts: { levelFilter?: string; excludedLoggers?: readonly string[]; levels?: Record<string, boolean>; hideControl?: boolean; chore?: string } = {},
 ): Promise<MessageLogEntry[]> {
-  const { levelFilter, levels, hideControl, chore } = opts;
+  const { levelFilter, excludedLoggers = [], levels, hideControl, chore } = opts;
   // TM1 v12 removed message-log RETRIEVAL from the REST API (deprecated in 12.0):
   // MessageLogEntries, the MessageLog() function, the TailMessageLog() delta flow
   // and the Processes('X')/ErrorLogs navigation all answer empty — re-measured live
   // on 12.5.9, 2026-08-26 (v12LogSurfaceProbe.js). What remains is one run-log file per execution, so read
   // those instead of showing a permanently empty panel.
   if (config?.version === 'v12') {
-    const res = await fetchV12RunLogEntries(config, { top, levels, hideControl, chore });
-    return res.entries.length > 0 ? res.entries : v12EmptyNotice();
+    const res = await fetchV12RunLogEntries(config, { top, levels, excludedLoggers, hideControl, chore });
+    // No notice when the user unticked sources: the table is then empty by
+    // choice, and the notice would also show up as a source in the menu.
+    return res.entries.length > 0 || excludedLoggers.length > 0 ? res.entries : v12EmptyNotice();
   }
   const refreshMs = Math.max(vscode.workspace.getConfiguration('tm1').get<number>('messageLogRefreshMs') ?? 5000, 250);
   const get = async (filter?: string) => await apiRequest(
@@ -86,8 +88,10 @@ export async function fetchMessageLogEntries(
     config,
   );
 
-  let res = await get(levelFilter);
-  if (levelFilter && (!isOk(res))) {
+  // The unticked sources narrow the same way (v12 skips their files above).
+  const filter = [buildLoggerFilter(excludedLoggers), levelFilter].filter(Boolean).join(' and ') || undefined;
+  let res = await get(filter);
+  if (filter && (!isOk(res))) {
     // The enum literal is version-specific (`ibm.tm1.api.v1.LogLevel`, read off
     // 11.8's $metadata). A server that spells it differently rejects the query
     // LOUDLY — 11.8 answers a wrong enum type name with HTTP 501 "functionExpr
@@ -297,6 +301,11 @@ export function getHtml(webview: vscode.Webview, extensionUri: vscode.Uri, start
   }
   .toolbar details.dd .menu label { display: flex; align-items: center; gap: 6px; padding: 2px 4px; font-size: 12px; color: var(--vscode-foreground); white-space: nowrap; cursor: pointer; }
   .toolbar details.dd .menu label:hover { background: var(--vscode-list-hoverBackground); }
+  .toolbar details.dd .menuhead { display: flex; align-items: center; gap: 4px; padding-bottom: 4px; margin-bottom: 4px; border-bottom: 1px solid var(--vscode-panel-border); }
+  .toolbar details.dd .menuhead span { font-size: 11px; color: var(--vscode-descriptionForeground); white-space: nowrap; }
+  /* A source the whole-log search found but the loaded window does not hold. */
+  .toolbar details.dd .menu label.absent { color: var(--vscode-descriptionForeground); }
+  .toolbar details.dd .menu label .last { margin-left: auto; padding-left: 12px; font-size: 11px; font-variant-numeric: tabular-nums; color: var(--vscode-descriptionForeground); }
   .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--vscode-charts-green, #4caf50); display: inline-block; flex-shrink: 0; }
   .dot.err { background: var(--vscode-charts-red, #f44336); }
   #status { font-size: 11px; color: var(--vscode-descriptionForeground); font-variant-numeric: tabular-nums; }
@@ -345,7 +354,14 @@ export function getHtml(webview: vscode.Webview, extensionUri: vscode.Uri, start
   </select></label>
   <details class="dd" id="loggerDd">
     <summary title="${vscode.l10n.t('Filter by where an entry comes from (TM1 logger, e.g. TM1.Server, TM1.Process, TM1.Chore). All sources are shown by default.')}">${vscode.l10n.t('Source')}<span id="loggerCount"></span></summary>
-    <div class="menu" id="loggerMenu"></div>
+    <div class="menu">
+      <div class="menuhead">
+        <button id="loggerAll">${vscode.l10n.t('All')}</button>
+        <button id="loggerNone">${vscode.l10n.t('None')}</button>
+        <span id="loggerNote" data-searching="${vscode.l10n.t('Searching the whole log for sources…')}" data-capped="${vscode.l10n.t('More sources exist than listed.')}"></span>
+      </div>
+      <div id="loggerMenu" data-absent="${vscode.l10n.t('Not in the loaded rows — newest entry {0}')}"></div>
+    </div>
   </details>
   <input id="filterInput" type="text" placeholder="${vscode.l10n.t('Text search…')}" />
   <button id="analyzeBtn" class="primary" title="${vscode.l10n.t('Analyze process runs')}">${vscode.l10n.t('Analyze')}</button>
@@ -354,6 +370,7 @@ export function getHtml(webview: vscode.Webview, extensionUri: vscode.Uri, start
     // Disabled rather than hidden: a missing button reads as a bug, a disabled
     // one with the reason on it answers the question before it is asked.
     : vscode.l10n.t('TM1 v12 does not expose the server log over REST — only per-run process and chore logs are available.')}">${vscode.l10n.t('Startup')}</button>
+  <button id="exportBtn" class="primary" title="${vscode.l10n.t('Export CSV')}">${vscode.l10n.t('Export')}</button>
   <div class="spacer"></div>
   <span id="status">–</span>
 </div>
@@ -427,6 +444,10 @@ export async function showMessageLogCommand(context: vscode.ExtensionContext, no
   // depth window is applied on the SERVER now, so the panel has to know which
   // levels are wanted before it can ask for anything.
   let currentLevels: Record<string, boolean> = { info: true, warn: true, error: true, debug: true };
+  // Sources the user unticked; pushed to the server like the levels, so the
+  // depth window counts rows of the wanted sources.
+  let excludedLoggers: string[] = [];
+  let loggerWalkStarted = false;
   let inFlight = false;
   panel.webview.html = getHtml(panel.webview, context.extensionUri, isStartupAnalysisAvailable(serverCfg.version));
   rememberColumnWidths(panel, 'messageLog');
@@ -449,7 +470,9 @@ export async function showMessageLogCommand(context: vscode.ExtensionContext, no
         postTo<MessageLogToWebview>(panel.webview, { entries: [], ts: Date.now() });
         return;
       }
-      const entries = await fetchMessageLogEntries(currentTop, serverCfg, { levelFilter, levels: currentLevels });
+      const entries = await fetchMessageLogEntries(currentTop, serverCfg, {
+        levelFilter, levels: currentLevels, excludedLoggers,
+      });
       // Panel may have been disposed during the await (tab closed, window
       // reload). Posting to a disposed webview throws "Webview is disposed".
       if (!panels.get(key)) { return; }
@@ -464,6 +487,46 @@ export async function showMessageLogCommand(context: vscode.ExtensionContext, no
       postTo<MessageLogToWebview>(panel.webview, { error: vscode.l10n.t(formatTreeError(err)), ts: Date.now() });
     } finally {
       inFlight = false;
+    }
+  }
+
+  /**
+   * Search the whole log for every source that has rows (`walkLoggers`). Started
+   * by the first opening of the source menu, not with the panel: on a log of
+   * 689,169 rows it costs about 20 s of server scans, which only a user who
+   * filters by source should pay. Runs beside the poll, outside its in-flight
+   * guard, and with its own timeout — a step took up to 3.4 s live, and the
+   * poll's `refreshMs` would cut it off.
+   */
+  async function loadLoggers(): Promise<void> {
+    if (!serverCfg || loggerWalkStarted) { return; }
+    loggerWalkStarted = true;
+    const onFound = (logger: KnownLogger): void => { postTo<MessageLogToWebview>(panel.webview, { logger }); };
+    try {
+      let complete: boolean;
+      if (serverCfg.version === 'v12') {
+        // No message log to search; the run-log listing answers it in one request.
+        const found = await listRunLogLoggers(serverCfg, 30_000);
+        if (!panels.get(key)) { return; }
+        found.forEach(onFound);
+        complete = true;
+      } else {
+        complete = await walkLoggers(
+          async (excluded) => {
+            if (!panels.get(key)) { return undefined; }
+            const rows = await fetchMessageLogSlice(serverCfg, { top: 1, filter: buildLoggerFilter(excluded), timeoutMs: 30_000 });
+            return panels.get(key) ? rows[0] : undefined;
+          },
+          onFound,
+        );
+      }
+      if (!panels.get(key)) { return; }
+      postTo<MessageLogToWebview>(panel.webview, { loggerWalk: complete ? 'done' : 'capped' });
+    } catch (err) {
+      // Let the next opening of the menu try again.
+      loggerWalkStarted = false;
+      if (!panels.get(key)) { return; }
+      postTo<MessageLogToWebview>(panel.webview, { loggerWalk: 'failed', error: vscode.l10n.t(formatTreeError(err)) });
     }
   }
 
@@ -490,6 +553,15 @@ export async function showMessageLogCommand(context: vscode.ExtensionContext, no
       // tick (≤ refreshMs) fetches with the new levels anyway, since the state
       // above is already updated.
       void refresh();
+    } else if (msg.command === 'setLoggers' && Array.isArray(msg.excluded)) {
+      excludedLoggers = msg.excluded.slice(0, 200).map(String);
+      void refresh();
+    } else if (msg.command === 'loadLoggers') {
+      void loadLoggers();
+    } else if (msg.command === 'exportCsv') {
+      _saveCsvFile(String(msg.csv), 'tm1-message-log').catch((err: unknown) => {
+        void vscode.window.showErrorMessage(vscode.l10n.t('TM1: {0}', errMsg(err)));
+      });
     } else if (msg.command === 'openErrorLog' && msg.file) {
       void openErrorLog(String(msg.file), serverCfg);
     } else if (msg.command === 'openStartup') {

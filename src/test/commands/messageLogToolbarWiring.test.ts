@@ -72,6 +72,8 @@ function runInlineScript(): { els: Map<string, StubEl>; posted: unknown[] } {
     'src/webviewClient/messageLog/protocol.ts',
     'src/messageLog/messageLogPure.ts',
     'src/utils/logTimestamp.ts',
+    'src/consolidationCompare/comparePure.ts',
+    'src/utils/odataKey.ts',
   ]), sandbox, { filename: 'messageLog.js' });
   return { els, posted };
 }
@@ -95,5 +97,16 @@ describe('message log toolbar wiring', () => {
     expect(els.get('topSel')?.listeners['change'] ?? []).toHaveLength(1);
     expect(els.get('filterInput')?.listeners['input'] ?? []).toHaveLength(1);
     expect(els.get('tbody')?.listeners['click'] ?? []).toHaveLength(1);
+  });
+
+  it('wires the source menu and the export at load time', () => {
+    const { els, posted } = runInlineScript();
+    for (const id of ['loggerAll', 'loggerNone', 'exportBtn']) {
+      expect(els.get(id)?.listeners['click'] ?? [], id).toHaveLength(1);
+    }
+    expect(els.get('loggerDd')?.listeners['toggle'] ?? []).toHaveLength(1);
+    // Nothing loaded yet: the export still answers, with the header line alone.
+    els.get('exportBtn')!.listeners['click'][0](undefined);
+    expect(posted).toContainEqual({ command: 'exportCsv', csv: 'TimeStamp;Level;Logger;ThreadID;Message' });
   });
 });

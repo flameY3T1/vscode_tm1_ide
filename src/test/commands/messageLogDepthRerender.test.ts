@@ -22,6 +22,7 @@ interface StubEl {
   listeners: Record<string, ((ev: unknown) => void)[]>;
   addEventListener(type: string, fn: (ev: unknown) => void): void;
   insertAdjacentHTML(where: string, html: string): void;
+  querySelectorAll(): StubEl[];
   dataset: Record<string, string>;
   classList: { toggle(): void };
   textContent: string;
@@ -37,6 +38,8 @@ function makeEl(): StubEl {
     insertAdjacentHTML(where, html) {
       this.innerHTML = where === 'afterbegin' ? html + this.innerHTML : this.innerHTML + html;
     },
+    // The source menu marks its labels after every answer; none exist here.
+    querySelectorAll: () => [],
     dataset: {},
     classList: { toggle() { /* stub */ } },
     textContent: '',
@@ -86,6 +89,8 @@ function runInlineScript(): Harness {
     'src/webviewClient/messageLog/protocol.ts',
     'src/messageLog/messageLogPure.ts',
     'src/utils/logTimestamp.ts',
+    'src/consolidationCompare/comparePure.ts',
+    'src/utils/odataKey.ts',
   ]), sandbox, { filename: 'messageLog.js' });
   expect(winListeners['message'] ?? []).toHaveLength(1);
 

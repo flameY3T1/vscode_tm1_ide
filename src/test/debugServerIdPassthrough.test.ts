@@ -5,7 +5,8 @@ import * as path from 'path';
 /**
  * Regression guard for the connection identity of a debug session.
  *
- * The bug: `tm1.debugProcess` / `tm1.debugProcessFromTree` resolved the correct
+ * The bug: `tm1.debugProcess` (and `tm1.debugProcessFromTree`, removed
+ * 2026-11-15: no menu, no keybinding ever reached it) resolved the correct
  * `Tm1Config` and then dropped it — the launch configuration carried only
  * `processName` + `parameters`, so `Tm1DebugAdapter` fell back to the global
  * `getConfig()` of whichever server was connected LAST. Two profiles pointing at
@@ -147,18 +148,18 @@ describe('Tm1DebugAdapter launch request', () => {
 });
 
 /**
- * Source-level guard for the two producers. Executing the command callbacks
+ * Source-level guard for the producer. Executing the command callbacks
  * would require standing up the whole `registerProcessCommands` activation
- * graph; what has to stay true is narrow and structural: both `startDebugging`
- * launch objects must name a serverId, or the adapter is back to guessing.
+ * graph; what has to stay true is narrow and structural: the `startDebugging`
+ * launch object must name a serverId, or the adapter is back to guessing.
  */
 describe('registerProcessCommands passes serverId into startDebugging', () => {
   const src = fs.readFileSync(
     path.resolve(__dirname, '../activation/registerProcessCommands.ts'), 'utf8',
   );
 
-  it('has exactly two startDebugging call sites', () => {
-    expect(src.match(/startDebugging\(/g)?.length).toBe(2);
+  it('has exactly one startDebugging call site', () => {
+    expect(src.match(/startDebugging\(/g)?.length).toBe(1);
   });
 
   it('carries serverId in every startDebugging launch object', () => {
@@ -167,7 +168,7 @@ describe('registerProcessCommands passes serverId into startDebugging', () => {
       const rest = src.slice(m.index!);
       return rest.slice(0, rest.indexOf('});') + 3);
     });
-    expect(sites).toHaveLength(2);
+    expect(sites).toHaveLength(1);
     for (const site of sites) {
       expect(site).toMatch(/\bserverId\b/);
     }

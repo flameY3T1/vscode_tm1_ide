@@ -1,7 +1,31 @@
 import { describe, it, expect } from 'vitest';
 import {
-  initialView, toggleCollapse, isCollapsed, freezeOrder,
+  initialView, toggleCollapse, isCollapsed, freezeOrder, toggleDrill, pushIntent,
 } from '../webviewClient/dimensionBrowser/intents';
+import { storedMdx } from '../webviewClient/dimensionBrowser/viewMdx';
+
+describe('re-expanding over a narrowed set shows ALL children', () => {
+  // Click test 2026-11-13: keep one year, show its consolidation, collapse it,
+  // expand it - only the kept year came back, not every child.
+  const kept = pushIntent(initialView('tree'), { kind: 'keep', names: ['Total', '2024'] });
+
+  it('drills on top of the collapse instead of taking it off', () => {
+    const zu = toggleDrill(kept, 'Total', true);
+    const auf = toggleDrill(zu, 'Total', false);
+    expect(auf.intents.map((i) => i.kind)).toEqual(['keep', 'collapse', 'expand']);
+    expect(storedMdx(auf, 'D', 'D')).toMatch(/^\{DRILLDOWNMEMBER\(\{DRILLUPMEMBER\(\{INTERSECT/);
+  });
+
+  it('collapsing again does not pile up layers', () => {
+    const auf = toggleDrill(toggleDrill(kept, 'Total', true), 'Total', false);
+    expect(toggleDrill(auf, 'Total', true).intents.map((i) => i.kind)).toEqual(['keep', 'collapse']);
+  });
+
+  it('without a narrowing layer the collapse is still just taken off', () => {
+    const auf = toggleDrill(toggleDrill(initialView('tree'), 'Total', true), 'Total', false);
+    expect(auf.intents).toEqual([]);
+  });
+});
 
 describe('Intent model', () => {
   it('starts with the chosen base and without intents', () => {

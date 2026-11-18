@@ -17,6 +17,7 @@ import { computeDropIndex, resolveDropPlacement } from './dropIndicatorPure';
 import { pivotMatrixLocal } from './pivotMatrixPure';
 import { buildPivotedMdx } from './mdxPivotPure';
 import { axisBaseNamesFromMatrix } from './gridPure';
+import { axisElementNames, axisInfoOf, axisOf, collectParentsUnion } from './contextMenuPure';
 import { renderGrid } from './grid';
 import { _dispElem } from './gridLabels';
 import { requestRefresh } from './refreshBridge';
@@ -32,23 +33,11 @@ const L = getL10n();
 function _hierOrder(dim: string, names: string[]): string[] {
   const m = state.lastMatrix;
   if (!m || names.length <= 1) return names;
-  const rowDims = m.rowDims ?? state.rowDims;
-  const colDims = m.colDims ?? state.colDims;
-  let pmap: Record<string, string> | undefined;
-  const ri = rowDims.indexOf(dim);
-  if (ri >= 0) pmap = (m.rowParents ?? [])[ri];
-  else {
-    const ci = colDims.indexOf(dim);
-    if (ci >= 0) pmap = (m.colParents ?? [])[ci];
-  }
-  if (!pmap) return names;
+  const side = axisOf(m, dim, state.rowDims, state.colDims);
+  if (!side?.parents) return names;
+  const info = axisInfoOf(side);
   const want = new Set(names);
-  const childMap: Record<string, string[]> = {};
-  for (const c in pmap) {
-    if (Object.prototype.hasOwnProperty.call(pmap, c)) {
-      (childMap[pmap[c]] ??= []).push(c);
-    }
-  }
+  const childMap = info.children;
   // Find roots within `names`: an item is a root if its parent isn't in want.
   // (Lifts intermediate consolidations to root when their actual parent
   // wasn't selected, so they appear at top of their visible subtree.)
@@ -60,8 +49,7 @@ function _hierOrder(dim: string, names: string[]): string[] {
     (childMap[n] ?? []).forEach(dfs);
   }
   names.forEach((n) => {
-    const p = pmap![n];
-    if (!p || !want.has(p)) dfs(n);
+    if (!collectParentsUnion([n], info).some((p) => want.has(p))) dfs(n);
   });
   // Anything still missing (cycle / orphans) appended in original order.
   names.forEach((n) => { if (!seen.has(n)) { seen.add(n); ordered.push(n); } });
@@ -218,20 +206,9 @@ function _currentDimElements(dim: string): string[] {
     const t = state.titleAssignments?.[dim];
     return t ? [t] : [];
   }
-  const rowDims = m.rowDims ?? state.rowDims;
-  const colDims = m.colDims ?? state.colDims;
-  const rowIdx = rowDims.indexOf(dim);
-  if (rowIdx >= 0 && m.rowTuples) {
-    const set = new Set<string>();
-    m.rowTuples.forEach((t) => { if (t[rowIdx]) set.add(t[rowIdx]); });
-    return Array.from(set);
-  }
-  const colIdx = colDims.indexOf(dim);
-  if (colIdx >= 0 && m.colTuples) {
-    const set = new Set<string>();
-    m.colTuples.forEach((t) => { if (t[colIdx]) set.add(t[colIdx]); });
-    return Array.from(set);
-  }
+  const side = axisOf(m, dim, state.rowDims, state.colDims);
+  const onAxis = side && axisElementNames(side);
+  if (onAxis) return onAxis;
   const t = m.titleAssignments?.[dim] ?? state.titleAssignments?.[dim];
   return t ? [t] : [];
 }
@@ -291,51 +268,33 @@ export function clearElementFetchPending(dim?: string): void {
   if (dim === undefined) { _elementFetchPending.clear(); } else { _elementFetchPending.delete(dim); }
 }
 
-/** Label of an axis/title entry: the dimension name, plus a hierarchy picker
- *  when the dimension has more than one hierarchy. */
+/** Label of an axis/title entry: the dimension name, plus the hierarchy name
+ *  as plain text when it is not the default one. Switching hierarchy happens
+ *  in the dimension browser only (`rekeyHierarchy`). */
 function _makeKeyLabel(key: string, className: string): HTMLSpanElement {
   const { dim, hier } = splitHierKey(key);
   const lbl = document.createElement('span');
   lbl.className = className ? `${className} chip-label` : 'chip-label';
   lbl.title = key;
   // The name shrinks to an ellipsis when the zone is narrow (the rows zone is
-  // as wide as the row headers); the picker shrinks too (see css.ts .chip-hier).
+  // as wide as the row headers); the hierarchy name shrinks too (see css.ts .chip-hier).
   const name = document.createElement('span');
   name.className = 'chip-name';
-  lbl.appendChild(name);
-  const hiers = state.hierarchies[dim];
-  if (!hiers || hiers.length < 2) { name.textContent = dim; return lbl; }
   name.textContent = dim;
-  const sel = document.createElement('select');
-  sel.className = 'chip-hier';
-  sel.title = L.hierarchy;
-  // Another hierarchy of this dimension already on the grid is not offered:
-  // one key per hierarchy.
-  const taken = new Set([...state.rowDims, ...state.colDims, ...state.titleDims].filter((k) => k !== key));
-  for (const h of hiers) {
-    const k = hierKey(dim, h);
-    if (taken.has(k)) { continue; }
-    const opt = document.createElement('option');
-    opt.value = k;
-    // The default hierarchy repeats the dimension name right beside it.
-    opt.textContent = h === (state.defaultHiers[dim] ?? dim) ? L.defaultHierarchy : h;
-    opt.title = h;
-    opt.selected = h === hier;
-    sel.appendChild(opt);
-  }
-  // The chip is draggable; a drag must not start from the picker.
-  sel.addEventListener('mousedown', (e) => e.stopPropagation());
-  sel.addEventListener('click', (e) => e.stopPropagation());
-  sel.addEventListener('change', () => switchHierarchy(key, sel.value));
-  lbl.appendChild(sel);
+  lbl.appendChild(name);
+  if (hier === (state.defaultHiers[dim] ?? dim)) { return lbl; }
+  const hierName = document.createElement('span');
+  hierName.className = 'chip-hier';
+  hierName.textContent = `· ${hier}`;
+  lbl.appendChild(hierName);
   return lbl;
 }
 
-/** Hierarchy of `key`'s dimension not yet on the grid, or `undefined`. */
-function _freeHierarchy(key: string): string | undefined {
+/** Keys of the hierarchies of `key`'s dimension not yet on the grid. */
+function _freeHierarchies(key: string): string[] {
   const { dim } = splitHierKey(key);
   const onGrid = new Set([...state.rowDims, ...state.colDims, ...state.titleDims]);
-  return (state.hierarchies[dim] ?? []).map((h) => hierKey(dim, h)).find((k) => !onGrid.has(k));
+  return (state.hierarchies[dim] ?? []).map((h) => hierKey(dim, h)).filter((k) => !onGrid.has(k));
 }
 
 function _forgetKey(key: string): void {
@@ -370,18 +329,44 @@ export function rekeyHierarchy(key: string, next: string): void {
   _setAxes(replaceKey({ rowDims: state.rowDims, colDims: state.colDims, titleDims: state.titleDims }, key, next));
 }
 
-/** Show `next` (another hierarchy of the same dimension) in place of `key`. */
-export function switchHierarchy(key: string, next: string): void {
-  if (!next || next === key) { return; }
-  _forgetKey(key);
-  _applyAxes(replaceKey({ rowDims: state.rowDims, colDims: state.colDims, titleDims: state.titleDims }, key, next));
+/** Put the free hierarchy `added` of `key`'s dimension in the same zone, after `key`. */
+export function addHierarchy(key: string, added: string): void {
+  if (!_freeHierarchies(key).includes(added)) { return; }
+  _applyAxes(addKeyAfter({ rowDims: state.rowDims, colDims: state.colDims, titleDims: state.titleDims }, key, added));
 }
 
-/** Put a further hierarchy of `key`'s dimension on the same axis, after `key`. */
-export function addHierarchy(key: string): void {
-  const added = _freeHierarchy(key);
-  if (!added) { return; }
-  _applyAxes(addKeyAfter({ rowDims: state.rowDims, colDims: state.colDims, titleDims: state.titleDims }, key, added));
+/** The dimension of `key` has a hierarchy not yet on the grid. */
+export function canAddHierarchy(key: string): boolean {
+  return _freeHierarchies(key).length > 0;
+}
+
+/** The chip's + and the chip context menu: one free hierarchy is added at
+ *  once, several are offered in a menu at `left`/`top`. */
+export function offerAddHierarchy(key: string, left: number, top: number): void {
+  document.querySelector('.chip-hier-menu')?.remove();
+  const free = _freeHierarchies(key);
+  if (free.length < 2) { if (free[0]) { addHierarchy(key, free[0]); } return; }
+  const menu = document.createElement('div');
+  menu.className = 'chip-hier-menu';
+  const close = (): void => {
+    menu.remove();
+    document.removeEventListener('mousedown', onOutside, true);
+    document.removeEventListener('keydown', onKey, true);
+  };
+  const onOutside = (e: MouseEvent): void => { if (!menu.contains(e.target as Node)) { close(); } };
+  const onKey = (e: KeyboardEvent): void => { if (e.key === 'Escape') { close(); } };
+  for (const k of free) {
+    const item = document.createElement('div');
+    item.className = 'ctx-item';
+    item.textContent = splitHierKey(k).hier;
+    item.addEventListener('click', () => { close(); addHierarchy(key, k); });
+    menu.appendChild(item);
+  }
+  document.body.appendChild(menu);
+  menu.style.left = `${Math.max(0, Math.min(left, window.innerWidth - menu.offsetWidth - 6))}px`;
+  menu.style.top = `${Math.max(0, Math.min(top, window.innerHeight - menu.offsetHeight - 6))}px`;
+  document.addEventListener('mousedown', onOutside, true);
+  document.addEventListener('keydown', onKey, true);
 }
 
 /** Another hierarchy of `key`'s dimension is on the grid too, in any zone. */
@@ -430,11 +415,15 @@ function _makeAxisChip(dim: string): HTMLSpanElement {
   const filter = _makeDimFilterButton(dim, 'chip-filter');
 
   const add = document.createElement('span');
-  if (_freeHierarchy(dim)) {
+  if (canAddHierarchy(dim)) {
     add.className = 'chip-add';
     add.title = L.addHierarchy;
     add.textContent = '+';
-    add.addEventListener('click', (e) => { e.stopPropagation(); addHierarchy(dim); });
+    add.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const r = add.getBoundingClientRect();
+      offerAddHierarchy(dim, r.left, r.bottom + 2);
+    });
   }
 
   const x = _makeRemoveButton(dim, false);

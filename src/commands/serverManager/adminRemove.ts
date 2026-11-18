@@ -2,12 +2,9 @@
  * Removes an admin-server entry — including the question of what should
  * happen to the instances discovered through it.
  *
- * This lives here and not in the command because there are TWO paths to the
- * same action: the context-menu entry `tm1.adminServer.remove` on the tree
- * node, and the delete button in the edit view (`addServerPanel`). Both must
- * ask the same confirmation question and spare the same children; two
- * copies of the same rules would be exactly the spot where one of them goes
- * stale.
+ * Called by the delete button in the edit view (`addServerPanel`). Until
+ * 2026-11-15 a tree command `tm1.adminServer.remove` took the same path; its
+ * menu entry had been gone since 2026-09-23, so nothing could reach it.
  */
 import * as vscode from 'vscode';
 import { getAllServers, saveServers, type ServerProfile } from '../../serverState/state';

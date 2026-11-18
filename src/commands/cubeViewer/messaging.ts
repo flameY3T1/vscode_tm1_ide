@@ -35,7 +35,7 @@ import { _picklistDims, _picklistMaps } from './picklistWiring';
 import { _fetchCellPage, _fetchTuplePage, CellsetNotFoundError } from './cellset';
 import { rowsForCellBudget } from './cellBudgetPure';
 import { levelsForSlice } from './axisMeta';
-import { getDimChildIndex } from './dimStructCache';
+import { getDimStructure } from './dimStructCache';
 import { dispatch, type DispatchTable } from '../../webviews/dispatchTablePure';
 import { sameElementSequence } from './dimSelectionKeyPure';
 import { refreshInlineMdx } from './view';
@@ -812,7 +812,7 @@ export const cubeViewerTable: DispatchTable<WebviewToHost, CubeViewerCtx> = {
     let children: string[] = [];
     let descendants: string[] = [];
     try {
-      const idx = await getDimChildIndex(msg.dimName, config);
+      const idx = (await getDimStructure(msg.dimName, config)).index;
       children = idx.children.get(msg.elem) ?? [];
       const limit = msg.within ? new Set(msg.within) : undefined;
       const seen = new Set<string>();

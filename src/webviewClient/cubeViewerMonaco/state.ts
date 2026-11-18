@@ -69,20 +69,12 @@ export interface CubeViewerState {
    */
   localFocus: { dim: string; visible: Set<string> } | null;
   /**
-   * Drilldown action queued during a server-side filter promotion. When the
-   * user drills on a dim that has dimSelections set, we clear the server
-   * filter (reload all elements) and replay this action against the new
+   * Toggle queued during a server-side filter promotion. When the user
+   * toggles on a dim that has dimSelections set, we clear the server
+   * filter (reload all elements) and replay the toggle against the new
    * matrix once it arrives.
    */
-  pendingDrillAction: null | {
-    dim: string;
-    elem: string;
-    kind: 'toggle' | 'showParents' | 'showAllParents' | 'expandAll' | 'keepOnly';
-    /** Optional multi-element list when the action was triggered with a header
-     *  multi-selection. When present, applyPendingDrillAction iterates over
-     *  these instead of just `elem`. */
-    elems?: string[];
-  };
+  pendingDrillAction: null | { dim: string; elem: string };
   /**
    * A paused expand/collapse click that is waiting for the host's child list.
    *

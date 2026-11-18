@@ -4,15 +4,16 @@ import { splitVariableColumns } from '../../utils/processVariablesUi';
 import { apiRequest, deployProcess } from '../../tm1Client';
 import type { ProcessParameter, ProcessVariable, DataSource, Tm1Config } from '../../tm1Rest/transport/types';
 import { getPanelTitle } from './processEditorUtils';
-import { draftKeyOf, isLive, serverLabel, sessionOfPanel } from './state';
+import { draftKeyOf, isLive, serverLabel, type PanelSession } from './state';
 import { getExtensionContext } from '../../utils/extensionContext';
 import { clearDraft } from './draftStore';
 import { encodeODataKey } from '../../utils/odataKey';
 import { carryStoredPassword } from '../../utils/dataSourceWire';
 import { parseBodySafe } from '../../tm1Rest/parseRest';
 import { fetchProcessUiData } from '../../tm1Rest/processApi';
+import type { ProcessSyntaxError } from '../../tm1Rest/processCompile';
 import { postTo } from '../../webviews/typedPost';
-import type { HostToWebview } from '../../webviewClient/processEditorMonaco/protocol';
+import type { EditorSnapshot, HostToWebview } from '../../webviewClient/processEditorMonaco/protocol';
 
 /**
  * Reads the DataSource TM1 stores for `processName`, as the server spells it.
@@ -45,47 +46,101 @@ export async function fetchStoredOdbcPassword(processName: string, config: Tm1Co
 }
 
 /**
+ * After a push from the process file: the server compiles what it now holds.
+ * Nothing is reverted (unlike `handleMonacoSave`) - the file is the truth, the
+ * markers say what is wrong with it. False when it does not compile.
+ */
+export async function checkPushedCompile(panel: vscode.WebviewPanel, processName: string, config: Tm1Config): Promise<boolean> {
+  let errors: ProcessSyntaxError[] = [];
+  try {
+    const { compileProcess } = await import('../../tm1Rest/processCompile');
+    errors = await compileProcess(processName, config);
+  } catch { /* check unavailable: the run reports it */ }
+  if (errors.length === 0) {
+    postTo<HostToWebview>(panel.webview, { type: 'clearCompileResults' });
+    return true;
+  }
+  postCompileErrors(panel, errors);
+  const failMsg = vscode.l10n.t('Pushed, but the process does not compile ({0}).', String(errors.length));
+  postTo<HostToWebview>(panel.webview, { type: 'saveError', message: failMsg });
+  vscode.window.showErrorMessage(failMsg);
+  return false;
+}
+
+/** Server compile errors as editor markers (red squiggles, Problems panel, F8). */
+function postCompileErrors(panel: vscode.WebviewPanel, errors: ProcessSyntaxError[]): void {
+  const errorsBySection: Record<string, Array<{ ruleId: string; severity: 'error'; message: string; line: number; section: string }>> = {
+    prolog: [], metadata: [], data: [], epilog: [],
+  };
+  for (const err of errors) {
+    const sec = String(err.Procedure ?? '').toLowerCase();
+    if (errorsBySection[sec]) {
+      errorsBySection[sec].push({
+        ruleId: 'tm1-compile',
+        severity: 'error',
+        message: `[compile] ${err.Message}`,
+        line: Math.max(1, err.LineNumber ?? 1),
+        section: sec,
+      });
+    }
+  }
+  postTo<HostToWebview>(panel.webview, { type: 'compileResults', errorsBySection });
+}
+
+/** The snapshot off the wire in host types; save and save as read it the same way. */
+function readSnapshot(snapshot: Partial<EditorSnapshot>) {
+  const s: Partial<EditorSnapshot['sections']> = snapshot.sections ?? {};
+  return {
+    sections: {
+      prolog:   String(s.prolog   ?? ''),
+      metadata: String(s.metadata ?? ''),
+      data:     String(s.data     ?? ''),
+      epilog:   String(s.epilog   ?? ''),
+    },
+    parameters: snapshot.parameters as ProcessParameter[] | undefined,
+    dataSource: snapshot.dataSource as DataSource | undefined,
+    variables: snapshot.variables as ProcessVariable[] | undefined,
+    hasSecurity: snapshot.hasSecurity,
+    errorCount: Number(snapshot.errorCount ?? 0),
+  };
+}
+
+/** False when the linter reports errors and the user does not save anyway. */
+async function confirmLintErrors(errorCount: number): Promise<boolean> {
+  if (errorCount <= 0) { return true; }
+  const choice = await vscode.window.showWarningMessage(
+    vscode.l10n.t('Linter reports {0} error(s). Save anyway?', String(errorCount)),
+    { modal: true },
+    vscode.l10n.t('Save Anyway'),
+  );
+  return choice === vscode.l10n.t('Save Anyway');
+}
+
+/**
  * Handles save/deploy from the Monaco webview.
  * Returns true on success. With `autoSave=true`: skips the "saved" toast and
  * short-circuits when the panel is not dirty (returns true without deploy).
  */
 export async function handleMonacoSave(
-  panel: vscode.WebviewPanel,
-  panelKey: string,
-  processName: string,
-  serverKey: string,
-  rawSections: { prolog?: string; metadata?: string; data?: string; epilog?: string },
-  webviewParameters: ProcessParameter[] | undefined,
-  webviewDataSource: DataSource | undefined,
-  webviewVariables: ProcessVariable[] | undefined,
-  config: Tm1Config,
-  autoSave: boolean = false,
-  errorCount: number = 0,
-  webviewHasSecurity?: boolean,
-): Promise<boolean> {
-  // Held for the whole save: a reopen during deploy registers a NEW session
+  // The object, not the key: a reopen during deploy registers a NEW session
   // under the same key, and this save must not mark that one clean.
-  const session = sessionOfPanel(panel);
-  if (autoSave && !session?.dirty) { return true; }
-  if (errorCount > 0) {
-    const choice = await vscode.window.showWarningMessage(
-      vscode.l10n.t('Linter reports {0} error(s). Save anyway?', String(errorCount)),
-      { modal: true },
-      vscode.l10n.t('Save Anyway'),
-    );
-    if (choice !== vscode.l10n.t('Save Anyway')) {
-      postTo<HostToWebview>(panel.webview, { type: 'saveCancelled' });
-      return false;
-    }
+  session: PanelSession,
+  // Partial: it comes off the wire, and a missing part falls back to the stored one.
+  snapshot: Partial<EditorSnapshot>,
+  autoSave: boolean = false,
+): Promise<boolean> {
+  const { panel, processName, serverKey, config } = session;
+  if (autoSave && !session.dirty) { return true; }
+  const {
+    sections, parameters: webviewParameters, dataSource: webviewDataSource,
+    variables: webviewVariables, hasSecurity: webviewHasSecurity, errorCount,
+  } = readSnapshot(snapshot);
+  if (!(await confirmLintErrors(errorCount))) {
+    postTo<HostToWebview>(panel.webview, { type: 'saveCancelled' });
+    return false;
   }
-  const sections = {
-    prolog:   String(rawSections.prolog   ?? ''),
-    metadata: String(rawSections.metadata ?? ''),
-    data:     String(rawSections.data     ?? ''),
-    epilog:   String(rawSections.epilog   ?? ''),
-  };
 
-  const stored = session?.code;
+  const stored = session.code;
   if (!stored) {
     vscode.window.showErrorMessage(vscode.l10n.t('Internal error: process data not found.'));
     return false;
@@ -113,7 +168,7 @@ export async function handleMonacoSave(
       })
     : stored.parameters;
 
-  const dataSource = webviewDataSource ?? session?.dataSource;
+  const dataSource = webviewDataSource ?? session.dataSource;
   const mergedVariables: ProcessVariable[] = webviewVariables
     ? webviewVariables.map(v => ({
         Name: String(v.Name ?? ''),
@@ -137,7 +192,7 @@ export async function handleMonacoSave(
     variables: stored.variables.map(v => ({ ...v })),
     // Without a known DataSource the revert would leave the new one on the
     // server; read it before the save overwrites it.
-    dataSource: session?.dataSource
+    dataSource: session.dataSource
       ?? (webviewDataSource && config ? await fetchStoredDataSource(processName, config) : undefined),
     hasSecurity: stored.hasSecurity,
   };
@@ -166,22 +221,7 @@ export async function handleMonacoSave(
             }, oldSnapshot.dataSource, oldSnapshot.parameters, oldSnapshot.variables, config, oldSnapshot.hasSecurity);
           } catch { reverted = false; }
 
-          const errorsBySection: Record<string, Array<{ ruleId: string; severity: 'error'; message: string; line: number; section: string }>> = {
-            prolog: [], metadata: [], data: [], epilog: [],
-          };
-          for (const err of errors) {
-            const sec = String(err.Procedure ?? '').toLowerCase();
-            if (errorsBySection[sec]) {
-              errorsBySection[sec].push({
-                ruleId: 'tm1-compile',
-                severity: 'error',
-                message: `[compile] ${err.Message}`,
-                line: Math.max(1, err.LineNumber ?? 1),
-                section: sec,
-              });
-            }
-          }
-          postTo<HostToWebview>(panel.webview, { type: 'compileResults', errorsBySection });
+          postCompileErrors(panel, errors);
           const failMsg = reverted
             ? vscode.l10n.t('Compile error — not saved ({0}).', String(errors.length))
             : vscode.l10n.t('Compile error ({0}) — and the previous version could NOT be restored. The server still holds the broken code.', String(errors.length));
@@ -207,15 +247,15 @@ export async function handleMonacoSave(
     // The tab may have been closed during deploy/compile: `onDidDispose` already
     // dropped the session, and `panel.title` would throw "Webview is disposed"
     // and turn the successful save into an error.
-    const live = !!session && isLive(session);
-    if (session && webviewDataSource) {
+    const live = isLive(session);
+    if (webviewDataSource) {
       session.dataSource = webviewDataSource;
     }
-    if (session) { session.dirty = false; }
+    session.dirty = false;
     // The server now holds this content — a parked recovery draft would offer
     // the user stale work on the next open. Best-effort: a failed cleanup must
     // never turn a successful save into an error.
-    if (session) { session.draft = undefined; }
+    session.draft = undefined;
     const draftMemento = getExtensionContext()?.globalState;
     if (draftMemento) { void clearDraft(draftMemento, draftKeyOf(serverKey, processName)).then(undefined, () => { /* nothing to recover from */ }); }
     if (live) { panel.title = getPanelTitle(processName, false, serverLabel(serverKey)); }
@@ -259,24 +299,16 @@ export async function handleMonacoSave(
  * (a callback so this module doesn't import openPanel.ts and create a cycle).
  */
 export async function handleMonacoSaveAs(
-  sourceProcessName: string,
-  rawSections: { prolog?: string; metadata?: string; data?: string; epilog?: string },
-  webviewParameters: ProcessParameter[] | undefined,
-  webviewDataSource: DataSource | undefined,
-  webviewVariables: ProcessVariable[] | undefined,
-  config: Tm1Config,
-  errorCount: number = 0,
+  session: PanelSession,
+  snapshot: Partial<EditorSnapshot>,
   reopenAfterSave: (newProcessName: string) => Promise<void>,
-  webviewHasSecurity?: boolean,
 ): Promise<void> {
-  if (errorCount > 0) {
-    const choice = await vscode.window.showWarningMessage(
-      vscode.l10n.t('Linter reports {0} error(s). Save anyway?', String(errorCount)),
-      { modal: true },
-      vscode.l10n.t('Save Anyway'),
-    );
-    if (choice !== vscode.l10n.t('Save Anyway')) { return; }
-  }
+  const { processName: sourceProcessName, config } = session;
+  const {
+    sections, parameters: webviewParameters, dataSource: webviewDataSource,
+    variables: webviewVariables, hasSecurity: webviewHasSecurity, errorCount,
+  } = readSnapshot(snapshot);
+  if (!(await confirmLintErrors(errorCount))) { return; }
   const newName = await vscode.window.showInputBox({
     ignoreFocusOut: true,
     title: vscode.l10n.t('Save process as…'),
@@ -308,13 +340,6 @@ export async function handleMonacoSaveAs(
       if (choice !== vscode.l10n.t('Overwrite')) { return; }
     }
   } catch { /* ignore — deployProcess will surface real connection errors */ }
-
-  const sections = {
-    prolog:   String(rawSections.prolog   ?? ''),
-    metadata: String(rawSections.metadata ?? ''),
-    data:     String(rawSections.data     ?? ''),
-    epilog:   String(rawSections.epilog   ?? ''),
-  };
 
   const parameters: ProcessParameter[] = (webviewParameters ?? []).map(p => {
     const type: 'Numeric' | 'String' = p.Type === 'Numeric' ? 'Numeric' : 'String';

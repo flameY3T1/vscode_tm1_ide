@@ -27,7 +27,7 @@ export const TM1_DEBUG_TYPE = 'tm1-ide';
  * `serverId` is what makes a debug session point at a *profile* rather than at
  * "whatever was connected last": two profiles can share one gateway URL and
  * differ only in user or v12 database, so nothing below `serverId` can tell
- * them apart. Written by `tm1.debugProcess` / `tm1.debugProcessFromTree`;
+ * them apart. Written by `tm1.debugProcess`;
  * optional so hand-written `launch.json` files keep working.
  */
 export interface Tm1LaunchArguments {

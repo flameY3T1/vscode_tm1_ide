@@ -9,6 +9,8 @@ import { postTo } from '../../../webviews/typedPost';
 import type { HostToWebview, WebviewToHost } from '../../../webviewClient/processEditorMonaco/protocol';
 import { parseProcess, type TM1Process } from '../../../git/serializer';
 import { pushProcessFrom } from '../../../git/pushOrchestrator';
+import { checkPushedCompile } from '../save';
+import { refuseDebugStart } from '../debugSession';
 import { getConfig } from '../../../tm1Client';
 import { fetchProcessEtag } from '../../../tm1Rest/processApi';
 import { Tm1HttpError } from '../../../tm1Rest/httpError';
@@ -154,8 +156,8 @@ export class ProcessFileEditorProvider implements vscode.CustomTextEditorProvide
         }),
         push: async () => {
           const dir = bound && resolveDir(bound);
-          if (!dir || !(await saveBoth())) { return; }
-          await vscode.window.withProgress({
+          if (!dir || !(await saveBoth())) { return false; }
+          return vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,
             title: vscode.l10n.t('TM1 Git: Pushing process "{0}"…', process.name),
           }, async () => {
@@ -169,13 +171,16 @@ export class ProcessFileEditorProvider implements vscode.CustomTextEditorProvide
                 const pick = await vscode.window.showWarningMessage(
                   vscode.l10n.t('"{0}" was changed on the server since this file was opened. Overwrite the server version?', process.name),
                   { modal: true }, overwrite);
-                if (pick !== overwrite) { return; }
+                if (pick !== overwrite) { return false; }
                 serverEtag = await pushProcessFrom(dir.serverDir, dir.serverName, process.name, bound);
               }
-              vscode.window.showInformationMessage(vscode.l10n.t('Process "{0}" pushed.', process.name));
             } catch (err) {
               vscode.window.showErrorMessage(vscode.l10n.t('Push failed: {0}', errMsg(err)));
+              return false;
             }
+            if (!(await checkPushedCompile(panel, process.name, bound))) { return false; }
+            vscode.window.showInformationMessage(vscode.l10n.t('Process "{0}" pushed.', process.name));
+            return true;
           });
         },
       });
@@ -190,11 +195,7 @@ export class ProcessFileEditorProvider implements vscode.CustomTextEditorProvide
     // the workspace and its document never reloads. Watch the file itself.
     const jsonWatcher = vscode.workspace.createFileSystemWatcher(
       new vscode.RelativePattern(vscode.Uri.joinPath(jsonUri, '..'), jsonUri.path.split('/').pop()!), true, false, true);
-    jsonWatcher.onDidChange(async () => {
-      try {
-        session.onJsonChanged(new TextDecoder().decode(await vscode.workspace.fs.readFile(jsonUri)));
-      } catch { /* deleted or unreadable: the next change reports it */ }
-    });
+    jsonWatcher.onDidChange(() => { void session.onJsonFileChanged(); });
     panel.onDidDispose(() => {
       jsonWatcher.dispose();
       docSub.dispose();
@@ -231,7 +232,10 @@ export class ProcessFileEditorProvider implements vscode.CustomTextEditorProvide
         // These write the editor state to TM1 through the server editor's handlers.
         case 'execute':
         case 'debugStart':
-        case 'saveAs': return !(await session.beforeServerWrite());
+          if (await session.beforeServerWrite(true)) { return false; }
+          if (msg.type === 'debugStart') { refuseDebugStart(panel); }
+          return true;
+        case 'saveAs': return !(await session.beforeServerWrite(false));
         case 'fileModeProbeResult': this.probeAnswer?.(msg); return true;
         default: return false;
       }

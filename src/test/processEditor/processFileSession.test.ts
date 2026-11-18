@@ -14,7 +14,7 @@ function make(pushAllowed = true) {
   const { tiText, headerJson } = serializeProcess(PROC);
   const deps = {
     post: vi.fn(), applyEdits: vi.fn(async () => {}), warn: vi.fn(),
-    scheduleAutosave: vi.fn(), push: vi.fn(async () => {}), saveFiles: vi.fn(async () => true),
+    scheduleAutosave: vi.fn(), push: vi.fn(async () => true), saveFiles: vi.fn(async () => true),
     readFiles: vi.fn(async () => ({ ti: '', json: '' })),
   } satisfies ProcessFileSessionDeps;
   const session = new ProcessFileSession(PROC, tiText, headerJson, '\r\n', pushAllowed, deps);
@@ -50,7 +50,7 @@ describe('ProcessFileSession', () => {
       const { tiText, headerJson } = serializeProcess(PULLED);
       const deps = {
         post: vi.fn(), applyEdits: vi.fn(async () => {}), warn: vi.fn(),
-        scheduleAutosave: vi.fn(), push: vi.fn(async () => {}), saveFiles: vi.fn(async () => true),
+        scheduleAutosave: vi.fn(), push: vi.fn(async () => true), saveFiles: vi.fn(async () => true),
     readFiles: vi.fn(async () => ({ ti: '', json: '' })),
       } satisfies ProcessFileSessionDeps;
       return { session: new ProcessFileSession(PULLED, tiText, headerJson, '\r\n', true, deps), deps, headerJson };
@@ -137,11 +137,42 @@ describe('ProcessFileSession', () => {
 
   it('refuses Execute/Debug/Save As on an unbound file, saves the files first on a bound one', async () => {
     const unbound = make(false);
-    expect(await unbound.session.beforeServerWrite()).toBe(false);
+    expect(await unbound.session.beforeServerWrite(false)).toBe(false);
+    expect(await unbound.session.beforeServerWrite(true)).toBe(false);
     expect(unbound.deps.warn).toHaveBeenCalledWith('unboundPush');
     const bound = make(true);
-    expect(await bound.session.beforeServerWrite()).toBe(true);
+    expect(await bound.session.beforeServerWrite(false)).toBe(true);
     expect(bound.deps.saveFiles).toHaveBeenCalledOnce();
+    expect(bound.deps.push).not.toHaveBeenCalled();
+  });
+
+  it('a run pushes the files first, and again only after they changed', async () => {
+    const { session, deps } = make();
+    expect(await session.beforeServerWrite(true)).toBe(true);
+    expect(await session.beforeServerWrite(true)).toBe(true);
+    expect(deps.push).toHaveBeenCalledTimes(1);
+    await session.onFileSync(sync('a = 2;') as never);
+    expect(await session.beforeServerWrite(true)).toBe(true);
+    expect(deps.push).toHaveBeenCalledTimes(2);
+  });
+
+  it('a run does not start when the push failed, and tries again next time', async () => {
+    const { session, deps } = make();
+    deps.push.mockResolvedValueOnce(false);
+    expect(await session.beforeServerWrite(true)).toBe(false);
+    expect(await session.beforeServerWrite(true)).toBe(true);
+    expect(deps.push).toHaveBeenCalledTimes(2);
+  });
+
+  it('a run pushes again after a failed push, even when the files are back at the last pushed state', async () => {
+    const { session, deps } = make();
+    expect(await session.beforeServerWrite(true)).toBe(true);
+    await session.onFileSync(sync('broken') as never);
+    deps.push.mockResolvedValueOnce(false);
+    expect(await session.beforeServerWrite(true)).toBe(false);
+    await session.onFileSync(sync('a = 1;') as never);
+    expect(await session.beforeServerWrite(true)).toBe(true);
+    expect(deps.push).toHaveBeenCalledTimes(3);
   });
 
   it('writes the security flag from the webview into the header', async () => {
@@ -153,7 +184,7 @@ describe('ProcessFileSession', () => {
   it('does not invent "Parameters": [] when the header had none', async () => {
     const proc = { ...PROC, parameters: undefined };
     const { tiText, headerJson } = serializeProcess(proc);
-    const deps = { post: vi.fn(), applyEdits: vi.fn(async () => {}), warn: vi.fn(), scheduleAutosave: vi.fn(), push: vi.fn(async () => {}), saveFiles: vi.fn(async () => true), readFiles: vi.fn(async () => ({ ti: '', json: '' })) };
+    const deps = { post: vi.fn(), applyEdits: vi.fn(async () => {}), warn: vi.fn(), scheduleAutosave: vi.fn(), push: vi.fn(async () => true), saveFiles: vi.fn(async () => true), readFiles: vi.fn(async () => ({ ti: '', json: '' })) };
     const session = new ProcessFileSession(proc, tiText, headerJson, '\n', true, deps);
     await session.onFileSync(sync('a = 2;') as never);
     expect('Parameters' in lastHeader(deps, headerJson)).toBe(false);
@@ -177,6 +208,35 @@ describe('ProcessFileSession', () => {
     expect(deps.applyEdits).not.toHaveBeenCalled();
     await session.onFileSync(sync('ext; mine;', { seenExternal: 1 }) as never);
     expect(deps.applyEdits).toHaveBeenCalledOnce();
+  });
+
+  it('a watcher read during a write in flight does not hand the previous header to the webview', async () => {
+    const { session, deps, headerJson } = make();
+    // The disk as the watcher sees it: a header lands only when applyEdits resolves.
+    let disk = headerJson;
+    let land!: () => void;
+    deps.applyEdits.mockImplementation(async (...args: unknown[]) => {
+      await new Promise<void>(r => { land = r; });
+      disk = (args[1] as string | undefined) ?? disk;
+    });
+    const writing = session.onFileSync(sync('a = 1;', { hasSecurity: true }) as never);
+    await Promise.resolve(); // the write is in flight, the disk still holds the old header
+    deps.readFiles.mockImplementation(async () => ({ ti: '', json: disk }));
+    const watched = session.onJsonFileChanged();
+    land();
+    await Promise.all([writing, watched]);
+    expect(deps.post).not.toHaveBeenCalled();
+    expect(deps.warn).not.toHaveBeenCalled();
+  });
+
+  it('a watcher read of a foreign header still reaches the webview, and a failed read is swallowed', async () => {
+    const { session, deps, headerJson } = make();
+    deps.readFiles.mockRejectedValueOnce(new Error('gone'));
+    await session.onJsonFileChanged();
+    expect(deps.post).not.toHaveBeenCalled();
+    deps.readFiles.mockResolvedValueOnce({ ti: '', json: headerJson.replace('"HasSecurityAccess": false', '"HasSecurityAccess": true') });
+    await session.onJsonFileChanged();
+    expect(deps.post).toHaveBeenCalledWith({ type: 'monacoSetSecurity', hasSecurity: true });
   });
 
   it('runs overlapping fileSyncs one after the other', async () => {

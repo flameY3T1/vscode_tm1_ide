@@ -367,3 +367,68 @@ describe('save — names with value conversion', () => {
     expect(vi.mocked(apiRequest)).not.toHaveBeenCalled();
   });
 });
+
+describe('save read-back', () => {
+  const hint = { paths: new Set(['Administration.DisableSandboxing']), values: new Map<string, unknown>() };
+  const edits = new Map<string, unknown>([['Administration.DisableSandboxing', true]]);
+  const answers = (stored: unknown) => vi.mocked(apiRequest)
+    .mockResolvedValueOnce({ statusCode: 200, body: '' })
+    .mockResolvedValueOnce({ statusCode: 200, body: '{}' })
+    .mockResolvedValueOnce({ statusCode: 200, body: JSON.stringify({ Administration: { DisableSandboxing: stored } }) })
+    .mockResolvedValueOnce({ statusCode: 200, body: JSON.stringify({ Administration: { DisableSandboxing: stored } }) });
+
+  it('reports a leaf the server answered 200 for but left unchanged', async () => {
+    answers(null);
+    const result = await save(cfg, edits, hint);
+    expect(result.errors).toEqual([expect.objectContaining({ target: 'ignored', param: 'Administration.DisableSandboxing' })]);
+  });
+
+  it('stays quiet when the value was stored', async () => {
+    answers(true);
+    expect((await save(cfg, edits, hint)).errors).toEqual([]);
+  });
+});
+
+describe('save of a list leaf', () => {
+  const hint = { paths: new Set(['Administration.StartupChores']) };
+  // A factory: parseBodySafe empties the body of the response it reads.
+  const chores = () => ({ statusCode: 200, body: JSON.stringify({ value: [{ Name: 'a' }, { Name: 'Nightly Load' }] }) });
+
+  it('sends StartupChores as an array of names', async () => {
+    vi.mocked(apiRequest).mockResolvedValueOnce(chores()).mockResolvedValueOnce({ statusCode: 200, body: '' });
+    const result = await save(cfg, new Map([['Administration.StartupChores', 'a, nightlyload']]), hint);
+    expect(result.errors).toEqual([]);
+    expect(JSON.parse(vi.mocked(apiRequest).mock.calls[1][2] as string)).toEqual({ Administration: { StartupChores: ['a', 'nightlyload'] } });
+  });
+
+  it('refuses a name that is no chore and says when it is a process', async () => {
+    vi.mocked(apiRequest).mockResolvedValueOnce(chores())
+      .mockResolvedValueOnce({ statusCode: 200, body: '{}' })   // Processes('__sleep')
+      .mockResolvedValueOnce({ statusCode: 404, body: '' });    // Processes('nope')
+    const result = await save(cfg, new Map([['Administration.StartupChores', 'a, __sleep, nope']]), hint);
+    expect(result.errors.map(e => e.message)).toEqual([
+      expect.stringContaining('A process of that name exists'),
+      'No chore named "nope" on this server.',
+    ]);
+    expect(vi.mocked(apiRequest).mock.calls.some(c => c[0] === 'PATCH')).toBe(false);
+  });
+
+  it('clears the list without reading the chores', async () => {
+    vi.mocked(apiRequest).mockResolvedValue({ statusCode: 200, body: '' });
+    await save(cfg, new Map([['Administration.StartupChores', '']]), hint);
+    expect(vi.mocked(apiRequest).mock.calls.map(c => c[0])).toEqual(['PATCH']);
+  });
+
+  it('still saves when the chore list cannot be reached', async () => {
+    vi.mocked(apiRequest).mockRejectedValueOnce(new Error('ETIMEDOUT')).mockResolvedValueOnce({ statusCode: 200, body: '' });
+    const result = await save(cfg, new Map([['Administration.StartupChores', 'a']]), hint);
+    expect(result.errors).toEqual([]);
+    expect(vi.mocked(apiRequest).mock.calls[1][0]).toBe('PATCH');
+  });
+
+  it('keeps the plain message when the process lookup cannot be reached', async () => {
+    vi.mocked(apiRequest).mockResolvedValueOnce(chores()).mockRejectedValueOnce(new Error('ETIMEDOUT'));
+    const result = await save(cfg, new Map([['Administration.StartupChores', 'nope']]), hint);
+    expect(result.errors.map(e => e.message)).toEqual(['No chore named "nope" on this server.']);
+  });
+});

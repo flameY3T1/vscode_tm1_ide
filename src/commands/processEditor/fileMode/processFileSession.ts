@@ -27,8 +27,12 @@ export interface ProcessFileSessionDeps {
   applyEdits(ti: TextReplace | undefined, jsonText: string | undefined): Promise<void>;
   warn(kind: SessionWarning): void;
   scheduleAutosave(): void;
-  /** Saves both documents, then pushes to TM1. Only called when `pushAllowed`. */
-  push(): Promise<void>;
+  /**
+   * Saves both documents, pushes to TM1, then asks the server to compile. False
+   * when the server does not hold a compiling copy of the files afterwards.
+   * Only called when `pushAllowed`.
+   */
+  push(): Promise<boolean>;
   /** Saves both documents; false when a save failed (e.g. the file changed on disk). */
   saveFiles(): Promise<boolean>;
   /** What the `.ti` document and the `.json` file hold now (after a failed write). */
@@ -48,6 +52,9 @@ export class ProcessFileSession {
    * would revert it, so it is dropped (the webview re-syncs after applying).
    */
   private externalSeq = 0;
+  /** What the last successful push sent; a run pushes again only when the files moved on. */
+  private pushedTi: string | undefined;
+  private pushedJson: string | undefined;
   /** `onFileSync` computes offsets against `shownTi`; two at once would interleave. */
   private queue: Promise<void> = Promise.resolve();
 
@@ -170,16 +177,39 @@ export class ProcessFileSession {
   }
 
   /**
-   * Execute / Debug / Save As write the editor state to TM1 through the server
-   * editor's handlers. An unbound file would hit the ACTIVE connection — refuse;
-   * a bound one saves its files first so the file and the server agree.
+   * The header file changed on disk. Reads behind any write in flight: until
+   * that lands, the disk still holds our previous header, which is not
+   * `shownJson` and would go to the webview as a foreign change. Measured
+   * 2026-11-15 in a VS Code host: 8 of 400 reads at a 30 ms write cadence,
+   * none at 60 ms and above — so only a slow disk reaches it.
    */
-  async beforeServerWrite(): Promise<boolean> {
+  onJsonFileChanged(): Promise<void> {
+    this.queue = this.queue.then(async () => {
+      try {
+        this.onJsonChanged((await this.deps.readFiles()).json);
+      } catch { /* deleted or unreadable: the next change reports it */ }
+    });
+    return this.queue;
+  }
+
+  /**
+   * Execute / Debug / Save As go on through the server editor's handlers. An
+   * unbound file would hit the ACTIVE connection — refuse.
+   *
+   * `run` (Execute, Debug): the server runs ITS copy, and the server editor's
+   * auto-save never fires here (file mode does not mark its session dirty), so
+   * the files are pushed first unless the last push already sent them. Until
+   * 2026-11-12 a run used whatever the server held, without the file's edits.
+   * Save As deploys the editor state itself and only needs the files saved.
+   */
+  async beforeServerWrite(run: boolean): Promise<boolean> {
     if (!this.pushAllowed) {
       this.deps.warn('unboundPush');
       return false;
     }
-    return await this.filesHoldEditor() && this.deps.saveFiles();
+    if (!(await this.filesHoldEditor())) { return false; }
+    if (!run) { return this.deps.saveFiles(); }
+    return (this.shownTi === this.pushedTi && this.shownJson === this.pushedJson) || this.push();
   }
 
   /** Toolbar "Save": a file outside every connected server's git folder never guesses a server. */
@@ -188,7 +218,19 @@ export class ProcessFileSession {
       this.deps.warn('unboundPush');
       return;
     }
-    if (await this.filesHoldEditor()) { await this.deps.push(); }
+    if (await this.filesHoldEditor()) { await this.push(); }
+  }
+
+  private async push(): Promise<boolean> {
+    const ti = this.shownTi;
+    const json = this.shownJson;
+    // A push that fails its compile check has already written the server: forget the last good state first.
+    this.pushedTi = undefined;
+    this.pushedJson = undefined;
+    if (!(await this.deps.push())) { return false; }
+    this.pushedTi = ti;
+    this.pushedJson = json;
+    return true;
   }
 
   /**

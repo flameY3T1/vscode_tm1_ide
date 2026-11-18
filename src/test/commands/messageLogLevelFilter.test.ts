@@ -49,6 +49,16 @@ describe('fetchMessageLogEntries — server-side level filter', () => {
     expect(calls[0]).toContain('%20eq%20');
   });
 
+  it('joins the logger filter and the level filter with and', async () => {
+    responses = [{ statusCode: 200, body: ROW }];
+    await fetchMessageLogEntries(100, CFG, {
+      excludedLoggers: ['TM1.Process'],
+      levelFilter: "(Level eq ibm.tm1.api.v1.LogLevel'Error')",
+    });
+    expect(decodeURIComponent(calls[0]))
+      .toContain("$filter=(Logger ne 'TM1.Process') and (Level eq ibm.tm1.api.v1.LogLevel'Error')");
+  });
+
   it('keeps the depth window on MATCHING rows: $top rides along with the filter', async () => {
     responses = [{ statusCode: 200, body: ROW }];
     await fetchMessageLogEntries(500, CFG, { levelFilter: "(Level eq ibm.tm1.api.v1.LogLevel'Error')" });

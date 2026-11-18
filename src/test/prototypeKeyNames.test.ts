@@ -9,7 +9,7 @@ vi.mock('../tm1Client', () => ({ apiRequest: vi.fn(), assertOk: vi.fn() }));
 vi.mock('../tm1Rest/client', async () => await import('../tm1Client'));
 
 import { apiRequest } from '../tm1Client';
-import { _fetchDimParents } from '../commands/cubeViewer/fetch';
+import { _fetchDimParents } from '../commands/cubeViewer/dimStructCache';
 import { scopeParentMaps } from '../commands/cubeViewer/axisMetaScopePure';
 import { computeIndentDepths } from '../webviewClient/cubeViewerMonaco/rowIndentPure';
 import type { Tm1Config } from '../tm1Rest/transport/types';
@@ -56,9 +56,7 @@ describe('security manager: user names that shadow Object.prototype', () => {
 });
 
 import { stripMatrixNameMapPrototypes, mergeParentDelta } from '../webviewClient/cubeViewerMonaco/parentMergePure';
-import { buildAxisInfo, collectDescendantsDfs, collectAncestorsBfs, collectParentsUnion, collectDirectChildren } from '../webviewClient/cubeViewerMonaco/contextMenuPure';
-import { buildCubeStructure } from '../webviewClient/cubeViewerMonaco/cubeHierStructure';
-import { descendants, allParents as hierAllParents, children as hierChildren, leaves } from '../webviewClient/_shared/hierarchy/operations';
+import { buildAxisInfo, collectDescendantsDfs, collectAncestorsRootFirst, collectParentsUnion, collectDirectChildren } from '../webviewClient/cubeViewerMonaco/contextMenuPure';
 import { hasCollapsedAncestorDag } from '../webviewClient/cubeViewerMonaco/gridPure';
 import { nameMap } from '../utils/nameMapPure';
 import type { MatrixData } from '../webviewClient/cubeViewerMonaco/protocol';
@@ -86,21 +84,12 @@ describe('cube viewer webview pipeline with names that shadow Object.prototype',
     stripMatrixNameMapPrototypes(m);
     const info = buildAxisInfo(m, 'D', ['D'], [])!;
     expect([...collectDescendantsDfs(['Total'], info)].sort()).toEqual([...rows].sort());
-    expect([...collectAncestorsBfs(['valueOf'], info)].sort()).toEqual(['Total', 'constructor']);
+    expect([...collectAncestorsRootFirst(['valueOf'], info)].sort()).toEqual(['Total', 'constructor']);
     expect(collectParentsUnion(['toString'], info)).toEqual(['constructor']);
     expect([...collectDirectChildren(['hasOwnProperty'], info)]).toEqual([]);
     expect([...collectDirectChildren(['constructor'], info)].sort()).toEqual(['toString', 'valueOf']);
   });
 
-  it('hierarchy operations over the cube structure', () => {
-    const m = received();
-    stripMatrixNameMapPrototypes(m);
-    const s = buildCubeStructure(m, 'D', ['D'], [])!;
-    expect(descendants(s, 'Total').sort()).toEqual(rows.filter(r => r !== 'Total').sort());
-    expect(leaves(s, 'Total').sort()).toEqual(['__proto__', 'hasOwnProperty', 'toString', 'valueOf']);
-    expect(hierAllParents(s, 'valueOf')).toEqual(['constructor', 'Total']);
-    expect(hierChildren(s, 'toString')).toEqual([]);
-  });
 
   it('collapse: only a really collapsed ancestor hides a row', () => {
     const m = received();
@@ -175,5 +164,71 @@ describe('display formats and MDX factors with names that shadow Object.prototyp
 describe('MDX set expression with dimensions named like Object.prototype members', () => {
   it('dimsOfSetExpr lists every dimension', () => {
     expect(dimsOfSetExpr('{[constructor].[a]} * {[toString].[b]} * {[D].[c]}')).toEqual(['constructor', 'toString', 'D']);
+  });
+});
+
+import { unwrapDisplayFormats, embedDisplayFormats } from '../cubeViewer/mdxFormatEmbedPure';
+import { _fetchDimElementsTree } from '../commands/cubeViewer/fetch';
+import { fetchAttributeValues, fetchAliasValues } from '../tm1Rest/dimensionElementsApi';
+import { stripPrototypesDeep } from '../utils/nameMapPure';
+
+describe('builders and the receive step with names that shadow Object.prototype', () => {
+  const api = apiRequest as unknown as ReturnType<typeof vi.fn>;
+
+  it('unwrapDisplayFormats keeps a "__proto__" dimension as a key and pollutes nothing', () => {
+    const fm = nameMap<Record<string, string>>();
+    fm['__proto__'] = Object.assign(nameMap<string>(), { polluted: '#,##0' });
+    const { mdx } = embedDisplayFormats('SELECT {[__proto__].[polluted]} ON 0 FROM [c]', fm);
+    const r = unwrapDisplayFormats(mdx);
+    expect(({} as Record<string, unknown>).polluted).toBeUndefined();
+    expect(Object.keys(r.formats)).toEqual(['__proto__']);
+    expect(r.formats['__proto__'].polluted).toBe('#,##0');
+  });
+
+  it('_fetchDimElementsTree lists every element under its parent', async () => {
+    api.mockImplementation((_m: string, url: string) => Promise.resolve({
+      statusCode: 200,
+      body: JSON.stringify({ value: url.includes('Edges')
+        ? KIDS.map(c => ({ ParentName: 'constructor', ComponentName: c })).filter(e => e.ComponentName !== 'constructor')
+        : ['constructor', ...KIDS.filter(k => k !== 'constructor')].map(Name => ({ Name })) }),
+    }));
+    const tree = await _fetchDimElementsTree('D', cfg);
+    api.mockReset();
+    expect(tree[0]).toEqual({ name: 'constructor', depth: 0 });
+    expect(tree.slice(1).map(t => t.name).sort()).toEqual(KIDS.filter(k => k !== 'constructor').sort());
+    expect(tree.slice(1).every(t => t.depth === 1)).toBe(true);
+  });
+
+  it('fetchAttributeValues and fetchAliasValues return own keys only', async () => {
+    // A fresh response per call: parseBody releases the body it has read.
+    api.mockImplementation(() => Promise.resolve({
+      statusCode: 200,
+      body: JSON.stringify({ value: [{ Name: '__proto__', Attributes: { A: 'x' } }, { Name: 'same', Attributes: { A: 'same' } }] }),
+    }));
+    const all = await fetchAttributeValues(cfg, 'D', 'D', 'A');
+    const alias = await fetchAliasValues(cfg, 'D', 'D', 'A');
+    api.mockReset();
+    expect(all['__proto__']).toBe('x');
+    expect(all['constructor']).toBeUndefined();
+    expect(Object.keys(alias)).toEqual(['__proto__']);
+    expect(alias['toString']).toBeUndefined();
+  });
+
+  it('stripPrototypesDeep reaches nested maps and arrays of maps', () => {
+    const msg = JSON.parse('{"type":"t","values":{"__proto__":"a"},"maps":[{"k":{"x":1}}]}') as { values: Record<string, string>; maps: Array<Record<string, Record<string, number>>> };
+    stripPrototypesDeep(msg);
+    expect(msg.values['constructor']).toBeUndefined();
+    expect(msg.values['__proto__']).toBe('a');
+    expect(msg.maps[0]['toString']).toBeUndefined();
+    expect(msg.maps[0].k['valueOf']).toBeUndefined();
+    expect(msg.maps[0].k.x).toBe(1);
+  });
+
+  it('stripPrototypesDeep leaves skipped objects and their contents alone', () => {
+    const msg = JSON.parse('{"matrix":{"values":{"0,0":{"f":1}},"rowParents":[{"a":"b"}]}}') as { matrix: { values: Record<string, object>; rowParents: Array<Record<string, string>> } };
+    stripPrototypesDeep(msg, new Set([msg.matrix.values]));
+    expect(Object.getPrototypeOf(msg.matrix.values)).toBe(Object.prototype);
+    expect(Object.getPrototypeOf(msg.matrix.values['0,0'])).toBe(Object.prototype);
+    expect(Object.getPrototypeOf(msg.matrix.rowParents[0])).toBeNull();
   });
 });

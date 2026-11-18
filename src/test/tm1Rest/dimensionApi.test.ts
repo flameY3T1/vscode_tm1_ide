@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import {
   listDimensionNames, listDimensionsWithHierarchies, listHierarchyNames,
-  listElementAttributes, listElementAttributeNames, listElementNames, listElementNamesAndLeaves, listEdges, listWeightedEdges,
+  listElementAttributes, listElementAttributeNames, listElementNames, listElementNamesAndLeaves, listWeightedEdges,
   createDimension, deleteDimension, createHierarchy, deleteHierarchy, DimensionApi, type ApiResponse,
 } from '../../tm1Rest/dimensionApi';
 import { deleteCube } from '../../tm1Rest/cubeApi';
@@ -152,31 +152,6 @@ describe('dimensionApi — functional helpers', () => {
         res.end();
       });
       expect(await listElementNames(fakeConfig(fake.url), 'D')).toEqual([]);
-    });
-  });
-
-  describe('listEdges', () => {
-    it('returns parent/child rows', async () => {
-      fake = await startFakeTm1((req, res) => {
-        expect(req.url).toContain('Edges?$select=ParentName,ComponentName');
-        jsonResponse(res, 200, {
-          value: [
-            { ParentName: 'Total', ComponentName: 'A' },
-            { ParentName: 'Total', ComponentName: 'B' },
-          ],
-        });
-      });
-      const out = await listEdges(fakeConfig(fake.url), 'D');
-      expect(out).toHaveLength(2);
-      expect(out[0].ParentName).toBe('Total');
-    });
-
-    it('returns [] on non-2xx', async () => {
-      fake = await startFakeTm1((req, res) => {
-        res.statusCode = 404;
-        res.end();
-      });
-      expect(await listEdges(fakeConfig(fake.url), 'D')).toEqual([]);
     });
   });
 

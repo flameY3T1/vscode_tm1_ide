@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { resolveWritePath, schemaFor, type ConfigSnapshot } from '../../serverConfig/configApi';
+import { droppedSilently, resolveWritePath, schemaFor, type ConfigSnapshot } from '../../serverConfig/configApi';
 import { PARAM_SCHEMA, allClusters, lookupLeafInfo, normalizeEnumRead, type Cluster } from '../../serverConfig/paramSchema';
 import { resolveReadAlias, aliasNames, aliasCoveredLeaves, legacyEchoNames, legacyEchoOf, isIsoDuration, isoDurationToSeconds } from '../../serverConfig/configAlias';
 import { classify } from '../../serverConfig/configClassifier';
@@ -40,6 +40,8 @@ interface RowVM {
    * test server exposes CacheFriendlyMalloc, DisableMemoryCache, LockPagesInMemory and
    * ApplyMaximumViewSizeToEntireTransaction even though IBM lists all four as removed in
    * TM1 12. Asking the server covers both directions and needs no upkeep.
+   * Listed is not the same as stored, though: v12 drops a write to three of those four
+   * and to six more leaves without a word — see `droppedSilently` in configApi.ts.
    */
   unavailable: boolean;
 }
@@ -167,7 +169,9 @@ function buildRows(snap: ConfigSnapshot): RowVM[] {
     // A duration comes in as `P0DT01H00M00S`. In the mask it is shown as a
     // number of seconds, so it can be entered; the description says so.
     const duration = !alias && isIsoDuration(value);
-    const shown = alias ? alias.value : normalizeEnumRead(effDef, duration ? isoDurationToSeconds(value) : value);
+    const shown = alias ? alias.value
+      : (leafInfo?.type === 'list' && Array.isArray(value)) ? value.join(', ')
+      : normalizeEnumRead(effDef, duration ? isoDurationToSeconds(value) : value);
     // "Not writable" and "doesn't exist here" are two different situations,
     // and until 2026-08-31 both carried the same N/A flag. The flat keys of
     // the old `/Configuration` view (SecurityMode, ProductVersion,
@@ -190,7 +194,7 @@ function buildRows(snap: ConfigSnapshot): RowVM[] {
       description: describe(name, effDef?.description ?? leafInfo?.description, isNested, alias, duration),
       defaultValue: effDef?.defaultValue,
       known: !!effDef || !!leafInfo || cls.known,
-      unavailable: notWritable && shown === undefined,
+      unavailable: (notWritable && shown === undefined) || droppedSilently(snap, name),
     });
   }
   // Build a suffix-set of nested keys so we can drop schema entries that are

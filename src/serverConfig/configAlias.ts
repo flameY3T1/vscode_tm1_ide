@@ -98,6 +98,11 @@ interface AliasDef {
   write(raw: unknown): WriteAlias;
 }
 
+/** Names from the form's comma- or semicolon-separated text — the wire wants an array. */
+export function splitList(raw: unknown): string[] {
+  return String(raw ?? '').split(/[,;]/).map(s => s.trim()).filter(s => s !== '');
+}
+
 /** Number from what the form sends — depending on the field kind it delivers text or a number. */
 function toNumber(raw: unknown): number | undefined {
   const t = typeof raw === 'string' ? raw.trim() : raw;
@@ -142,7 +147,7 @@ const ALIASES: Record<string, AliasDef> = {
     },
     write: (raw) => ({
       kind: 'entries',
-      entries: [['Access.CAM.ServerURIs', String(raw ?? '').split(/[,;]/).map(s => s.trim()).filter(s => s !== '')]],
+      entries: [['Access.CAM.ServerURIs', splitList(raw)]],
     }),
   },
   MTQ: {

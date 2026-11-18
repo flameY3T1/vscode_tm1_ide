@@ -1,5 +1,5 @@
 import type { Tm1Config } from '../../tm1Rest/transport/types';
-import { getDimStructure, getDimChildIndex } from './dimStructCache';
+import { getDimStructure } from './dimStructCache';
 import { scopeParentMaps } from './axisMetaScopePure';
 
 /** Per-row Level array for a tuple slice, computed from per-dim level maps. Pure. */
@@ -40,13 +40,10 @@ export async function _buildAxisMeta(
   // list) — the client never sees more than it can also name.
   const per = await Promise.all(dims.map(async (d, di) => {
     try {
-      const [struct, index] = await Promise.all([
-        getDimStructure(d, config),
-        getDimChildIndex(d, config),
-      ]);
+      const struct = await getDimStructure(d, config);
       const known = new Set<string>();
       for (const t of tuples) { const n = t[di]; if (n) { known.add(n); } }
-      const scoped = scopeParentMaps(known, struct.parents, index.parentSet, extraKnown?.[di]);
+      const scoped = scopeParentMaps(known, struct.parents, struct.index.parentSet, extraKnown?.[di]);
       return { levels: struct.levels, scoped };
     } catch {
       return {
